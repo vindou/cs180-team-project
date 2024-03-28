@@ -100,7 +100,14 @@ public class User
     }
 
     public ArrayList<User> blockFriend(User user) {
-        blocked.add(user);
+        for (int i = 0; i < blocked.size(); i++) {
+            if (user.equals(blocked.get(i))) {
+                break;
+            } else {
+                blocked.add(user);
+            }
+        }
+
         return blocked;
     }
 
