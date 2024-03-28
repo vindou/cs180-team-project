@@ -1,3 +1,6 @@
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import javax.swing.*;
 /**
@@ -21,85 +24,71 @@ public class User
     private ArrayList<User> blocked = new ArrayList<>();
     
     // Instantiates an User object
-    public User() 
+    public User(String email, String username, String password, String birthday) 
     {
-        this.email = setEmail();
-        this.username = setUsername();
-        this.password = setPassword();
-        this.age = setAge();
+        this.email = email;
+        this.username = username;
+        this.password = password;
+        this.birthday = birthday;
     }
 
-    public static String showNameInputDialog() {
-        String name; 
-        do {
-            Object[] options1 = {"Log In", "Create an Account", "Quit"};
-            int reply = JOptionPane.showConfirmDialog(null, "What would you like to do?",
-                                          "Welcome!", JOptionPane.YES_NO_CANCEL_OPTION, null, options1, null);
-
-            if (reply == JOptionPane.YES_OPTION) {
-                login();
-            } //end if
-            else if (reply == JOptionPane.NO_OPTION) {
-                createAccount();
-            } //end if
-            else 
-                return null;
-        
-        } while ((name == null) || (name.isEmpty())); 
-        
-        return name;
-    } //showNameInputDialog
-
-    public static String login() {
-        this.username = getUsername();
-        if (!(checkPassword()))
-        {
-            return null;
-        }
-
-    } //showNameInputDialog
-
-    public static String getUsername() {
-        String username; 
-        do {
-            username = JOptionPane.showInputDialog(null, "What is your username?", "Login", 
-                JOptionPane.QUESTION_MESSAGE);
-            if ((username == null) || (username.isEmpty())) {
-                JOptionPane.showMessageDialog(null, "username cannot be empty!", "Error!", JOptionPane.ERROR_MESSAGE);
-    
-            } //end if
-        
-        } while ((username == null) || (username.isEmpty())); 
-        
-        return username;
+    public String getUsername() {
+        return this.username;
     } //getUsername
 
-    public static boolean checkPassword() {
-        String pass; 
-        do {
-            pass = JOptionPane.showInputDialog(null, "What is your password?",
-                "Login", JOptionPane.QUESTION_MESSAGE);
-            if (!(pass.equals(this.password))) {
-                JOptionPane.showMessageDialog(null, "Incorrect Password! Please try again.", "Incorrect Password!", 
-                    JOptionPane.ERROR_MESSAGE);
-                int options = JOptionPane.showConfirmDialog(null, "Would you like to exit?", "Exit", 
-                    JOptionPane.YES_NO_OPTION);
-                if (options == JOptionPane.YES_OPTION)
-                    return false;
-            else if ((pass == null) || (pass.isEmpty())) {
-                JOptionPane.showMessageDialog(null, "password cannot be empty!", "Error!", JOptionPane.ERROR_MESSAGE);
-            } //end if
-        
-        } while ((pass == null) || (pass.isEmpty()) || (!pass.equals(this.password))); 
-        
-        return true;
-    } //getPassword
-
-    public static void createAccount() {
-        User newUser = new User();
-    } //getPassword
-
-
-
+    public String getEmail()
+    {
+        return this.email;
     }
+
+    public String getBirthday()
+    {
+        return this.birthday;
+    }
+
+    public boolean checkPassword(String pass) {
+        return (pass.equals(this.password));
+    }
+
+    public void setUsername(String username)
+    {
+        this.username = username;
+    }
+
+    public void setEmail(String email)
+    {
+        this.email = email;
+    }
+
+    public void setBirthday(String birthday)
+    {
+        this.birthday = birthday;
+    }
+
+    public void sendMessage(String message)
+    {
+        try {
+            BufferedWriter bw = new BufferedWriter(new FileWriter("output.txt"));
+            bw.append(message);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    
+        
 }
+
+    //equals function
+
+    //sendMessage 
+
+    //addFriend
+
+    //blockFriend
+
+    //removeFriend
+
+    //userSearch
+
+    //userViewer
