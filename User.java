@@ -89,39 +89,50 @@ public class User
     }
 
     public ArrayList<User> addFriend(User user) {
-        for (int i = 0; i < friends.size(); i++) {
-            if (user.equals(friends.get(i))) {
-                break;
-            } else {
-                friends.add(user);
+        try {
+            for (int i = 0; i < friends.size(); i++) {
+                if (user.equals(friends.get(i))) {
+                    throw new ActionNotAllowedException("Error: User already added");
+                } else {
+                    friends.add(user);
+                }
             }
+        } catch (ActionNotAllowedException e) {
+            e.printStackTrace();
         }
         return friends;
     }
 
     public ArrayList<User> blockFriend(User user) {
-        for (int i = 0; i < blocked.size(); i++) {
-            if (user.equals(blocked.get(i))) {
-                break;
-            } else {
-                blocked.add(user);
+        try {
+            for (int i = 0; i < blocked.size(); i++) {
+                if (user.equals(blocked.get(i))) {
+                    throw new ActionNotAllowedException("Error: User is already blocked");
+                } else {
+                    blocked.add(user);
+                }
             }
+        } catch (ActionNotAllowedException e) {
+            e.printStackTrace();
         }
 
         return blocked;
     }
 
     public ArrayList<User> removeFriend(User user) {
-        for (int i = 0; i < friends.size(); i++) {
-            if (user.equals(friends.get(i))) {
-                friends.remove(user);
-            } else {
-                break;
+        try {
+            for (int i = 0; i < friends.size(); i++) {
+                if (user.equals(friends.get(i))) {
+                    friends.remove(user);
+                } else {
+                    throw new ActionNotAllowedException("Error - User is not in friends list");
+                }
             }
+        } catch (ActionNotAllowedException e) {
+            e.printStackTrace();
         }
-        return friends;
+            return friends;
     }
-}
 
     //userSearch
 
