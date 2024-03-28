@@ -2,13 +2,14 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 import javax.swing.*;
 /**
  * This class represents a User for the team project
- *  hi
+ *
  * 
  *
- * @author Jack Juncker
+ * @author Jack Juncker, Ellie Williams
  * @version Mar 25th, 2024.
  */
 public class User 
@@ -75,19 +76,45 @@ public class User
         }
     }
 
-    
-        
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User user)) return false;
+        return Objects.equals(username, user.username);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(username);
+    }
+
+    public ArrayList<User> addFriend(User user) {
+        for (int i = 0; i < friends.size(); i++) {
+            if (user.equals(friends.get(i))) {
+                break;
+            } else {
+                friends.add(user);
+            }
+        }
+        return friends;
+    }
+
+    public ArrayList<User> blockFriend(User user) {
+        blocked.add(user);
+        return blocked;
+    }
+
+    public ArrayList<User> removeFriend(User user) {
+        for (int i = 0; i < friends.size(); i++) {
+            if (user.equals(friends.get(i))) {
+                friends.remove(user);
+            } else {
+                break;
+            }
+        }
+        return friends;
+    }
 }
-
-    //equals function
-
-    //sendMessage 
-
-    //addFriend
-
-    //blockFriend
-
-    //removeFriend
 
     //userSearch
 
