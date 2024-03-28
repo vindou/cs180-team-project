@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 /**
  * This class represents a User for the team project
- * 
+ *  hi
  * 
  *
  * @author Jack Juncker
