@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 /**
  * This class represents a User for the team project
  * 
@@ -8,12 +10,15 @@
  */
 public class User 
 {
-    private int age;
+    private String birthday;
+    private String bio;
     private String email;
     private String password;
+    //make sure no spaces in username
+    //Add usernumber to make database easier
     private String username;
-    private User[] friends;
-    private User[] blocked;
+    private ArrayList<User> friends = new ArrayList<>();
+    private ArrayList<User> blocked = new ArrayList<>();
     
     // Instantiates an User object
     public User() 
