@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import javax.swing.*;
 /**
  * This class just contains the UI stuff represents a User for the team project
  * 
@@ -6,7 +8,7 @@
  * @author Jack Juncker
  * @version Mar 25th, 2024.
  */
-public class UIStuff {
+public class UIStuff extends User {
     import java.util.ArrayList;
 
     private String birthday;
@@ -20,7 +22,7 @@ public class UIStuff {
     private ArrayList<User> blocked = new ArrayList<>();
     
     // Instantiates an User object
-    public User() 
+    public UIStuff() 
     {
         this.email = setEmail();
         this.username = setUsername();
@@ -100,4 +102,5 @@ public class UIStuff {
 
 
 
+    }
 }
