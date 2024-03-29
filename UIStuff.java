@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * 
  * 
  *
- * @author Jack Juncker
+ * @author Jack Juncker, Ellie Williams, Gilbert Chang, Sahil Shetty
  * @version Mar 25th, 2024.
  */
 public class UIStuff extends User {
