@@ -9,9 +9,12 @@ public class UserDatabase implements Database {
     // The file name that the data should be written to.
     private String fileName;
 
+    private File f;
+
     public UserDatabase(ArrayList<User> userArray, String fileName) {
         this.userArray = userArray;
         this.fileName = fileName;
+        this.f = new File(fileName);
     }
 
     // Create multiple methods to allow users to
@@ -23,7 +26,6 @@ public class UserDatabase implements Database {
 
         try {
 
-            File f = new File(fileName);
             FileReader fr = new FileReader(f);
             BufferedReader bfr = new BufferedReader(fr);
 
@@ -51,7 +53,6 @@ public class UserDatabase implements Database {
 
         try {
 
-            File f = new File(fileName);
             FileOutputStream fos = new FileOutputStream(f);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
 
@@ -71,18 +72,9 @@ public class UserDatabase implements Database {
 
     }
 
-    // Checks if the user is equivalent to any that's in the userArray
-    // if not, throw an ActionNotAllowedException that says
-    // account doesn't currently exist.
-    public boolean writeUserData(User user, String fileName) {
-        boolean completion = true;
-
-        return completion;
-    }
-
     // Finds the file with the same name as the string fileName and
     // returns a User object with the data in that file.
-    public User retrieveUserData(String fileName) {
-        return new User();
+    public User retrieveUserData(String username) {
+        
     }
 }
