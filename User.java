@@ -99,7 +99,7 @@ public class User
         this.birthday = birthday;
     } // setBirthday
 
-    public void sendTextMessage(Conversation conversation, String message) {
+    public void sendTextMessage(Conversation conversation, String message) throws ActionNotAllowedException {
         conversation.addMessage(new TextMessage(this, message));
     }    
 
@@ -108,18 +108,6 @@ public class User
         //Format for user data in a class, password can be printed because it is encrypted
         return this.getUsername() + " " + this.getEmail() + " " + this.getBirthday() + this.getPassword();
     } // toString
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof User user)) return false;
-        return Objects.equals(username, user.username);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(username);
-    }
 
     //Adds a User to the friends ArrayList<>
     public ArrayList<User> addFriend(User user) {
