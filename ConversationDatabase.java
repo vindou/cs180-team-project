@@ -1,9 +1,4 @@
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.Writer;
+import java.io.*;
 import java.util.ArrayList;
 
 public class ConversationDatabase implements Database {
@@ -48,8 +43,23 @@ public class ConversationDatabase implements Database {
     // returns true or false depending on completion.
     public boolean writeDatabase() {
        boolean completion = true;
+       File f = new File(this.filePath);
+       try {
+           FileOutputStream fos = new FileOutputStream(f, false);
+           PrintWriter pw = new PrintWriter(fos);
 
+           for (Conversation individualConversation : this.conversationArray) {
+               pw.println(individualConversation.toString());
+           }
+       } catch (FileNotFoundException e) {
+           e.printStackTrace();
+       }
+       
        return completion;
+    }
+
+    public boolean writeIndividualUser(User user) {
+
     }
 
     // Retrieves and returns the data for a conversation given a

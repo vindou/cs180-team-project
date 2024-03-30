@@ -5,6 +5,8 @@ public class Conversation {
     // group chat. 
     private String conversationName;
 
+    // DM File with usernames in it
+
     // Unique integer ID for a conversation 
     private int conversationID; 
 
