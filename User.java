@@ -50,52 +50,54 @@ public class User
 
     public String getUsername() {
         return this.username;
-    } //getUsername
+    } // getUsername
 
     public String getEmail()
     {
         return this.email;
-    }
+    } // getEmail
 
     public String getBirthday()
     {
         return this.birthday;
-    }
+    } // getBirthday
 
     public String getPassword()
     {
         return this.password;
-    }
+    } // getPassword
 
     public String getBio()
     {
         return this.bio;
-    }
+    } // getBio
 
     public void setBio(String bio)
     {
         this.bio =  bio;
-    }
+    } // setBio
 
     public boolean checkPassword(String pass) {
+        //Check the encrypted passwords against each other
         return (encrypt(pass).equals(this.password));
-    }
+    } // checkPassword
 
     public void setUsername(String username)
     {
         this.username = username;
-    }
+    } // setUsername
 
     public void setEmail(String email)
     {
         this.email = email;
-    }
-
+    } // setEmail
+ 
     public void setBirthday(String birthday)
     {
         this.birthday = birthday;
-    }
+    } // setBirthday
 
+    //Sends a String message to another User
     public void sendMessage(User user, String message)
     {
 
@@ -109,12 +111,13 @@ public class User
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
+    } // sendMessage
 
     public String toString()
     {
+        //Format for user data in a class, password can be printed because it is encrypted
         return this.getUsername() + " " + this.getEmail() + " " + this.getBirthday() + this.getPassword();
-    }
+    } // toString
 
     @Override
     public boolean equals(Object o) {
@@ -128,6 +131,7 @@ public class User
         return Objects.hash(username);
     }
 
+    //Adds a User to the friends ArrayList<>
     public ArrayList<User> addFriend(User user) {
         try {
             for (int i = 0; i < friends.size(); i++) {
@@ -141,8 +145,9 @@ public class User
             e.printStackTrace();
         }
         return friends;
-    }
+    } // addFriend
 
+    // adds a User to the blocked Arraylist<>
     public ArrayList<User> blockFriend(User user) {
         try {
             for (int i = 0; i < blocked.size(); i++) {
@@ -157,8 +162,9 @@ public class User
         }
 
         return blocked;
-    }
+    } // blockFriend
 
+    //removes a User from the friends ArrayList
     public ArrayList<User> removeFriend(User user) {
         try {
             for (int i = 0; i < friends.size(); i++) {
@@ -172,12 +178,13 @@ public class User
             e.printStackTrace();
         }
             return friends;
-    }
+    } // removeFriend
 
+    // Encrypts the password to an unrecognizable String
     public static String encrypt(String password)
     {
         try {
-            // Create a MessageDigest instance for SHA-256
+            // Create a MessageDigest instance for password
             MessageDigest digest = MessageDigest.getInstance(password);
             
             // Update the digest with the input bytes
