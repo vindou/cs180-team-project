@@ -40,6 +40,10 @@ public class Conversation {
         return this.msgs; 
     }
 
+    public ArrayList<Message> getDeletedMessages() {
+        return this.deletedMsgs; 
+    }
+
     // Adds a newly instantiated message object to the
     // msgs ArrayList of the DirectMessage object
     public void addMessage(Message newMessage) throws ActionNotAllowedException {
