@@ -176,7 +176,6 @@ public class UserTests {
 
             //make sure user2 is still in user1's friend list
             assertTrue(user1.getBlocked().contains(user2));
-
         }
 
         @Test(timeout = 1000)

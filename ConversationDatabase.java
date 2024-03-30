@@ -58,7 +58,8 @@ public class ConversationDatabase implements Database {
     public ArrayList<Conversation> findAvailableConversations(User user) {
         ArrayList<Conversation> availableConversations = new ArrayList<Conversation>();
 
-        for (Conversation conversation : this.conversationArray) {
+        for (Object conversationObj : this.conversationArray) {
+
             for (User involvedUser : conversation.getUsers()) {
                 if (involvedUser.equals(user)) {
                     availableConversations.add(conversation);
