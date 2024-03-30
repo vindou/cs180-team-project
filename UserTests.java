@@ -9,6 +9,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 
@@ -77,23 +79,197 @@ public class UserTests {
         //TEST 1
 
         @Test(timeout = 1000)
-        public void testExpectedOptionOne() {
+        public void testaddFriendSuccess() {
 
             // Set the input
-            String input = "will2613@purdue.edu" + System.lineSeparator() + "elliewilliams" + System.lineSeparator() + "purdue123" +
-                    System.lineSeparator() + "03/16/2004" + System.lineSeparator();
-
-            // Pair the input with the expected result
-            User expected = new User("will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
+            User user1 = new User("will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
+            User user2 = new User("pete@purdue.edu", "purduepete", "purduemascot4", "08/02/1869");
 
             // Runs the program with the input values
-            receiveInput(input);
-            User.main(new String[0]);
+            user1.addFriend(user2);
 
-            // Retrieves the output from the program
-            String output = getOutput();
+
 
             // Trims the output and verifies it is correct.
-            assertEquals("Make sure your output matches the expected case for the option 1",
-                    expected.trim(), output.trim());
+            assertTrue(user1.getFriends().contains(user2));
         }
+
+        //TEST 2
+
+        @Test(timeout = 1000)
+        public void testAddFriendAlreadyAdded() {
+            User user1 = new User("will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
+            User user2 = new User("pete@purdue.edu", "purduepete", "purduemascot4", "08/02/1869");
+
+
+
+            // add user2 once - should be success
+            user1.addFriend(user2);
+
+            //get a counter for user1's friends to ensure it doesn't increase when adding user2 again
+            int f = user1.getFriends().size();
+
+            //try to add user2 again - should throw exception
+            user1.addFriend(user2);
+
+            //make sure user1 has the same friend list as before the repeated action occurred
+            assertEquals(user1.getFriends().size() == f);
+
+            //make sure user2 is still in user1's friend list
+            assertTrue(user1.getFriends().contains(user2));
+
+        }
+
+        @Test(timeout = 1000)
+        public void testBlockUserSuccess() {
+
+            // Set the input
+            User user1 = new User("ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
+            User user2 = new User("pete", "pete@purdue.edu", "purduepete", "purduemascot4", "08/02/1869");
+
+            // Runs the program with the input values
+            user1.blockFriend(user2);
+
+
+
+            // Trims the output and verifies it is correct.
+            assertTrue(user1.getBlocked().contains(user2));
+        }
+
+
+        @Test(timeout = 1000)
+        public void testBlockFriendAlreadyBlocked() {
+            User user1 = new User("ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
+            User user2 = new User("pete", "pete@purdue.edu", "purduepete", "purduemascot4", "08/02/1869");
+
+
+
+            // block user2 once - should be success
+            user1.blockFriend(user2);
+
+            //get a counter for user1's blocked list to ensure it doesn't increase when blocking user2 again
+            int b = user1.getBlocked().size();
+
+            //try to block user2 again - should throw exception
+            user1.blockFriend(user2);
+
+            //make sure user1 has the same blocked list as before the repeated action occurred
+            assertEquals(user1.getBlocked().size() == b);
+
+            //make sure user2 is still in user1's friend list
+            assertTrue(user1.getBlocked().contains(user2));
+
+        }
+
+        @Test(timeout = 1000)
+        public void testRemoveFriendSuccess() {
+
+            // Set the input
+            User user1 = new User("ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
+            User user2 = new User("pete", "pete@purdue.edu", "purduepete", "purduemascot4", "08/02/1869");
+
+            // Runs the program with the input values
+            user1.removeFriend(user2);
+
+            // Trims the output and verifies it is correct.
+            assertTrue(!user1.getFriends().contains(user2));
+        }
+
+        public void testRemoveFriendAlreadyRemoved() {
+            User user1 = new User("ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
+            User user2 = new User("pete", "pete@purdue.edu", "purduepete", "purduemascot4", "08/02/1869");
+
+
+
+            // block user2 once - should be success
+            user1.removeFriend(user2);
+
+            //get a counter for user1's blocked list to ensure it doesn't increase when blocking user2 again
+            int g = user1.getFriends().size();
+
+            //try to block user2 again - should throw exception
+            user1.removeFriend(user2);
+
+            //make sure user1 has the same blocked list as before the repeated action occurred
+            assertEquals(user1.getFriends().size() == g);
+
+            //make sure user2 is still in user1's friend list
+            assertTrue(!user1.getFriends().contains(user2));
+
+        }
+
+        //TEST 3
+
+        @Test(timeout = 1000)
+        public void testGetFirstAlphabeticallyBothEmpty() {
+
+            // names for both users
+            String name1 = "";
+            String name2 = "";
+
+            //returns program output
+            String result = User.getFirstAlphabetically(name1, name2);
+
+            //compare expected/actual output
+            assertEquals("Both names are equal alphabetically.", result);
+        }
+
+        @Test(timeout = 1000)
+        public void testGetFirstAlphabeticallyName1Empty() {
+
+            // names for both users
+            String name1 = "";
+            String name2 = "Pete";
+
+            //returns program output
+            String result = User.getFirstAlphabetically(name1, name2);
+
+            //compare expected/actual output
+            assertEquals(name1, result);
+        }
+
+        @Test(timeout = 1000)
+        public void testGetFirstAlphabeticallyName2Empty() {
+
+            // names for both users
+            String name1 = "Ellie";
+            String name2 = "";
+
+            //returns program output
+            String result = User.getFirstAlphabetically(name1, name2);
+
+            //compare expected/actual output
+            assertEquals(name2, result);
+        }
+
+        @Test(timeout = 1000)
+        public void testGetFirstAlphabeticallyBothNotEmpty() {
+
+            // names for both users
+            String name1 = "Ellie";
+            String name2 = "Pete";
+
+            //returns program output
+            String result = User.getFirstAlphabetically(name1, name2);
+
+            //compare expected/actual output
+            assertEquals(name1, result);
+        }
+
+        @Test(timeout = 1000)
+        public void testGetFirstAlphabeticallyBothStartWithSameLetter() {
+
+            // names for both users
+            String name1 = "John";
+            String name2 = "Jack";
+
+            //returns program output
+            String result = User.getFirstAlphabetically(name1, name2);
+
+            //compare expected/actual output
+            assertEquals(name2, result);
+        }
+
+
+    }
+}
