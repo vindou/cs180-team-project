@@ -1,7 +1,4 @@
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
 import java.util.ArrayList;
 
 public class UserDatabase implements Database {
@@ -38,6 +35,9 @@ public class UserDatabase implements Database {
                 line = bfr.readLine();
             }
 
+            fr.close();
+            bfr.close();
+
             return userArrayList;
         } catch (Exception e) {
             e.printStackTrace();
@@ -48,6 +48,26 @@ public class UserDatabase implements Database {
     // Writes all user data to one file, given the fileName.
     // Make sure to get all the fields on one line.
     public boolean writeDatabase() {
+
+        try {
+
+            File f = new File(fileName);
+            FileOutputStream fos = new FileOutputStream(f);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+
+            for (User user: userArray) {
+                oos.writeObject(user);
+            }
+
+            oos.flush();
+            fos.close();
+            oos.close();
+
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
 
     }
 
