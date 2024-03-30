@@ -52,60 +52,73 @@ public class User
 
     public String getUsername() {
         return this.username;
-    } //getUsername
+    } // getUsername
 
     public String getEmail()
     {
         return this.email;
-    }
+    } // getEmail
 
     public String getBirthday()
     {
         return this.birthday;
-    }
+    } // getBirthday
 
     public String getPassword()
     {
         return this.password;
-    }
+    } // getPassword
 
     public String getBio()
     {
         return this.bio;
-    }
+    } // getBio
 
     public void setBio(String bio)
     {
         this.bio =  bio;
-    }
+    } // setBio
 
     public boolean checkPassword(String pass) {
+        //Check the encrypted passwords against each other
         return (encrypt(pass).equals(this.password));
-    }
+    } // checkPassword
 
     public void setUsername(String username)
     {
         this.username = username;
-    }
+    } // setUsername
 
     public void setEmail(String email)
     {
         this.email = email;
-    }
-
+    } // setEmail
+ 
     public void setBirthday(String birthday)
     {
         this.birthday = birthday;
-    }
+    } // setBirthday
 
-    public void sendTextMessage(Conversation conversation, String message) {
-        conversation.addMessage(new TextMessage(this, message));
+    public void sendMessage(User user, String message)
+    {
+
+        try {
+            BufferedWriter bw = new BufferedWriter(new FileWriter(this.getUsername() + "_" 
+                + user.getUsername() + ".txt"));
+            bw.append(message);
+
+            bw.flush();
+            bw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public String toString()
     {
+        //Format for user data in a class, password can be printed because it is encrypted
         return this.getUsername() + " " + this.getEmail() + " " + this.getBirthday() + this.getPassword();
-    }
+    } // toString
 
     @Override
     public boolean equals(Object o) {
@@ -119,6 +132,7 @@ public class User
         return Objects.hash(username);
     }
 
+    //Adds a User to the friends ArrayList<>
     public ArrayList<User> addFriend(User user) {
         try {
             for (int i = 0; i < friends.size(); i++) {
@@ -132,8 +146,9 @@ public class User
             e.printStackTrace();
         }
         return friends;
-    }
+    } // addFriend
 
+    // adds a User to the blocked Arraylist<>
     public ArrayList<User> blockFriend(User user) {
         try {
             for (int i = 0; i < blocked.size(); i++) {
@@ -148,8 +163,9 @@ public class User
         }
 
         return blocked;
-    }
+    } // blockFriend
 
+    //removes a User from the friends ArrayList
     public ArrayList<User> removeFriend(User user) {
         try {
             for (int i = 0; i < friends.size(); i++) {
@@ -163,37 +179,31 @@ public class User
             e.printStackTrace();
         }
             return friends;
-    }
+    } // removeFriend
 
-    public static String encrypt(String password)
+    // Encrypts the password to an different String by shifting characters by 5
+    public static String encrypt(String text) 
     {
-        try {
-            // Create a MessageDigest instance for SHA-256
-            MessageDigest digest = MessageDigest.getInstance(password);
-            
-            // Update the digest with the input bytes
-            byte[] hashBytes = digest.digest(password.getBytes());
-            
-            // Convert the byte array to a hexadecimal string
-            StringBuilder hexString = new StringBuilder();
-            for (byte b : hashBytes) {
-                String hex = Integer.toHexString(0xff & b);
-                if (hex.length() == 1) {
-                    hexString.append('0');
-                }
-                hexString.append(hex);
+        int shiftBy = 5;
+        String newPass = "";
+        for (char character : text.toCharArray()) {
+            char base;
+            if (Character.isUpperCase(character)) {
+                base = 'A';
+            } else {
+                base = 'a';
             }
-            
-            // Print the hexadecimal hash
-            return (hexString.toString());
-            
-        } catch (NoSuchAlgorithmException e) {
-            System.err.println("Encryption algorithm not available.");
-            e.printStackTrace();
+            if (Character.isLetter(character)) {
+                char encryptedChar = (char) (((character - base + shiftBy) % 26) + base);
+                newPass += encryptedChar;
+            } else {
+                newPass += character;
+            }
         }
-        return password;
+        return newPass;
     }
 
+    // helper method to create the file name for messages
     public static String getFirstAlphabetically(String name1, String name2) {
         if (name1.isEmpty() && name2.isEmpty()) {
             return "Both names are equal alphabetically.";
