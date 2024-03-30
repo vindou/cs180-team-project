@@ -109,18 +109,6 @@ public class User
         return this.getUsername() + " " + this.getEmail() + " " + this.getBirthday() + this.getPassword();
     } // toString
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof User user)) return false;
-        return Objects.equals(username, user.username);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(username);
-    }
-
     //Adds a User to the friends ArrayList<>
     public ArrayList<User> addFriend(User user) {
         try {
