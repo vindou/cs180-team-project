@@ -88,8 +88,8 @@ public class UserTests {
         public void testaddFriendSuccess() {
 
             // Set the input
-            User user1 = new User("will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
-            User user2 = new User("pete@purdue.edu", "purduepete", "purduemascot4", "08/02/1869");
+            User user1 = new User("ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
+            User user2 = new User("pete", "pete@purdue.edu", "purduepete", "purduemascot4", "08/02/1869");
 
             // Runs the program with the input values
             user1.addFriend(user2);
