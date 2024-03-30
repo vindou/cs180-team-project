@@ -99,20 +99,9 @@ public class User
         this.birthday = birthday;
     } // setBirthday
 
-    public void sendMessage(User user, String message)
-    {
-
-        try {
-            BufferedWriter bw = new BufferedWriter(new FileWriter(this.getUsername() + "_" 
-                + user.getUsername() + ".txt"));
-            bw.append(message);
-
-            bw.flush();
-            bw.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+    public void sendTextMessage(Conversation conversation, String message) {
+        conversation.addMessage(new TextMessage(this, message));
+    }    
 
     public String toString()
     {
