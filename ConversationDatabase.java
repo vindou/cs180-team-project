@@ -11,11 +11,14 @@ public class ConversationDatabase implements Database {
     // Conversation data should be written to.
     private String filePath;
 
+    private File f;
+
     // Main Constructor
     public ConversationDatabase(ArrayList<Conversation> conversationArray
                                 , String filePath) {
         this.conversationArray = conversationArray;
-        this.filePath = filePath; 
+        this.filePath = filePath;
+        this.f = new File(filePath);
     }
 
     // Returns an Array of all Conversations that have been
@@ -24,29 +27,12 @@ public class ConversationDatabase implements Database {
         return this.conversationArray;
     }
 
-    public ArrayList<Object> readDatabase(Object o) {
-        String fileName = (String) o;
+    public ArrayList<Object> readDatabase() {
         try {
-            File f = new File(fileName);
-            FileReader fr = new FileReader(f);
-            BufferedReader bfr = new BufferedReader(fr);
 
-            String iD = bfr.readLine();
-            while (iD != null) {
-                File conversationFile = new File (iD);
-                FileReader cfr = new FileReader(conversationFile);
-                BufferedReader bcfr = new BufferedReader(cfr);
-
-                String message =
-                while ()
-
-                iD = bfr.readLine();
-            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
     }
 
     // Returns the conversations that a user is involved in. 
@@ -90,10 +76,11 @@ public class ConversationDatabase implements Database {
         try {
             FileOutputStream fos = new FileOutputStream(f, false);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
-        } catch (FileNotFoundException e) {
+
+            oos.writeObject(conversation);
+        } catch (Exception e) {
             completion = false;
         }
-
         return completion;
     }
 
