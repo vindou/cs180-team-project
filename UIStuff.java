@@ -18,14 +18,13 @@ public class UIStuff extends User {
         super();
     }
 
-    public static String welcomeScreen() {
-        String name; 
+    public static void welcomeScreen() {
         do {
             // Define options
             Object[] options1 = {"Log In", "Create New Account", "Exit"};
 
             // Show dialog
-            int reply = JOptionPane.showConfirmDialog(null, "What would you like to do?", "Welcome!", 
+            int reply = JOptionPane.showOptionDialog(null, "What would you like to do?", "Welcome!", 
                 JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, options1, null);
 
             // Check user reply
@@ -39,9 +38,7 @@ public class UIStuff extends User {
                 //User closes window
             }
         
-        } while ((name == null) || (name.isEmpty())); 
-        
-        return name;
+        } while (true); 
     } //showNameInputDialog
 
     public static boolean login() {
