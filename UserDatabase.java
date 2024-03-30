@@ -22,14 +22,14 @@ public class UserDatabase implements Database {
     // Can search by name and username.
     // Names have at least one space, so you can differentiate
     // the search based on this.
-    public ArrayList<String> readDatabase() {
+    public ArrayList<Object> readDatabase() {
 
         try {
 
             FileReader fr = new FileReader(f);
             BufferedReader bfr = new BufferedReader(fr);
 
-            ArrayList<String> userArrayList = new ArrayList<>();
+            ArrayList<Object> userArrayList = new ArrayList<>();
 
             String line = bfr.readLine();
             while (line != null) {
@@ -49,7 +49,7 @@ public class UserDatabase implements Database {
 
     // Writes all user data to one file, given the fileName.
     // Make sure to get all the fields on one line.
-    public boolean writeDatabase() {
+    public boolean writeDatabase(){
 
         try {
 
@@ -74,7 +74,23 @@ public class UserDatabase implements Database {
 
     // Finds the file with the same name as the string fileName and
     // returns a User object with the data in that file.
-    public User retrieveUserData(String username) {
-        
+    public User retrieveUserData(String username) throws ActionNotAllowedException{
+        try {
+
+            FileInputStream fis = new FileInputStream(f);
+            ObjectInputStream ois = new ObjectInputStream(fis);
+
+            while (true) {
+                User user = (User) ois.readObject();
+                if (user.getUsername().equals(username)) {
+                    return user;
+                }
+            }
+        } catch (EOFException e) {
+            throw new ActionNotAllowedException("Username not in database");
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
