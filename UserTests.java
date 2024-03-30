@@ -96,7 +96,7 @@ public class UserTests {
 
 
 
-            // ensure user2 is in user1's friend list. 
+            // ensure user2 is in user1's friend list.
             assertTrue(user1.getFriends().contains(user2));
         }
 
@@ -104,8 +104,8 @@ public class UserTests {
 
         @Test(timeout = 1000)
         public void testAddFriendAlreadyAdded() {
-            User user1 = new User("will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
-            User user2 = new User("pete@purdue.edu", "purduepete", "purduemascot4", "08/02/1869");
+            User user1 = new User("ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
+            User user2 = new User("pete", "pete@purdue.edu", "purduepete", "purduemascot4", "08/02/1869");
 
 
 
@@ -299,9 +299,10 @@ public class UserTests {
                 assertEquals(message, messageOutput);
 
             }
-            
+
         }
 
 
     }
 }
+
