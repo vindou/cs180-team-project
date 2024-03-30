@@ -19,6 +19,7 @@ public class UIStuff extends User {
     }
 
     public static void welcomeScreen() {
+        boolean loggedIn = false;
         do {
             // Define options
             Object[] options1 = {"Log In", "Create New Account", "Exit"};
@@ -27,23 +28,37 @@ public class UIStuff extends User {
             int reply = JOptionPane.showOptionDialog(null, "What would you like to do?", "Welcome!", 
                 JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, options1, null);
 
+            
             // Check user reply
             if (reply == JOptionPane.YES_OPTION) {
                 //User Logs In
+                loggedIn = login();
+                break;
+                //break to enter website
             } else if (reply == JOptionPane.NO_OPTION) {
                 //User Creates New ACcount
                 createAccount();
-                boolean loggedIn = login();
-                if (loggedIn) {
-                    // Enter website
-                }
+                loggedIn = login();
+                //break to enter website
             } else if (reply == JOptionPane.CANCEL_OPTION) {
                 //User Exits
+                return;
             } else if (reply == JOptionPane.CLOSED_OPTION) {
                 //User closes window
+                return;
             }
         
         } while (true); 
+        // Enter website here
+        if (!loggedIn) {
+            //User is not logged in and exits
+            return;
+        }
+        else {
+            
+        }
+
+
     } //showNameInputDialog
 
     public static boolean login() {
