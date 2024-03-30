@@ -1,3 +1,3 @@
-public class Database {
+public interface Database {
     
 }

@@ -7,10 +7,12 @@ public class Conversation {
     // group chats to be made. 
     private ArrayList<User> users;
 
-    // msgs: An array list containing strings for every message
-    // sent in the DM. 
+    // msgs: An array list containing Message objects
+    // for every message sent in the DM. 
     private ArrayList<Message> msgs;
 
+    // deletedMsgs: An array list containing all the
+    // deleted message objects. 
     private ArrayList<Message> deletedMsgs;
 
     public Conversation (ArrayList<User> users) {
