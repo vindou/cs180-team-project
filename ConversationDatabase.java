@@ -89,12 +89,7 @@ public class ConversationDatabase implements Database {
         File f = new File(conversation.getID() + ".txt");
         try {
             FileOutputStream fos = new FileOutputStream(f, false);
-            PrintWriter pw = new PrintWriter(fos);
-
-            for (Message message : conversation.getMessages()) {
-                pw.println(message.toString());
-            }
-            pw.close();
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
         } catch (FileNotFoundException e) {
             completion = false;
         }
