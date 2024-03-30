@@ -12,6 +12,11 @@ public class UserDatabase implements Database {
     // The file name that the data should be written to.
     private String fileName;
 
+    public UserDatabase(ArrayList<User> userArray, String fileName) {
+        this.userArray = userArray;
+        this.fileName = fileName;
+    }
+
     // Create multiple methods to allow users to
     // search for other users in a database.
     // Can search by name and username.
@@ -27,8 +32,10 @@ public class UserDatabase implements Database {
 
             ArrayList<String> userArrayList = new ArrayList<>();
 
-            for (int i = 0; i < 8; i++) {
-                userArrayList.add(bfr.readLine());
+            String line = bfr.readLine();
+            while (line != null) {
+                userArrayList.add(line);
+                line = bfr.readLine();
             }
 
             return userArrayList;
@@ -41,7 +48,7 @@ public class UserDatabase implements Database {
     // Writes all user data to one file, given the fileName.
     // Make sure to get all the fields on one line.
     public boolean writeDatabase() {
-        return false;
+
     }
 
     // Checks if the user is equivalent to any that's in the userArray
