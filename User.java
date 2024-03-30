@@ -1,13 +1,4 @@
-import org.w3c.dom.Text;
-
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Objects;
-import javax.swing.*;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 /**
  * This class represents a User for the team project
  *
@@ -79,6 +70,16 @@ public class User
         this.bio =  bio;
     } // setBio
 
+    public String getName()
+    {
+        return this.name;
+    } // getName
+
+    public void setName(String name)
+    {
+        this.name =  name;
+    } // setName
+
     public boolean checkPassword(String pass) {
         //Check the encrypted passwords against each other
         return (encrypt(pass).equals(this.password));
@@ -98,6 +99,14 @@ public class User
     {
         this.birthday = birthday;
     } // setBirthday
+
+    public ArrayList<User> getFriends() {
+        return this.friends;
+    } // getUsername
+
+    public ArrayList<User> getBlocked() {
+        return this.blocked;
+    } // getUsername
 
     public void sendTextMessage(Conversation conversation, String message) throws ActionNotAllowedException {
         conversation.addMessage(new TextMessage(this, message));

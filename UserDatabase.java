@@ -1,7 +1,4 @@
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
 import java.util.ArrayList;
 
 public class UserDatabase implements Database {
@@ -12,12 +9,17 @@ public class UserDatabase implements Database {
     // The file name that the data should be written to.
     private String fileName;
 
+    public UserDatabase(ArrayList<User> userArray, String fileName) {
+        this.userArray = userArray;
+        this.fileName = fileName;
+    }
+
     // Create multiple methods to allow users to
     // search for other users in a database.
     // Can search by name and username.
     // Names have at least one space, so you can differentiate
     // the search based on this.
-    public ArrayList<String> readDatabase(String fileName) {
+    public ArrayList<String> readDatabase() {
 
         try {
 
@@ -27,9 +29,14 @@ public class UserDatabase implements Database {
 
             ArrayList<String> userArrayList = new ArrayList<>();
 
-            for (int i = 0; i < 8; i++) {
-                userArrayList.add(bfr.readLine());
+            String line = bfr.readLine();
+            while (line != null) {
+                userArrayList.add(line);
+                line = bfr.readLine();
             }
+
+            fr.close();
+            bfr.close();
 
             return userArrayList;
         } catch (Exception e) {
@@ -41,7 +48,27 @@ public class UserDatabase implements Database {
     // Writes all user data to one file, given the fileName.
     // Make sure to get all the fields on one line.
     public boolean writeDatabase() {
-        return false;
+
+        try {
+
+            File f = new File(fileName);
+            FileOutputStream fos = new FileOutputStream(f);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+
+            for (User user: userArray) {
+                oos.writeObject(user);
+            }
+
+            oos.flush();
+            fos.close();
+            oos.close();
+
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
     }
 
     // Checks if the user is equivalent to any that's in the userArray

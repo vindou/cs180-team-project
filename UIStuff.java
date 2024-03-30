@@ -18,14 +18,13 @@ public class UIStuff extends User {
         super();
     }
 
-    public static String welcomeScreen() {
-        String name; 
+    public static void welcomeScreen() {
         do {
             // Define options
             Object[] options1 = {"Log In", "Create New Account", "Exit"};
 
             // Show dialog
-            int reply = JOptionPane.showConfirmDialog(null, "What would you like to do?", "Welcome!", 
+            int reply = JOptionPane.showOptionDialog(null, "What would you like to do?", "Welcome!", 
                 JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, options1, null);
 
             // Check user reply
@@ -39,9 +38,7 @@ public class UIStuff extends User {
                 //User closes window
             }
         
-        } while ((name == null) || (name.isEmpty())); 
-        
-        return name;
+        } while (true); 
     } //showNameInputDialog
 
     public static boolean login() {
@@ -170,13 +167,14 @@ public class UIStuff extends User {
                 JOptionPane.QUESTION_MESSAGE);
             if ((password == null) || (password.isEmpty())) {
                 JOptionPane.showMessageDialog(null, "this field cannot be empty!", "Error!", JOptionPane.ERROR_MESSAGE);
+                continue;
             } 
             passwordCheck = JOptionPane.showInputDialog(null, "Please reenter password", "Create Account", 
                 JOptionPane.QUESTION_MESSAGE);
             if (!(password.equals(passwordCheck))) {
                 JOptionPane.showMessageDialog(null, "The password did not match!", "Error!", JOptionPane.ERROR_MESSAGE);
             } 
-        } while ((password == null) || (password.isEmpty()) || (!(password.equals(passwordCheck))));
+        } while ((password == null) || (password.isEmpty()));
         password = encrypt(password);
 
         User newUser;
