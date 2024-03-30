@@ -1,4 +1,6 @@
+import java.util.ArrayList;
+
 public interface Database {
-    public Object readDatabase();
+    public ArrayList<Object> readDatabase();
     public boolean writeDatabase(); 
 }
