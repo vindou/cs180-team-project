@@ -154,8 +154,9 @@ public class Conversation {
             proposedID = (int) (Math.random() * 1000000);
             
             innerloop:
-            for (Conversation individualConversation : database.getConversationArray()) {
-                if (this.conversationID == individualConversation.getID()) {
+            for (Object individualConversation : database.getConversationArray()) {
+                Conversation tempConvo = (Conversation) individualConversation;
+                if (this.conversationID == tempConvo.getID()) {
                     break innerloop;
                 }
             }

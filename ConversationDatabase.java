@@ -5,7 +5,7 @@ public class ConversationDatabase implements Database {
     // conversationArray: An ArrayList that stores every single
     // conversation that has been created on the social media
     // platform.
-    private ArrayList<Conversation> conversationArray;
+    private ArrayList<Object> conversationArray;
 
     // filePath: A String variable describing where the
     // Conversation data should be written to.
@@ -15,27 +15,42 @@ public class ConversationDatabase implements Database {
     private File f;
 
     // Main Constructor
-    public ConversationDatabase(ArrayList<Conversation> conversationArray
-                                , String filePath) {
-        this.conversationArray = conversationArray;
+    public ConversationDatabase(String filePath) {
+        this.conversationArray = readDatabase();
         this.filePath = filePath;
         this.f = new File(filePath);
     }
 
+    public void updateConversationArray() {
+        this.conversationArray = readDatabase();
+    }
+
     // Returns an Array of all Conversations that have been
     // ever made on the app.
-    public ArrayList<Conversation> getConversationArray() {
+    public ArrayList<Object> getConversationArray() {
         return this.conversationArray;
     }
 
     public ArrayList<Object> readDatabase() {
+        ArrayList<Object> conversationsFound = new ArrayList<Object>();
         try {
             // open file
             // use ois to access each object
             // add it to the array
+            FileInputStream fis = new FileInputStream(f);
+            ObjectInputStream ois = new ObjectInputStream(fis);
 
-        } catch (Exception e) {
+            Conversation conversation = (Conversation) ois.readObject();
+
+            while (true) {
+                conversationsFound.add(conversation);
+                conversation = (Conversation) ois.readObject();
+            }
+        } catch (EOFException e) {
+            return conversationsFound;
+        } catch (ClassNotFoundException | IOException e) {
             e.printStackTrace();
+            return null;
         }
     }
 
@@ -64,6 +79,8 @@ public class ConversationDatabase implements Database {
            for (Conversation conversation : conversationArray) {
                oos.writeObject(conversation);
            }
+
+           fos.close();
            oos.close();
        } catch (Exception e) {
            completion = false;
@@ -80,6 +97,7 @@ public class ConversationDatabase implements Database {
             ObjectOutputStream oos = new ObjectOutputStream(fos);
 
             oos.writeObject(conversation);
+            fos.close();
             oos.close();
         } catch (Exception e) {
             completion = false;
