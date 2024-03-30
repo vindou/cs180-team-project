@@ -167,10 +167,7 @@ public class Conversation {
     }
 
     public String toString() {
-        return "ID: " 
-                + this.conversationID
-                + ", Name: " + this.conversationName
-                + ", File Name: " + this.fileNameString();
+        return String.valueOf(this.conversationID);
     }
 
     public String fileNameString() {

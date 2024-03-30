@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
 public interface Database {
-    public ArrayList<Object> readDatabase(Object o);
+    public ArrayList<Object> readDatabase();
     public boolean writeDatabase(); 
 }
