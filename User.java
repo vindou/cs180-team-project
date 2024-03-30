@@ -203,6 +203,7 @@ public class User
         return password;
     }
 
+    // helper method to create the file name for messages
     public static String getFirstAlphabetically(String name1, String name2) {
         if (name1.isEmpty() && name2.isEmpty()) {
             return "Both names are equal alphabetically.";
