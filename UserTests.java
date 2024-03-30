@@ -5,10 +5,16 @@ import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.PrintStream;
+/**
+ * This class tests the various methods in the User class
+ *
+ *
+ *
+ * @author Ellie Williams
+ * @version Mar 30th, 2024.
+ */
+
+import java.io.*;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
@@ -90,7 +96,7 @@ public class UserTests {
 
 
 
-            // Trims the output and verifies it is correct.
+            // ensure user2 is in user1's friend list. 
             assertTrue(user1.getFriends().contains(user2));
         }
 
@@ -268,6 +274,32 @@ public class UserTests {
 
             //compare expected/actual output
             assertEquals(name2, result);
+        }
+
+        public void testSendMessage() {
+            try {
+                //initialize users
+                User user1 = new User("ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
+                User user2 = new User("pete", "pete@purdue.edu", "purduepete", "purduemascot4", "08/02/1869");
+
+                //initialize message and send it
+                String message = "test message";
+                user1.sendMessage(user2, message);
+
+                //create file and ensure it exists
+                File messages = new File("testmessages.txt");
+                assertTrue(messages.exists());
+
+                //read the file and check that the message sent is the same as what is received
+                FileReader fr = new FileReader(messages);
+                BufferedReader bfr = new BufferedReader(fr);
+                String messageOutput = bfr.readLine();
+                bfr.close();
+
+                assertEquals(message, messageOutput);
+
+            }
+            
         }
 
 
