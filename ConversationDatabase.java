@@ -24,8 +24,29 @@ public class ConversationDatabase implements Database {
         return this.conversationArray;
     }
 
-    public ArrayList<Object> readConversations(String fileName) {
-        
+    public ArrayList<Object> readDatabase(Object o) {
+        String fileName = (String) o;
+        try {
+            File f = new File(fileName);
+            FileReader fr = new FileReader(f);
+            BufferedReader bfr = new BufferedReader(fr);
+
+            String iD = bfr.readLine();
+            while (iD != null) {
+                File conversationFile = new File (iD);
+                FileReader cfr = new FileReader(conversationFile);
+                BufferedReader bcfr = new BufferedReader(cfr);
+
+                String message =
+                while ()
+
+                iD = bfr.readLine();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
     }
 
     // Returns the conversations that a user is involved in. 
