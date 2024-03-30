@@ -32,6 +32,11 @@ public class UIStuff extends User {
                 //User Logs In
             } else if (reply == JOptionPane.NO_OPTION) {
                 //User Creates New ACcount
+                createAccount();
+                boolean loggedIn = login();
+                if (loggedIn) {
+                    // Enter website
+                }
             } else if (reply == JOptionPane.CANCEL_OPTION) {
                 //User Exits
             } else if (reply == JOptionPane.CLOSED_OPTION) {
