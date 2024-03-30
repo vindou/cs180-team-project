@@ -60,8 +60,21 @@ public class ConversationDatabase implements Database {
     }
 
     public boolean writeMessageLogs(Conversation conversation) {
+        boolean completion = true;
+        File f = new File(conversation.getID() + ".txt");
+        try {
+            FileOutputStream fos = new FileOutputStream(f, false);
+            PrintWriter pw = new PrintWriter(fos);
 
-
+            for (Message message : conversation.getMessages()) {
+                pw.println(message.toString());
+            }
+            pw.close();
+        } catch (FileNotFoundException e) {
+            completion = false;
+        }
+        
+        return completion;
     }
 
     // Retrieves and returns the data for a conversation given a
