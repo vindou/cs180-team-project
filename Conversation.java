@@ -44,6 +44,44 @@ public class Conversation {
         return this.deletedMsgs; 
     }
 
+    public boolean addUser(User newUser) throws ActionNotAllowedException {
+        boolean validation = true;
+        boolean completion = false; 
+        
+        for (User currentUser : this.users) {
+            if (newUser.equals(currentUser)) {
+                validation = false; 
+                throw new ActionNotAllowedException("User already a part of this conversation!");
+            }
+        }
+        if (validation) {
+            this.users.add(newUser);
+            completion = true;
+        }
+        
+        return completion;
+    }
+
+    public boolean removeUser(User targetUser) throws ActionNotAllowedException {
+        boolean validation = false;
+        boolean completion = false; 
+        
+        for (User currentUser : this.users) {
+            if (targetUser.equals(currentUser)) {
+                validation = true; 
+            }
+        }
+        if (validation) {
+            this.users.remove(targetUser);
+            completion = true;
+        } else {
+            completion = false; 
+            throw new ActionNotAllowedException("User already a part of this conversation!");
+        }
+        
+        return completion;
+    }
+
     // Adds a newly instantiated message object to the
     // msgs ArrayList of the DirectMessage object
     public void addMessage(Message newMessage) throws ActionNotAllowedException {
