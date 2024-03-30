@@ -180,34 +180,26 @@ public class User
             return friends;
     } // removeFriend
 
-    // Encrypts the password to an unrecognizable String
-    public static String encrypt(String password)
+    // Encrypts the password to an different String by shifting characters by 5
+    public static String encrypt(String text) 
     {
-        try {
-            // Create a MessageDigest instance for password
-            MessageDigest digest = MessageDigest.getInstance(password);
-            
-            // Update the digest with the input bytes
-            byte[] hashBytes = digest.digest(password.getBytes());
-            
-            // Convert the byte array to a hexadecimal string
-            StringBuilder hexString = new StringBuilder();
-            for (byte b : hashBytes) {
-                String hex = Integer.toHexString(0xff & b);
-                if (hex.length() == 1) {
-                    hexString.append('0');
-                }
-                hexString.append(hex);
+        int shiftBy = 5;
+        String newPass = "";
+        for (char character : text.toCharArray()) {
+            char base;
+            if (Character.isUpperCase(character)) {
+                base = 'A';
+            } else {
+                base = 'a';
             }
-            
-            // Print the hexadecimal hash
-            return (hexString.toString());
-            
-        } catch (NoSuchAlgorithmException e) {
-            System.err.println("Encryption algorithm not available.");
-            e.printStackTrace();
+            if (Character.isLetter(character)) {
+                char encryptedChar = (char) (((character - base + shiftBy) % 26) + base);
+                newPass += encryptedChar;
+            } else {
+                newPass += character;
+            }
         }
-        return password;
+        return newPass;
     }
 
     // helper method to create the file name for messages

@@ -18,11 +18,11 @@ public class UIStuff extends User {
         super();
     }
 
-    public static String showNameInputDialog() {
+    public static String welcomeScreen() {
         String name; 
         do {
             // Define options
-            Object[] options1 = {"Option 1", "Option 2", "Option 3"};
+            Object[] options1 = {"Log In", "Create New Account", "Exit"};
 
             // Show dialog
             int reply = JOptionPane.showConfirmDialog(null, "What would you like to do?", "Welcome!", 
@@ -30,13 +30,13 @@ public class UIStuff extends User {
 
             // Check user reply
             if (reply == JOptionPane.YES_OPTION) {
-                System.out.println("User chose Yes");
+                //User Logs In
             } else if (reply == JOptionPane.NO_OPTION) {
-                System.out.println("User chose No");
+                //User Creates New ACcount
             } else if (reply == JOptionPane.CANCEL_OPTION) {
-                System.out.println("User chose Cancel");
+                //User Exits
             } else if (reply == JOptionPane.CLOSED_OPTION) {
-                System.out.println("User closed the dialog without making a selection");
+                //User closes window
             }
         
         } while ((name == null) || (name.isEmpty())); 
