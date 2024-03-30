@@ -24,6 +24,10 @@ public class ConversationDatabase implements Database {
         return this.conversationArray;
     }
 
+    public ArrayList<Object> readConversations(String fileName) {
+        
+    }
+
     // Returns the conversations that a user is involved in. 
     public ArrayList<Object> readDatabase(Object o) {
         ArrayList<Object> availableConversations = new ArrayList<Object>();
@@ -73,7 +77,7 @@ public class ConversationDatabase implements Database {
         } catch (FileNotFoundException e) {
             completion = false;
         }
-        
+
         return completion;
     }
 
