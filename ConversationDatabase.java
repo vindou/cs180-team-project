@@ -51,14 +51,16 @@ public class ConversationDatabase implements Database {
            for (Conversation individualConversation : this.conversationArray) {
                pw.println(individualConversation.toString());
            }
+           pw.close();
        } catch (FileNotFoundException e) {
-           e.printStackTrace();
+           completion = false;
        }
-       
+
        return completion;
     }
 
-    public boolean writeIndividualUser(User user) {
+    public boolean writeMessageLogs(Conversation conversation) {
+
 
     }
 
