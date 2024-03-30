@@ -30,4 +30,13 @@ public class TextMessage extends Message {
         }
         return equality;
     }
+
+    public String toString() {
+        return this.getSender().getUsername() 
+                + ":["
+                + this.getTimeSent().toString()
+                + "]: \""
+                + this.rawMessage
+                + "\"";
+    }
 }

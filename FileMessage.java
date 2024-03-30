@@ -24,4 +24,13 @@ public class FileMessage extends Message {
         }
         return equality;
     }
+
+    public String toString() {
+        return this.getSender().getUsername() 
+                + ":["
+                + this.getTimeSent().toString()
+                + "]: \""
+                + this.rawContent.toString()
+                + "\"";
+    }
 }

@@ -1,5 +1,4 @@
 public interface Database {
-    public void createDirectory();
-    public void readFile();
-    public void writeFile(); 
+    public Object readDatabase();
+    public boolean writeDatabase(); 
 }

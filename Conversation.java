@@ -1,6 +1,15 @@
 import java.util.ArrayList;
 
 public class Conversation {
+    // Conversation name: Allows user to set the name of their
+    // group chat. 
+    private String conversationName;
+
+    // Unique integer ID for a conversation 
+    private int conversationID; 
+
+    // Database to write to and refer to
+    private ConversationDatabase conversationDatabase;
     
     // Users Field: A list representing the users
     // involved in the conversation. Allows for
@@ -15,7 +24,29 @@ public class Conversation {
     // deleted message objects. 
     private ArrayList<Message> deletedMsgs;
 
-    public Conversation (ArrayList<User> users) {
+    public Conversation (String conversationName
+                        , ArrayList<User> users
+                        , ConversationDatabase conversationDatabase) {
+        this.conversationName = conversationName;
+        this.conversationID = generateID(conversationDatabase);
+        this.conversationDatabase = conversationDatabase;
+        this.users = users;
+        this.conversationID = generateID(conversationDatabase);
+        this.msgs = new ArrayList<Message>();
+        this.deletedMsgs = new ArrayList<Message>();
+    }
+
+    public Conversation(ArrayList<User> users, ConversationDatabase conversationDatabase) {
+        this.conversationName = "";
+        for (int i = 0; i < users.size(); i++) {
+            if (i != users.size() - 1) {
+                this.conversationName += users.get(i);
+            } else {
+                this.conversationName += users.get(i) + ", ";
+            }
+        }
+        this.conversationID = generateID(conversationDatabase);
+        this.conversationDatabase = conversationDatabase;
         this.users = users;
         this.msgs = new ArrayList<Message>();
         this.deletedMsgs = new ArrayList<Message>();
@@ -42,6 +73,10 @@ public class Conversation {
 
     public ArrayList<Message> getDeletedMessages() {
         return this.deletedMsgs; 
+    }
+
+    public int getID() {
+        return this.conversationID;
     }
 
     public boolean addUser(User newUser) throws ActionNotAllowedException {
@@ -102,4 +137,33 @@ public class Conversation {
         }
     }
 
+    public int generateID(ConversationDatabase database) {
+        boolean randomIntegerGenerated = false;
+        int proposedID = 0;
+        do {
+            proposedID = (int) (Math.random() * 1000000);
+            
+            innerloop:
+            for (Conversation individualConversation : database.getConversationArray()) {
+                if (this.conversationID == individualConversation.getID()) {
+                    break innerloop;
+                }
+            }
+
+            randomIntegerGenerated = true;
+        } while (!randomIntegerGenerated);
+
+        return proposedID;
+    }
+
+    public String toString() {
+        return "ID: " 
+                + this.conversationID
+                + ", Name: " + this.conversationName
+                + ", File Name: " + this.fileNameString();
+    }
+
+    public String fileNameString() {
+        return "Conversation #" + conversationID;
+    }
 }
