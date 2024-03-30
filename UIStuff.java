@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import javax.swing.*;
+import java.awt.*;
 /**
  * This class just contains the UI stuff represents a User for the team project
  * 
@@ -16,6 +17,10 @@ public class UIStuff extends User {
     public UIStuff()
     {
         super();
+    }
+
+    public static void main(String[] args) {
+        createGUI();
     }
 
     public static void welcomeScreen() {
@@ -55,11 +60,29 @@ public class UIStuff extends User {
             return;
         }
         else {
-            
+
         }
 
 
     } //showNameInputDialog
+
+    public static void createGUI() {
+        JFrame jf = new JFrame("JavaChat");
+        jf.setSize(640, 480);
+        jf.setDefaultCloseOperation(
+        JFrame.DISPOSE_ON_CLOSE);
+        JButton jbCenter = new JButton("Center");
+        JButton jbNorth = new JButton("North");
+        JButton jbSouth = new JButton("South");
+        JButton jbEast = new JButton("East");
+        JButton jbWest = new JButton("West");
+        jf.add(jbCenter, BorderLayout.CENTER);
+        jf.add(jbNorth, BorderLayout.NORTH);
+        jf.add(jbSouth, BorderLayout.SOUTH);
+        jf.add(jbEast, BorderLayout.EAST);
+        jf.add(jbWest, BorderLayout.WEST);
+        jf.setVisible(true);
+    }
 
     public static boolean login() {
         UIStuff uiStuff = new UIStuff();
