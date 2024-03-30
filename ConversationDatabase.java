@@ -59,7 +59,7 @@ public class ConversationDatabase implements Database {
         ArrayList<Conversation> availableConversations = new ArrayList<Conversation>();
 
         for (Object conversationObj : this.conversationArray) {
-
+            Conversation conversation = (Conversation) conversationObj;
             for (User involvedUser : conversation.getUsers()) {
                 if (involvedUser.equals(user)) {
                     availableConversations.add(conversation);
@@ -77,7 +77,8 @@ public class ConversationDatabase implements Database {
            FileOutputStream fos = new FileOutputStream(this.f, false);
            ObjectOutputStream oos = new ObjectOutputStream(fos);
 
-           for (Conversation conversation : conversationArray) {
+           for (Object conversationObj : conversationArray) {
+               Conversation conversation = (Conversation) conversationObj;
                oos.writeObject(conversation);
            }
 
