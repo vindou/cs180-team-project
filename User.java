@@ -99,7 +99,7 @@ public class User
         this.birthday = birthday;
     } // setBirthday
 
-    public void sendTextMessage(Conversation conversation, String message) {
+    public void sendTextMessage(Conversation conversation, String message) throws ActionNotAllowedException {
         conversation.addMessage(new TextMessage(this, message));
     }    
 
