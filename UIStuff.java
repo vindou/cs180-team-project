@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import javax.swing.*;
-import java.util.ArrayList;
 /**
  * This class just contains the UI stuff represents a User for the team project
  * 

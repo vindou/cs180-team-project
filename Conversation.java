@@ -24,6 +24,15 @@ public class Conversation {
     // deleted message objects. 
     private ArrayList<Message> deletedMsgs;
 
+    public Conversation() {
+        this.conversationName = "";
+        this.conversationID = -1;
+        this.conversationDatabase = null;
+        this.users = null;
+        this.msgs = null;
+        this.deletedMsgs = null;
+    }
+
     public Conversation (String conversationName
                         , ArrayList<User> users
                         , ConversationDatabase conversationDatabase) {
@@ -31,7 +40,6 @@ public class Conversation {
         this.conversationID = generateID(conversationDatabase);
         this.conversationDatabase = conversationDatabase;
         this.users = users;
-        this.conversationID = generateID(conversationDatabase);
         this.msgs = new ArrayList<Message>();
         this.deletedMsgs = new ArrayList<Message>();
     }
