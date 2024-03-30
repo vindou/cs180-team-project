@@ -20,7 +20,7 @@ public class UIStuff extends User {
     }
 
     public static void main(String[] args) {
-        createGUI();
+        createMainMenu();
     }
 
     public static void welcomeScreen() {
@@ -65,24 +65,6 @@ public class UIStuff extends User {
 
 
     } //showNameInputDialog
-
-    public static void createGUI() {
-        JFrame jf = new JFrame("JavaChat");
-        jf.setSize(640, 480);
-        jf.setDefaultCloseOperation(
-        JFrame.DISPOSE_ON_CLOSE);
-        JButton jbCenter = new JButton("Center");
-        JButton jbNorth = new JButton("North");
-        JButton jbSouth = new JButton("South");
-        JButton jbEast = new JButton("East");
-        JButton jbWest = new JButton("West");
-        jf.add(jbCenter, BorderLayout.CENTER);
-        jf.add(jbNorth, BorderLayout.NORTH);
-        jf.add(jbSouth, BorderLayout.SOUTH);
-        jf.add(jbEast, BorderLayout.EAST);
-        jf.add(jbWest, BorderLayout.WEST);
-        jf.setVisible(true);
-    }
 
     public static boolean login() {
         UIStuff uiStuff = new UIStuff();
@@ -239,6 +221,21 @@ public class UIStuff extends User {
         }
         return account;
     } //searchUser
+
+    public static void createMainMenu() {
+        JFrame jf = new JFrame("JavaChat");
+        jf.setSize(640, 480);
+        jf.setDefaultCloseOperation(
+        JFrame.DISPOSE_ON_CLOSE);
+
+        JPanel pane1 = new JPanel();
+        pane1.add(new JButton("New Chat"));
+        pane1.add(new JButton("Load Chats"));
+        jf.add(pane1);
+
+        jf.setVisible(true);
+        pane1.setVisible(true);
+    }
 
 }
 
