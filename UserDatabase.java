@@ -17,7 +17,7 @@ public class UserDatabase implements Database {
     // Can search by name and username.
     // Names have at least one space, so you can differentiate
     // the search based on this.
-    public ArrayList<String> readDatabase(String fileName) {
+    public ArrayList<String> readDatabase() {
 
         try {
 
