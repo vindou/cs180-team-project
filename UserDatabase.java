@@ -1,3 +1,7 @@
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.ArrayList;
 
 public class UserDatabase implements Database {
@@ -13,8 +17,25 @@ public class UserDatabase implements Database {
     // Can search by name and username.
     // Names have at least one space, so you can differentiate
     // the search based on this.
-    public ArrayList<Object> readDatabase(Object o) {
-        return null;
+    public ArrayList<String> readDatabase(String fileName) {
+
+        try {
+
+            File f = new File(fileName);
+            FileReader fr = new FileReader(f);
+            BufferedReader bfr = new BufferedReader(fr);
+
+            ArrayList<String> userArrayList = new ArrayList<>();
+
+            for (int i = 0; i < 8; i++) {
+                userArrayList.add(bfr.readLine());
+            }
+
+            return userArrayList;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     // Writes all user data to one file, given the fileName.
