@@ -4,7 +4,6 @@ import org.junit.Before;
 
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
-import org.junit.runner.RunWith;
 import org.junit.runner.notification.Failure;
 
 import java.io.*;
@@ -279,6 +278,193 @@ public class UserTests {
             //compare expected/actual output
             assertEquals(result, "ufxxbtwi");
         }
+
+        // MESSAGE SUPERCLASS TEST CASES
+        @Test(timeout = 2000)
+        public void testMessageSuperClassConstructor() {
+            User testUser = new User("ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
+            Message testMessage = new Message(testUser);
+
+            User comparedUser = testMessage.getSender();
+            int comparedIndex = testMessage.getIndex();
+
+            assertEquals(comparedUser, testUser);
+            assertEquals(0, comparedIndex);
+        }
+
+        @Test(timeout = 2000)
+        public void testMessageIndexSetter() {
+            User testUser = new User("ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
+            Message testMessage = new Message(testUser);
+
+            int testIndex = 4;
+            try{
+                testMessage.setIndex(testIndex);
+            } catch (ActionNotAllowedException ignored) {}
+            int comparedIndex = testMessage.getIndex();
+
+            assertEquals(testIndex, comparedIndex);
+        }
+
+        // TEXTMESSAGE SUBCLASS TESTS
+
+        @Test(timeout = 2000)
+        public void testTextMessageConstructor() {
+            User testUser = new User("ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
+            TextMessage testMessage = new TextMessage(testUser, "hi");
+
+            assertEquals(testMessage.getMessage(), "hi");
+        }
+
+        @Test(timeout = 2000)
+        public void testTextMessageChangeMessageMethod() {
+            User testUser = new User("ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
+            TextMessage testMessage = new TextMessage(testUser, "hi");
+            testMessage.changeMessage("ho");
+            assertEquals(testMessage.getMessage(), "ho");
+        }
+
+        @Test(timeout = 2000)
+        public void testTextMessageEqualityMethod() {
+            User testUser = new User("ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
+            User testUser2 = new User("ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
+            TextMessage testMessage = new TextMessage(testUser, "hi");
+            TextMessage testMessage2 = new TextMessage(testUser, "hi");
+
+            assertTrue(testMessage.equals(testMessage2));
+        }
+
+        @Test(timeout = 2000)
+        public void testTextMessageToStringMethod() {
+            User testUser = new User("ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
+            TextMessage testMessage = new TextMessage(testUser, "hi");
+
+            String textMessageString = testMessage.toString();
+            String expectedString = "elliewilliams" + ":[" + testMessage.getTimeSent() + "]: \""
+                    + "hi"
+                    + "\"";
+
+            assertEquals(textMessageString, expectedString);
+        }
+
+        // CONVERSATION AND CONVERSATION DATABASE CLASS TESTS
+
+        @Test(timeout = 2000)
+        public void testConversationAndDatabaseConstructor() {
+            User user1 = new User("ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
+            User user2 = new User("pete", "pete@purdue.edu", "purduepete", "purduemascot4", "08/02/1869");
+
+            ArrayList<User> testArray = new ArrayList<User>();
+            testArray.add(user1);
+            testArray.add(user2);
+
+            ConversationDatabase cd = new ConversationDatabase("output.txt");
+            Conversation testConversation = new Conversation("cs 180 group", testArray, cd);
+
+            assertNull(cd.getConversationArray());
+            assertEquals("output.txt", cd.getFilePath());
+            assertTrue(testConversation.getID() > 0);
+            assertEquals(2, testConversation.getUsers().size());
+            assertEquals(0, testConversation.getMessages().size());
+        }
+
+        @Test(timeout = 2000)
+        public void testAvailableConversationFinder() {
+            ConversationDatabase cd = new ConversationDatabase("output.txt");
+            User user1 = new User("ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
+
+            assertEquals(0, cd.findAvailableConversations(user1).size());
+        }
+
+        @Test(timeout = 2000)
+        public void testUserAdditionMethod() {
+            User user1 = new User("ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
+            User user2 = new User("pete", "pete@purdue.edu", "purduepete", "purduemascot4", "08/02/1869");
+
+            ArrayList<User> testArray = new ArrayList<User>();
+            testArray.add(user1);
+
+            ConversationDatabase cd = new ConversationDatabase("output.txt");
+            Conversation testConversation = new Conversation("cs 180 group", testArray, cd);
+
+            try {
+                testConversation.addUser(user2);
+            } catch (ActionNotAllowedException ignored) {}
+
+            assertEquals(testConversation.getUsers().size(), 2);
+        }
+
+        @Test(timeout = 2000)
+        public void testUserRemovalMethod() {
+            User user1 = new User("ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
+            User user2 = new User("pete", "pete@purdue.edu", "purduepete", "purduemascot4", "08/02/1869");
+
+            ArrayList<User> testArray = new ArrayList<User>();
+            testArray.add(user1);
+            testArray.add(user2);
+
+            ConversationDatabase cd = new ConversationDatabase("output.txt");
+            Conversation testConversation = new Conversation("cs 180 group", testArray, cd);
+
+            try {
+                testConversation.removeUser(user2);
+            } catch (ActionNotAllowedException ignored) {}
+
+            assertEquals(testConversation.getUsers().size(), 1);
+        }
+
+        @Test(timeout = 2000)
+        public void testMessageAddition() {
+            User user1 = new User("ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
+
+            ArrayList<User> testArray = new ArrayList<User>();
+            testArray.add(user1);
+
+            ConversationDatabase cd = new ConversationDatabase("output.txt");
+            Conversation testConversation = new Conversation("cs 180 group", testArray, cd);
+
+            TextMessage tM = new TextMessage(user1, "hi");
+
+            try {
+                testConversation.addMessage(tM);
+            } catch (ActionNotAllowedException ignored) {}
+
+            assertEquals(testConversation.getMessages().size(), 1);
+        }
+
+        @Test(timeout = 2000)
+        public void testMessageRemoval() {
+            User user1 = new User("ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
+
+            ArrayList<User> testArray = new ArrayList<User>();
+            testArray.add(user1);
+
+            ConversationDatabase cd = new ConversationDatabase("output.txt");
+            Conversation testConversation = new Conversation("cs 180 group", testArray, cd);
+
+            TextMessage tM = new TextMessage(user1, "hi");
+
+            try {
+                testConversation.addMessage(tM);
+                testConversation.deleteMessage(tM);
+            } catch (ActionNotAllowedException ignored) {}
+
+            assertEquals(testConversation.getMessages().size(), 0);
+        }
+
+        @Test(timeout = 2000)
+        public void testConversationToString() {
+            User user1 = new User("ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
+
+            ArrayList<User> testArray = new ArrayList<User>();
+
+            ConversationDatabase cd = new ConversationDatabase("output.txt");
+            Conversation testConversation = new Conversation("cs 180 group", testArray, cd);
+
+            assertEquals(testConversation.toString(), "Conversation #" + testConversation.getID());
+        }
+
+
 
         // tests checkPassword() method
         @Test(timeout = 5000)
