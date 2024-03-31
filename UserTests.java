@@ -377,8 +377,91 @@ public class UserTests {
         }
 
         @Test(timeout = 2000)
-        public void testUserManipulationMethods() {
+        public void testUserAdditionMethod() {
+            User user1 = new User("ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
+            User user2 = new User("pete", "pete@purdue.edu", "purduepete", "purduemascot4", "08/02/1869");
 
+            ArrayList<User> testArray = new ArrayList<User>();
+            testArray.add(user1);
+
+            ConversationDatabase cd = new ConversationDatabase("output.txt");
+            Conversation testConversation = new Conversation("cs 180 group", testArray, cd);
+
+            try {
+                testConversation.addUser(user2);
+            } catch (ActionNotAllowedException ignored) {}
+
+            assertEquals(testConversation.getUsers().size(), 2);
+        }
+
+        @Test(timeout = 2000)
+        public void testUserRemovalMethod() {
+            User user1 = new User("ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
+            User user2 = new User("pete", "pete@purdue.edu", "purduepete", "purduemascot4", "08/02/1869");
+
+            ArrayList<User> testArray = new ArrayList<User>();
+            testArray.add(user1);
+            testArray.add(user2);
+
+            ConversationDatabase cd = new ConversationDatabase("output.txt");
+            Conversation testConversation = new Conversation("cs 180 group", testArray, cd);
+
+            try {
+                testConversation.removeUser(user2);
+            } catch (ActionNotAllowedException ignored) {}
+
+            assertEquals(testConversation.getUsers().size(), 1);
+        }
+
+        @Test(timeout = 2000)
+        public void testMessageAddition() {
+            User user1 = new User("ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
+
+            ArrayList<User> testArray = new ArrayList<User>();
+            testArray.add(user1);
+
+            ConversationDatabase cd = new ConversationDatabase("output.txt");
+            Conversation testConversation = new Conversation("cs 180 group", testArray, cd);
+
+            TextMessage tM = new TextMessage(user1, "hi");
+
+            try {
+                testConversation.addMessage(tM);
+            } catch (ActionNotAllowedException ignored) {}
+
+            assertEquals(testConversation.getMessages().size(), 1);
+        }
+
+        @Test(timeout = 2000)
+        public void testMessageRemoval() {
+            User user1 = new User("ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
+
+            ArrayList<User> testArray = new ArrayList<User>();
+            testArray.add(user1);
+
+            ConversationDatabase cd = new ConversationDatabase("output.txt");
+            Conversation testConversation = new Conversation("cs 180 group", testArray, cd);
+
+            TextMessage tM = new TextMessage(user1, "hi");
+
+            try {
+                testConversation.addMessage(tM);
+                testConversation.deleteMessage(tM);
+            } catch (ActionNotAllowedException ignored) {}
+
+            assertEquals(testConversation.getMessages().size(), 0);
+        }
+
+        @Test(timeout = 2000)
+        public void testConversationToString() {
+            User user1 = new User("ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
+
+            ArrayList<User> testArray = new ArrayList<User>();
+
+            ConversationDatabase cd = new ConversationDatabase("output.txt");
+            Conversation testConversation = new Conversation("cs 180 group", testArray, cd);
+
+            assertEquals(testConversation.toString(), "Conversation #" + testConversation.getID());
         }
 
 
