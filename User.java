@@ -2,12 +2,12 @@ import java.util.ArrayList;
 /**
  * This class represents a User for the team project
  *
- * 
+ *
  *
  * @author Jack Juncker, Ellie Williams
  * @version Mar 25th, 2024.
  */
-public class User 
+public class User
 {
     private String birthday;
     private String bio;
@@ -19,17 +19,20 @@ public class User
     private String username;
     private ArrayList<User> friends = new ArrayList<>();
     private ArrayList<User> blocked = new ArrayList<>();
-    
+
     // Instantiates an User object
-    public User(String name, String email, String username, String password, String birthday) throws ActionNotAllowedException 
-    {
-        this.name = name;
-        this.email = email;
-        this.username = username;
-        if (username.contains(" "))
-            throw new ActionNotAllowedException("Usernames cannot contain spaces.");
-        this.password = encrypt(password);
-        this.birthday = birthday;
+    public User(String name, String email, String username, String password, String birthday) {
+        try {
+            this.name = name;
+            this.email = email;
+            this.username = username;
+            if (username.contains(" "))
+                throw new ActionNotAllowedException("Usernames cannot contain spaces.");
+            this.password = encrypt(password);
+            this.birthday = birthday;
+        } catch (ActionNotAllowedException e) {
+            e.printStackTrace();
+        }
     }
 
     public User()
@@ -94,7 +97,7 @@ public class User
     {
         this.email = email;
     } // setEmail
- 
+
     public void setBirthday(String birthday)
     {
         this.birthday = birthday;
@@ -110,7 +113,7 @@ public class User
 
     public void sendTextMessage(Conversation conversation, String message) throws ActionNotAllowedException {
         conversation.addMessage(new TextMessage(this, message));
-    }    
+    }
 
     public String toString()
     {
@@ -121,13 +124,12 @@ public class User
     //Adds a User to the friends ArrayList<>
     public ArrayList<User> addFriend(User user) {
         try {
-            for (int i = 0; i < friends.size(); i++) {
-                if (user.equals(friends.get(i))) {
+                if (friends.contains(user)) {
                     throw new ActionNotAllowedException("Error: User already added");
                 } else {
                     friends.add(user);
                 }
-            }
+
         } catch (ActionNotAllowedException e) {
             e.printStackTrace();
         }
@@ -137,15 +139,14 @@ public class User
     // adds a User to the blocked Arraylist<>
     public ArrayList<User> blockFriend(User user) {
         try {
-            for (int i = 0; i < blocked.size(); i++) {
-                if (user.equals(blocked.get(i))) {
-                    throw new ActionNotAllowedException("Error: User is already blocked");
-                } else {
+                if (blocked.contains(user)) {
+                    throw new ActionNotAllowedException("User already blocked");
+
+                }else {
                     blocked.add(user);
                 }
-            }
-        } catch (ActionNotAllowedException e) {
-            e.printStackTrace();
+            } catch (ActionNotAllowedException e) {
+                e.printStackTrace();
         }
 
         return blocked;
@@ -154,21 +155,20 @@ public class User
     //removes a User from the friends ArrayList
     public ArrayList<User> removeFriend(User user) {
         try {
-            for (int i = 0; i < friends.size(); i++) {
-                if (user.equals(friends.get(i))) {
+                if (friends.contains(user)) {
                     friends.remove(user);
                 } else {
                     throw new ActionNotAllowedException("Error - User is not in friends list");
                 }
-            }
+
         } catch (ActionNotAllowedException e) {
             e.printStackTrace();
         }
-            return friends;
+        return friends;
     } // removeFriend
 
     // Encrypts the password to an different String by shifting characters by 5
-    public static String encrypt(String text) 
+    public static String encrypt(String text)
     {
         int shiftBy = 5;
         String newPass = "";
@@ -204,7 +204,7 @@ public class User
 
         // If they are the same, compare the rest of the strings
         if (comparisonResult == 0) {
-            return getFirstAlphabetically(name1.substring(1), name2.substring(1));
+            return (name1.charAt(0) + (getFirstAlphabetically(name1.substring(1), name2.substring(1))));
         } else if (comparisonResult < 0) {
             return name1;
         } else {
