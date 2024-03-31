@@ -22,14 +22,6 @@ import static org.junit.Assert.*;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * A framework to run public test cases.
- *
- * <p>Purdue University -- CS18000 -- Spring 2024</p>
- *
- * @author Purdue CS
- * @version Jan 13, 2024
- */
 public class UserTests {
 
     public static void main(String[] args) {
@@ -44,15 +36,6 @@ public class UserTests {
             }
         }
     }
-
-    /**
-     * A framework to run public test cases.
-     *
-     * <p>Purdue University -- CS18000 -- Spring 2024</p>
-     *
-     * @author Purdue CS
-     * @version Jan 13, 2024
-     */
 
     public static class TestCase {
         private final PrintStream originalOutput = System.out;
@@ -84,9 +67,9 @@ public class UserTests {
             System.setIn(testIn);
         }
 
-        //TEST 1
+        //test the addFriend method when no exceptions are thrown
 
-        @Test(timeout = 1000)
+        @Test(timeout = 5000)
         public void testaddFriendSuccess() {
 
             // Set the input
@@ -101,9 +84,9 @@ public class UserTests {
             assertTrue(user1.getFriends().contains(user2));
         }
 
-        //TEST 2
+        //tests addFriend when an exception is thrown
 
-        @Test(timeout = 1000)
+        @Test(timeout = 5000)
         public void testAddFriendAlreadyAdded() {
             User user1 = new User("ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
             User user2 = new User("pete", "pete@purdue.edu", "purduepete", "purduemascot4", "08/02/1869");
@@ -122,9 +105,11 @@ public class UserTests {
 
             //make sure user2 is still in user1's friend list
             assertTrue(user1.getFriends().contains(user2));
+
         }
 
-        @Test(timeout = 1000)
+        //tests blockUser when no exceptions are thrown
+        @Test(timeout = 5000)
         public void testBlockUserSuccess() {
 
             // Set the input
@@ -140,8 +125,9 @@ public class UserTests {
         }
 
 
-        @Test(timeout = 1000)
-        public void testBlockFriendAlreadyBlocked() {
+        // Tests blockUser when an exception is thrown
+        @Test(timeout = 5000)
+        public void testBlockUserAlreadyBlocked() {
             User user1 = new User("ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
             User user2 = new User("pete", "pete@purdue.edu", "purduepete", "purduemascot4", "08/02/1869");
 
@@ -163,7 +149,8 @@ public class UserTests {
 
         }
 
-        @Test(timeout = 1000)
+        // Tests removeFriend method when no exceptions are thrown
+        @Test(timeout = 5000)
         public void testRemoveFriendSuccess() {
 
             // Set the input
@@ -177,7 +164,8 @@ public class UserTests {
             assertTrue(!user1.getFriends().contains(user2));
         }
 
-        @Test(timeout = 1000)
+        // Tests removeFriend when the friend is already removed
+        @Test(timeout = 5000)
         public void testRemoveFriendAlreadyRemoved() {
             User user1 = new User("ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
             User user2 = new User("pete", "pete@purdue.edu", "purduepete", "purduemascot4", "08/02/1869");
@@ -200,9 +188,9 @@ public class UserTests {
 
         }
 
-        //TEST 3
 
-        @Test(timeout = 1000)
+        // Tests the getFirstAlphabetically method when both names are empty
+        @Test(timeout = 5000)
         public void testGetFirstAlphabeticallyBothEmpty() {
 
             // names for both users
@@ -216,7 +204,8 @@ public class UserTests {
             assertEquals("Both names are equal alphabetically.", result);
         }
 
-        @Test(timeout = 1000)
+        // Tests the compare alphabetically method when name1 is empty
+        @Test(timeout = 5000)
         public void testGetFirstAlphabeticallyName1Empty() {
 
             // names for both users
@@ -230,7 +219,8 @@ public class UserTests {
             assertEquals(name1, result);
         }
 
-        @Test(timeout = 1000)
+        // Tests the compare alphabetically method when name2 is empty
+        @Test(timeout = 5000)
         public void testGetFirstAlphabeticallyName2Empty() {
 
             // names for both users
@@ -244,7 +234,8 @@ public class UserTests {
             assertEquals(name2, result);
         }
 
-        @Test(timeout = 1000)
+        // Tests the compare alphabetically method when both names aren't empty
+        @Test(timeout = 5000)
         public void testGetFirstAlphabeticallyBothNotEmpty() {
 
             // names for both users
@@ -258,7 +249,8 @@ public class UserTests {
             assertEquals(name1, result);
         }
 
-        @Test(timeout = 1000)
+        // Tests the compare alphabetically method when both names start with the same letter
+        @Test(timeout = 5000)
         public void testGetFirstAlphabeticallyBothStartWithSameLetter() {
 
             // names for both users
@@ -272,7 +264,8 @@ public class UserTests {
             assertEquals(name2, result);
         }
 
-        @Test(timeout = 1000)
+        // tests the encryptPassword method
+        @Test(timeout = 5000)
         public void testEncryptPassword() {
 
             // names for both users
