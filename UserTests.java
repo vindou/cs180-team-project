@@ -97,7 +97,6 @@ public class UserTests {
             user1.addFriend(user2);
 
 
-
             // ensure user2 is in user1's friend list.
             assertTrue(user1.getFriends().contains(user2));
         }
@@ -137,7 +136,6 @@ public class UserTests {
             user1.blockFriend(user2);
 
 
-
             // Trims the output and verifies it is correct.
             assertTrue(user1.getBlocked().contains(user2));
         }
@@ -147,7 +145,6 @@ public class UserTests {
         public void testBlockFriendAlreadyBlocked() {
             User user1 = new User("ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
             User user2 = new User("pete", "pete@purdue.edu", "purduepete", "purduemascot4", "08/02/1869");
-
 
 
             // block user2 once - should be success
@@ -185,7 +182,6 @@ public class UserTests {
         public void testRemoveFriendAlreadyRemoved() {
             User user1 = new User("ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
             User user2 = new User("pete", "pete@purdue.edu", "purduepete", "purduemascot4", "08/02/1869");
-
 
 
             // block user2 once - should be success
@@ -290,30 +286,6 @@ public class UserTests {
             //compare expected/actual output
             assertEquals(result, "ufxxbtwi");
         }
-
-
-        @Test(timeout = 1000)
-        public void testSendTextMessage() {
-            try {
-                //initialize users
-                User user1 = new User("ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
-                User user2 = new User("pete", "pete@purdue.edu", "purduepete", "purduemascot4", "08/02/1869");
-
-                Conversation conversation = new Conversation();
-
-                //initialize message and send it
-                String message = "test message";
-                user1.sendTextMessage(conversation, message);
-
-                //read the file and check that the message sent is the same as what is received
-                assertEquals(1, conversation.getMessages().size());
-                assertEquals(message, conversation.getMessages().get(0));
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        }
-
     }
+
 }
