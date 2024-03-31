@@ -389,7 +389,6 @@ public class UserTests {
         @Test(timeout = 2000)
         public void testTextMessageEqualityMethod() {
             User testUser = new User("ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
-            User testUser2 = new User("ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
             TextMessage testMessage = new TextMessage(testUser, "hi");
             TextMessage testMessage2 = new TextMessage(testUser, "hi");
 

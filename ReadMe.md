@@ -59,6 +59,12 @@ requires it's associated method to change the
 message index of the new message to the size of the message ArrayList, so it's crucial
 that this method functions. 
 
+There are several tests for TextMessage.java. The first one test the constructor in an identical way to how
+Message.java's constructor is tested. The second one tests the edit message method in the subclass,
+by comparing the final rawMessage field of a TextMessage object to what it's expected to be. The third checks
+our equality method using a simple assertTrue method call. The final test tests our toString method, which converts
+the Message object into a string for file writing. 
+
 ### Conversation.java:
 
 This class contains the information for every conversation in the database. Each conversation has a Conversation Name, 
@@ -71,3 +77,15 @@ The conversation database stores every message that has ever been sent by any of
 which conversations the User is involved in, as well as write all of the conversation names to a file. Also, given a 
 conversation name, the database can retrieve all messages from that conversation. This will be helpful for implementing
 a search option. 
+
+#### Testing ConversationDatabase.java and Conversation.java
+
+Because the Conversation.java constructor inherently relies on the ConversationDatabase constructor,
+one encompassing test was written in order to test both. This test just compares the expected
+size of the fields, as well as their values. To check the available conversation
+method, an empty file was created and read through, and an assertEqual method call was used to check
+that the expected size of the returned ArrayList was what equal to what it was actually. The next two 
+methods test the addUser and removeUser methods, and they both use assertEquals methods
+to check that the size of the user ArrayLists are what they are expected to be after the methods
+have been called. The addMessage and deleteMessage accomplish this in the exact same way, using the assertEquals
+method call. 
