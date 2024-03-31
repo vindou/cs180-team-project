@@ -25,6 +25,13 @@ Blocked users will not be able to have conversations with each other.
 Along with password creation, we decided to incorporate password encryption into the User class. This will ensure a 
 safer and more secure experience for Users.
 
+Testing User.java:
+
+In order to test the User class and its various methods, several test cases were created. The add/block/remove user
+methods were tested in both successful and unsuccessful cases (namely, when an exception was or was not thrown). 
+We also tested the method which compared two Users alphabetically by their first names, with several different scenarios.
+Finally, the encrypt method for passwords was tested by comparing the program's output with the expected output. 
+
 ActionNotAllowedException.java:
 
 This class represents the exception that is thrown when a User performs an illegal action. 

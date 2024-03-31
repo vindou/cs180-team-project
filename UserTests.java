@@ -279,6 +279,68 @@ public class UserTests {
             assertEquals(result, "ufxxbtwi");
         }
 
+        // tests checkPassword() method
+        @Test(timeout = 5000)
+        public void checkPasswordTest() {
+
+            // Set the input
+            User user = new User("ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
+
+            // Runs the program with the input values
+            boolean success = user.checkPassword("purdue123");
+
+
+            // ensure the method succeeds.
+            assertTrue(success);
+            System.out.println("checkPassword() success");
+        }
+
+        // tests setBio() method
+        @Test(timeout = 5000)
+        public void setBioTest() {
+
+            // Set the input
+            User user = new User("ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
+
+            String newBio = "I am a student at Purdue!";
+
+            // Runs the program with the input values
+            user.setBio(newBio);
+
+
+            // ensure the method succeeds.
+            assertEquals(user.getBio(), newBio);
+            System.out.println("setBio() success");
+        }
+
+        // tests setBio() method
+        @Test(timeout = 5000)
+        public void getFriendsTest() {
+
+            // Set the input
+            User user1 = new User("ellie", "ellie@purdue.edu", "ellieW", "purdue1231", "03/16/2004");
+            User user2 = new User("jack", "jack@purdue.edu", "jackJ", "purdue1232", "03/17/2004");
+            User user3 = new User("gilbert", "gilbert@purdue.edu", "gilbertC", "purdue1233", "03/18/2004");
+            User user4 = new User("sahil", "sahil@purdue.edu", "SahilS", "purdue1234", "03/19/2004");
+
+            user1.addFriend(user2);
+            user1.addFriend(user3);
+            user1.addFriend(user4);
+
+            ArrayList<User> test = new ArrayList<>();
+            test.add(user2);
+            test.add(user3);
+            test.add(user4);
+
+            // Runs the program with the input values
+            ArrayList<User> friends = user1.getFriends();
+
+
+            // ensure the method succeeds.
+            assertEquals(friends, test);
+            System.out.println("getFriends() success");
+        }
+
         // MESSAGE SUPERCLASS TEST CASES
         @Test(timeout = 2000)
         public void testMessageSuperClassConstructor() {
@@ -472,8 +534,6 @@ public class UserTests {
 
             assertEquals(testConversation.fileNameString(), "Conversation #" + testConversation.getID());
         }
-
-
     }
 
 }
