@@ -16,9 +16,9 @@ public class ConversationDatabase implements Database {
 
     // Main Constructor
     public ConversationDatabase(String filePath) {
-        this.conversationArray = readDatabase();
         this.filePath = filePath;
         this.f = new File(filePath);
+        this.conversationArray = readDatabase();
     }
 
     public void updateConversationArray() {
@@ -41,7 +41,7 @@ public class ConversationDatabase implements Database {
             // open file
             // use ois to access each object
             // add it to the array
-            FileInputStream fis = new FileInputStream(f);
+            FileInputStream fis = new FileInputStream(this.f);
             ObjectInputStream ois = new ObjectInputStream(fis);
 
             Conversation conversation = (Conversation) ois.readObject();
@@ -54,7 +54,7 @@ public class ConversationDatabase implements Database {
             return conversationsFound;
         } catch (ClassNotFoundException | IOException e) {
             e.printStackTrace();
-            return null;
+            return new ArrayList<Object>();
         }
     }
 
@@ -110,11 +110,4 @@ public class ConversationDatabase implements Database {
         }
         return completion;
     }
-
-    // Retrieves and returns the data for a conversation given a
-    // file name.
-    public Conversation retrieveData(String conversationFileName) {
-        return new Conversation();
-    }
-
 }

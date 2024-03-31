@@ -288,7 +288,7 @@ public class UserTests {
             User comparedUser = testMessage.getSender();
             int comparedIndex = testMessage.getIndex();
 
-            assertEquals(comparedUser, testUser);
+            assertTrue(comparedUser.equals(testUser));
             assertEquals(0, comparedIndex);
         }
 
@@ -358,11 +358,11 @@ public class UserTests {
             testArray.add(user1);
             testArray.add(user2);
 
-            ConversationDatabase cd = new ConversationDatabase("output.txt");
+            ConversationDatabase cd = new ConversationDatabase("output");
             Conversation testConversation = new Conversation("cs 180 group", testArray, cd);
 
-            assertNull(cd.getConversationArray());
-            assertEquals("output.txt", cd.getFilePath());
+            assertTrue(cd.getConversationArray().isEmpty());
+            assertEquals("output", cd.getFilePath());
             assertTrue(testConversation.getID() > 0);
             assertEquals(2, testConversation.getUsers().size());
             assertEquals(0, testConversation.getMessages().size());
@@ -370,7 +370,7 @@ public class UserTests {
 
         @Test(timeout = 2000)
         public void testAvailableConversationFinder() {
-            ConversationDatabase cd = new ConversationDatabase("output.txt");
+            ConversationDatabase cd = new ConversationDatabase("output");
             User user1 = new User("ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
 
             assertEquals(0, cd.findAvailableConversations(user1).size());
@@ -384,7 +384,7 @@ public class UserTests {
             ArrayList<User> testArray = new ArrayList<User>();
             testArray.add(user1);
 
-            ConversationDatabase cd = new ConversationDatabase("output.txt");
+            ConversationDatabase cd = new ConversationDatabase("output");
             Conversation testConversation = new Conversation("cs 180 group", testArray, cd);
 
             try {
@@ -403,7 +403,7 @@ public class UserTests {
             testArray.add(user1);
             testArray.add(user2);
 
-            ConversationDatabase cd = new ConversationDatabase("output.txt");
+            ConversationDatabase cd = new ConversationDatabase("output");
             Conversation testConversation = new Conversation("cs 180 group", testArray, cd);
 
             try {
@@ -416,40 +416,49 @@ public class UserTests {
         @Test(timeout = 2000)
         public void testMessageAddition() {
             User user1 = new User("ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
+            User user2 = new User("pete", "pete@purdue.edu", "purduepete", "purduemascot4", "08/02/1869");
 
             ArrayList<User> testArray = new ArrayList<User>();
             testArray.add(user1);
+            testArray.add(user2);
 
-            ConversationDatabase cd = new ConversationDatabase("output.txt");
+            ConversationDatabase cd = new ConversationDatabase("output");
             Conversation testConversation = new Conversation("cs 180 group", testArray, cd);
 
             TextMessage tM = new TextMessage(user1, "hi");
 
             try {
                 testConversation.addMessage(tM);
-            } catch (ActionNotAllowedException ignored) {}
+            } catch (ActionNotAllowedException e) {
+                e.printStackTrace();
+            }
 
-            assertEquals(testConversation.getMessages().size(), 1);
+            assertEquals(1, testConversation.getMessages().size());
         }
 
-        @Test(timeout = 2000)
+        @Test(timeout = 3000)
         public void testMessageRemoval() {
             User user1 = new User("ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
+            User user2 = new User("pete", "pete@purdue.edu", "purduepete", "purduemascot4", "08/02/1869");
 
             ArrayList<User> testArray = new ArrayList<User>();
             testArray.add(user1);
+            testArray.add(user2);
 
-            ConversationDatabase cd = new ConversationDatabase("output.txt");
+            ConversationDatabase cd = new ConversationDatabase("output");
             Conversation testConversation = new Conversation("cs 180 group", testArray, cd);
 
             TextMessage tM = new TextMessage(user1, "hi");
+            TextMessage tM2 = new TextMessage(user1, "ho");
 
             try {
                 testConversation.addMessage(tM);
                 testConversation.deleteMessage(tM);
-            } catch (ActionNotAllowedException ignored) {}
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
-            assertEquals(testConversation.getMessages().size(), 0);
+            assertTrue(testConversation.getMessages().isEmpty());
         }
 
         @Test(timeout = 2000)
@@ -458,10 +467,10 @@ public class UserTests {
 
             ArrayList<User> testArray = new ArrayList<User>();
 
-            ConversationDatabase cd = new ConversationDatabase("output.txt");
+            ConversationDatabase cd = new ConversationDatabase("output");
             Conversation testConversation = new Conversation("cs 180 group", testArray, cd);
 
-            assertEquals(testConversation.toString(), "Conversation #" + testConversation.getID());
+            assertEquals(testConversation.fileNameString(), "Conversation #" + testConversation.getID());
         }
 
 

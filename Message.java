@@ -41,7 +41,7 @@ public class Message {
     // that's newly added to it's ArrayList to the
     // size of the ArrayList. 
     public void setIndex(int newIndex) throws ActionNotAllowedException{
-        if (newIndex <= 0) {
+        if (newIndex < 0) {
             throw new ActionNotAllowedException("Index out of bounds!");
         } else {
             this.messageIndex = newIndex;
