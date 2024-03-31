@@ -31,6 +31,10 @@ public class ConversationDatabase implements Database {
         return this.conversationArray;
     }
 
+    public String getFilePath() {
+        return this.filePath;
+    }
+
     public ArrayList<Object> readDatabase() {
         ArrayList<Object> conversationsFound = new ArrayList<Object>();
         try {
