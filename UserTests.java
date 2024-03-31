@@ -1,21 +1,15 @@
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
+import org.junit.After;
+import org.junit.Before;
+
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
+import org.junit.runner.RunWith;
 import org.junit.runner.notification.Failure;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-import java.io.PrintStream;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.io.*;
+
+import static org.junit.Assert.*;
 
 /**
  * This class tests the various methods in the User class
@@ -25,10 +19,6 @@ import java.util.Arrays;
  * @author Ellie Williams
  * @version Mar 30th, 2024.
  */
-
-import java.io.*;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 
@@ -119,8 +109,6 @@ public class UserTests {
             User user1 = new User("ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
             User user2 = new User("pete", "pete@purdue.edu", "purduepete", "purduemascot4", "08/02/1869");
 
-
-
             // add user2 once - should be success
             user1.addFriend(user2);
 
@@ -131,7 +119,7 @@ public class UserTests {
             user1.addFriend(user2);
 
             //make sure user1 has the same friend list as before the repeated action occurred
-            assertEquals(user1.getFriends().size() == f);
+            assertEquals(f, user1.getFriends().size());
 
             //make sure user2 is still in user1's friend list
             assertTrue(user1.getFriends().contains(user2));
@@ -172,10 +160,11 @@ public class UserTests {
             user1.blockFriend(user2);
 
             //make sure user1 has the same blocked list as before the repeated action occurred
-            assertEquals(user1.getBlocked().size() == b);
+            assertEquals(user1.getBlocked().size(), b);
 
             //make sure user2 is still in user1's friend list
             assertTrue(user1.getBlocked().contains(user2));
+
         }
 
         @Test(timeout = 1000)
@@ -192,6 +181,7 @@ public class UserTests {
             assertTrue(!user1.getFriends().contains(user2));
         }
 
+        @Test(timeout = 1000)
         public void testRemoveFriendAlreadyRemoved() {
             User user1 = new User("ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
             User user2 = new User("pete", "pete@purdue.edu", "purduepete", "purduemascot4", "08/02/1869");
@@ -208,7 +198,7 @@ public class UserTests {
             user1.removeFriend(user2);
 
             //make sure user1 has the same blocked list as before the repeated action occurred
-            assertEquals(user1.getFriends().size() == g);
+            assertEquals(user1.getFriends().size(), g);
 
             //make sure user2 is still in user1's friend list
             assertTrue(!user1.getFriends().contains(user2));
@@ -287,39 +277,43 @@ public class UserTests {
             assertEquals(name2, result);
         }
 
-        public void testSendMessage() {
+        @Test(timeout = 1000)
+        public void testEncryptPassword() {
+
+            // names for both users
+            String password = "password";
+
+
+            //returns program output
+            String result = User.encrypt(password);
+
+            //compare expected/actual output
+            assertEquals(result, "ufxxbtwi");
+        }
+
+
+        @Test(timeout = 1000)
+        public void testSendTextMessage() {
             try {
                 //initialize users
                 User user1 = new User("ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
                 User user2 = new User("pete", "pete@purdue.edu", "purduepete", "purduemascot4", "08/02/1869");
 
+                Conversation conversation = new Conversation();
+
                 //initialize message and send it
                 String message = "test message";
-                user1.sendMessage(user2, message);
-
-                //create file and ensure it exists
-                File messages = new File("testmessages.txt");
-                assertTrue(messages.exists());
+                user1.sendTextMessage(conversation, message);
 
                 //read the file and check that the message sent is the same as what is received
-                FileReader fr = new FileReader(messages);
-                BufferedReader bfr = new BufferedReader(fr);
-                String messageOutput = bfr.readLine();
-                bfr.close();
+                assertEquals(1, conversation.getMessages().size());
+                assertEquals(message, conversation.getMessages().get(0));
 
-                assertEquals(message, messageOutput);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
-            }
-            finally {
-            
-            }
         }
-
-
-        // TEST 4
-        
-
 
     }
 }
-
