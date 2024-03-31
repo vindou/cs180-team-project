@@ -203,13 +203,8 @@ public class UIStuff extends User {
         password = encrypt(password);
 
         User newUser;
-        try {
-            newUser = new User(name, email, username, password, birthday);
-            users.add(newUser);
-        } catch (ActionNotAllowedException e) {
-            e.printStackTrace();
-        }
-        
+        newUser = new User(name, email, username, password, birthday);
+        users.add(newUser);
     } //newUser
 
     public User searchUser(String search)

@@ -1,4 +1,4 @@
-CS 180 Team Project:
+Team Project:
 
 Assignment Description
 Ideas and Implementation
