@@ -175,5 +175,33 @@ public class UserDatabaseTest {
                 System.out.println(user);
             }
         }
+
+        // testing the application of the retrieveUserData method
+        @Test(timeout = 5000)
+        public void retrieveUserDataTest() {
+            
+            // Set the input
+            User user1 = new User("ellie", "ellie@purdue.edu", "ellieW", "purdue1231", "03/16/2004");
+            User user2 = new User("jack", "jack@purdue.edu", "jackJ", "purdue1232", "03/17/2004");
+            User user3 = new User("gilbert", "gilbert@purdue.edu", "gilbertC", "purdue1233", "03/18/2004");
+            User user4 = new User("sahil", "sahil@purdue.edu", "SahilS", "purdue1234", "03/19/2004");
+
+            ArrayList<User> userArray = new ArrayList<>();
+            userArray.add(user1);
+            userArray.add(user2);
+            userArray.add(user3);
+            userArray.add(user4);
+
+            String filename = "userData.txt";
+            UserDatabase userData = new UserDatabase(userArray, filename);
+
+            User user;
+            try {
+                user = userData.retrieveUserData("jackJ");
+                assertEquals(user, user2);
+            } catch (ActionNotAllowedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
