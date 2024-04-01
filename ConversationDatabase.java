@@ -1,6 +1,13 @@
 import java.io.*;
 import java.util.ArrayList;
-
+/**
+ * This class represents a database for Conversation objects for our team project
+ *
+ *
+ *
+ * @author Gilbert Chang, Sahil Shetty
+ * @version Mar 25th, 2024.
+ */
 public class ConversationDatabase implements Database {
     // conversationArray: An ArrayList that stores every single
     // conversation that has been created on the social media

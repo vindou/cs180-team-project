@@ -6,7 +6,7 @@ import java.awt.*;
  * 
  * 
  *
- * @author Jack Juncker, Ellie Williams, Gilbert Chang, Sahil Shetty
+ * @author Jack Juncker 
  * @version Mar 25th, 2024.
  */
 public class UIStuff extends User {

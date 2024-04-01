@@ -1,7 +1,14 @@
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
-
+/**
+ * This class represents a User for the team project
+ *
+ *
+ *
+ * @author Sahil Shetty, Gilbert Chang, Jack Juncker
+ * @version Mar 25th, 2024.
+ */
 public class UserDatabase implements Database {
 
     // An ArrayList containing every user on the platform.
