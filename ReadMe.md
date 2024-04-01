@@ -26,7 +26,7 @@ safer and more secure experience for Users.
 
 #### Testing User.java
 
-In order to test the User class and its various methods, several test cases were created. The add/block/remove user
+In order to test the User class and its various methods, several test cases were created. Firstly, the User constructor itself was tested to ensure that the getters/setters were returning expected values. The add/block/remove user
 methods were tested in both successful and unsuccessful cases (namely, when an exception was or was not thrown). 
 We also tested the method which compared two Users alphabetically by their first names, with several different scenarios.
 Finally, the encrypt method for passwords was tested by comparing the program's output with the expected output. 
