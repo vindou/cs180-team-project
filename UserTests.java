@@ -17,7 +17,7 @@ import static org.junit.Assert.*;
  *
  *
  *
- * @author Ellie Williams
+ * @author Ellie Williams, Jack Juncker
  * @version Mar 30th, 2024.
  */
 

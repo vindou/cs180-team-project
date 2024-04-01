@@ -1,5 +1,13 @@
 import java.util.ArrayList;
-
+/**
+ * This interface lays out a lot of the methods as a base for the User.java class
+ * More methods may need to be added, but these will be included
+ *
+ *
+ *
+ * @author Jack Juncker, Ellie Williams
+ * @version Mar 25th, 2024.
+ */
 public interface UserInterface {
     // get_____ methods
     public String getBirthday();

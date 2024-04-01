@@ -1,5 +1,13 @@
 import java.time.LocalTime;
-
+/**
+ * This class represents a Message object in our team project
+ * holding data about the message that is being sent
+ *
+ *
+ *
+ * @author Jack Juncker, Ellie Williams
+ * @version Mar 25th, 2024.
+ */
 public class Message {
     // timeSent: A LocalTime field representing
     // the exact time in EST that the message was

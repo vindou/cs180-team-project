@@ -1,6 +1,13 @@
 import java.io.Serializable;
 import java.util.ArrayList;
-
+/**
+ * This class represents a Conversation object for the team project
+ *
+ *
+ *
+ * @author Gilbert Chang, Sahil Shetty
+ * @version Mar 25th, 2024.
+ */
 public class Conversation implements Serializable {
     // Conversation name: Allows user to set the name of their
     // group chat. 

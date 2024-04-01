@@ -24,7 +24,7 @@ import static org.junit.Assert.*;
 /**
  * A framework to run public test cases.
  *
- * @author Sahil Shetty
+ * @author Sahil Shetty, Jack Juncker
  * @version April 1, 2024
  */
 @RunWith(Enclosed.class)
