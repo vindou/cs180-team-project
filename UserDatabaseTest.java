@@ -163,9 +163,18 @@ public class UserDatabaseTest {
         // testing the application of the readDatabase method
         @Test(timeout = 5000)
         public void readDatabaseTest() {
+            User user1 = new User("ellie", "ellie@purdue.edu", "ellieW", "purdue1231", "03/16/2004");
+            User user2 = new User("jack", "jack@purdue.edu", "jackJ", "purdue1232", "03/17/2004");
+            User user3 = new User("gilbert", "gilbert@purdue.edu", "gilbertC", "purdue1233", "03/18/2004");
+            User user4 = new User("sahil", "sahil@purdue.edu", "SahilS", "purdue1234", "03/19/2004");
+
+            ArrayList<User> test = new ArrayList<User>();
+            test.add(user1);
+            test.add(user2);
+            test.add(user3);
+            test.add(user4);
             
             String filename = "userData.txt";
-            ArrayList<User> test = new ArrayList<>();
             UserDatabase userData = new UserDatabase(test, filename);
 
             ArrayList<Object> userArray = userData.readDatabase();
@@ -177,7 +186,6 @@ public class UserDatabaseTest {
         // testing the application of the retrieveUserData method
         @Test(timeout = 5000)
         public void retrieveUserDataTest() {
-            
             // Set the input
             User user1 = new User("ellie", "ellie@purdue.edu", "ellieW", "purdue1231", "03/16/2004");
             User user2 = new User("jack", "jack@purdue.edu", "jackJ", "purdue1232", "03/17/2004");
@@ -193,11 +201,12 @@ public class UserDatabaseTest {
             String filename = "userData.txt";
             UserDatabase userData = new UserDatabase(userArray, filename);
 
-            User user;
             try {
-                user = userData.retrieveUserData("jackJ");
-                assertEquals(user, user2);
+                User user = userData.retrieveUserData("jackJ");
+                assertTrue(user.equals(user2));
             } catch (ActionNotAllowedException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }

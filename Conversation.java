@@ -1,6 +1,7 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Conversation {
+public class Conversation implements Serializable {
     // Conversation name: Allows user to set the name of their
     // group chat. 
     private String conversationName;
