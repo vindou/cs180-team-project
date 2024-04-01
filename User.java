@@ -8,8 +8,7 @@ import java.util.ArrayList;
  * @author Jack Juncker, Ellie Williams
  * @version Mar 25th, 2024.
  */
-public class User implements Serializable
-{
+public class User implements Serializable, UserInterface {
     private String birthday;
     private String bio;
     private String email;
@@ -82,6 +81,11 @@ public class User implements Serializable
         this.name =  name;
     } // setName
 
+    @Override
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public boolean checkPassword(String pass) {
         //Check the encrypted passwords against each other
         return (encrypt(pass).equals(this.password));
@@ -91,6 +95,16 @@ public class User implements Serializable
     {
         this.username = username;
     } // setUsername
+
+    @Override
+    public void setFriends(ArrayList<User> friends) {
+
+    }
+
+    @Override
+    public void setBlocked(ArrayList<User> blocked) {
+
+    }
 
     public void setEmail(String email)
     {
@@ -123,11 +137,11 @@ public class User implements Serializable
     //Adds a User to the friends ArrayList<>
     public ArrayList<User> addFriend(User user) {
         try {
-                if (friends.contains(user)) {
-                    throw new ActionNotAllowedException("Error: User already added");
-                } else {
-                    friends.add(user);
-                }
+            if (friends.contains(user)) {
+                throw new ActionNotAllowedException("Error: User already added");
+            } else {
+                friends.add(user);
+            }
 
         } catch (ActionNotAllowedException e) {
             e.printStackTrace();
@@ -138,14 +152,14 @@ public class User implements Serializable
     // adds a User to the blocked Arraylist<>
     public ArrayList<User> blockFriend(User user) {
         try {
-                if (blocked.contains(user)) {
-                    throw new ActionNotAllowedException("User already blocked");
+            if (blocked.contains(user)) {
+                throw new ActionNotAllowedException("User already blocked");
 
-                }else {
-                    blocked.add(user);
-                }
-            } catch (ActionNotAllowedException e) {
-                e.printStackTrace();
+            }else {
+                blocked.add(user);
+            }
+        } catch (ActionNotAllowedException e) {
+            e.printStackTrace();
         }
 
         return blocked;
@@ -154,11 +168,11 @@ public class User implements Serializable
     //removes a User from the friends ArrayList
     public ArrayList<User> removeFriend(User user) {
         try {
-                if (friends.contains(user)) {
-                    friends.remove(user);
-                } else {
-                    throw new ActionNotAllowedException("Error - User is not in friends list");
-                }
+            if (friends.contains(user)) {
+                friends.remove(user);
+            } else {
+                throw new ActionNotAllowedException("Error - User is not in friends list");
+            }
 
         } catch (ActionNotAllowedException e) {
             e.printStackTrace();
