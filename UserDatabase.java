@@ -7,14 +7,10 @@ public class UserDatabase implements Database {
     // An ArrayList containing every user on the platform.
     private ArrayList<User> userArray;
 
-    // The file name that the data should be written to.
-    private String fileName;
-
     private File f;
 
     public UserDatabase(ArrayList<User> userArray, String fileName) {
         this.userArray = userArray;
-        this.fileName = fileName;
         this.f = new File(fileName);
     }
 
@@ -27,19 +23,19 @@ public class UserDatabase implements Database {
 
         try {
 
-            FileReader fr = new FileReader(f);
-            BufferedReader bfr = new BufferedReader(fr);
+            FileInputStream fis = new FileInputStream(f);
+            ObjectInputStream ois = new ObjectInputStream(fis);
 
             ArrayList<Object> userArrayList = new ArrayList<>();
 
-            String line = bfr.readLine();
+            User line = (User) ois.readObject();
             while (line != null) {
                 userArrayList.add(line);
-                line = bfr.readLine();
+                line = (User) ois.readObject();
             }
 
-            fr.close();
-            bfr.close();
+            fis.close();
+            ois.close();
 
             return userArrayList;
         } catch (Exception e) {

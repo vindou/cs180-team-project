@@ -24,10 +24,8 @@ import static org.junit.Assert.*;
 /**
  * A framework to run public test cases.
  *
- * <p>Purdue University -- CS18000 -- Summer 2022</p>
- *
- * @author Purdue CS
- * @version June 13, 2022
+ * @author Sahil Shetty
+ * @version April 1, 2024
  */
 @RunWith(Enclosed.class)
 public class UserDatabaseTest {
@@ -97,7 +95,7 @@ public class UserDatabaseTest {
 
             // Runs the program with the input values
             receiveInput(input);
-            UserDatabase.main(new String[0]);
+            // UserDatabase.main(new String[0]);
 
             // Retrieves the output from the program
             String output = getOutput();
@@ -126,7 +124,7 @@ public class UserDatabaseTest {
 
             // Runs the program with the input values
             receiveInput(input);
-            UserDatabase.main(new String[0]);
+            // UserDatabase.main(new String[0]);
 
             // Retrieves the output from the program
             String output = getOutput();

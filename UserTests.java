@@ -7,6 +7,7 @@ import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
 
 import java.io.*;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import static org.junit.Assert.*;
@@ -533,6 +534,20 @@ public class UserTests {
 
             assertEquals(testConversation.fileNameString(), "Conversation #" + testConversation.getID());
         }
-    }
 
+        @Test(timeout = 2000)
+        public void testUserDatabase() {
+
+            User user1 = new User("ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
+            User user2 = new User("pete", "pete@purdue.edu", "purduepete", "purduemascot4", "08/02/1869");
+
+            ArrayList<User> userArray = new ArrayList<>();
+            userArray.add(user1);
+            userArray.add(user2);
+
+            UserDatabase userDatabase = new UserDatabase(userArray, "testDatabase");
+            userDatabase.writeDatabase();
+            assertEquals(userArray, userDatabase.readDatabase());
+        }
+    }
 }
