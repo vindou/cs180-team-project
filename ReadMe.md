@@ -74,9 +74,9 @@ conversationID. The unique conversationID will make it much easier to store and 
 ### ConversationDatabase.java implements Database:
 
 The conversation database stores every message that has ever been sent by any of the Users. The database can return
-which conversations the User is involved in, as well as write all of the conversation names to a file. Also, given a 
+which conversations the User is involved in, as well as write all the conversation names to a file. Also, given a 
 conversation name, the database can retrieve all messages from that conversation. This will be helpful for implementing
-a search option. 
+a search option.
 
 #### Testing ConversationDatabase.java and Conversation.java
 
@@ -89,3 +89,18 @@ methods test the addUser and removeUser methods, and they both use assertEquals 
 to check that the size of the user ArrayLists are what they are expected to be after the methods
 have been called. The addMessage and deleteMessage accomplish this in the exact same way, using the assertEquals
 method call. 
+
+### UserDatabase.java:
+
+This class contains the methods to read and write all the User objects from a specific file. It also has the
+retrieveUserData method which looks for a specific user object in the specific file (the file path is a field).
+
+### UserDatabase.java implements Database
+
+#### Testing UserDatababse.java
+
+The UserDatabase writes and reads data from the same files. Therefore, to test it, we first wrote test data to the
+database. We then read that same data from the database and compared it to the input we put for the writeDatabase
+method. Finally, we chose a random user from our example data and tested to see if the retrieveUserData method would
+find the user from the database. All tests passed.
+
