@@ -1,3 +1,13 @@
+/**
+ * TextMessage.java
+ *
+ * A class that represents a Message that a User sends
+ *
+ * @author Gilbert Chang
+ *
+ * @version March 31, 2024
+ */
+
 public class TextMessage extends Message {
     
     // rawMessage: String field representing
