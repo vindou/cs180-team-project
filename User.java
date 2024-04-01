@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.util.ArrayList;
 /**
  * This class represents a User for the team project
@@ -7,7 +8,7 @@ import java.util.ArrayList;
  * @author Jack Juncker, Ellie Williams
  * @version Mar 25th, 2024.
  */
-public class User
+public class User implements Serializable
 {
     private String birthday;
     private String bio;
@@ -208,5 +209,13 @@ public class User
         } else {
             return name2;
         }
+    }
+
+    public boolean equals(User comparedUser) {
+        boolean equality = false;
+        if (this.username.equals(comparedUser.getUsername())) {
+            equality = true;
+        }
+        return equality;
     }
 }
