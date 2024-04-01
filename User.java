@@ -14,8 +14,6 @@ public class User
     private String email;
     private String name;
     private String password;
-    //make sure no spaces in username
-    //Add usernumber to make database easier
     private String username;
     private ArrayList<User> friends = new ArrayList<>();
     private ArrayList<User> blocked = new ArrayList<>();
@@ -211,8 +209,4 @@ public class User
             return name2;
         }
     }
-
-    //userSearch
-
-    //userViewer
 }
