@@ -31,12 +31,12 @@ public class TextMessage extends Message {
 
     // equals: Compares two TextMessage objects and returns
     // true or false depending on if the rawMessage contents
-    // are the same, and if the indices are equal. 
-    public boolean equals(Message comparedMessage) {
+    // are the same, and if the indices are equal.
+    @Override
+    public boolean equals(TextMessage comparedMessage) {
         boolean equality = false;
-        TextMessage translated = (TextMessage) comparedMessage;
-        if (this.rawMessage.equals(translated.getMessage())
-            && this.getIndex() == translated.getIndex()) {
+        if (this.rawMessage.equals(comparedMessage.getMessage())
+            && this.getIndex() == comparedMessage.getIndex()) {
             equality = true;
         }
         return equality;

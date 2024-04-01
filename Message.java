@@ -8,7 +8,7 @@ import java.time.LocalTime;
  * @author Jack Juncker, Ellie Williams
  * @version Mar 25th, 2024.
  */
-public class Message {
+public abstract class Message {
     // timeSent: A LocalTime field representing
     // the exact time in EST that the message was
     // sent (intialized). 
@@ -55,4 +55,9 @@ public class Message {
             this.messageIndex = newIndex;
         }
     }
+
+    // equals: Compares two TextMessage objects and returns
+    // true or false depending on if the rawMessage contents
+    // are the same, and if the indices are equal.
+    public abstract boolean equals(TextMessage comparedMessage);
 }
