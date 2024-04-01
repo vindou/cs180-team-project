@@ -176,10 +176,12 @@ public class UserDatabaseTest {
             
             String filename = "userData.txt";
             UserDatabase userData = new UserDatabase(test, filename);
+            userData.writeDatabase();
 
             ArrayList<Object> userArray = userData.readDatabase();
-            for (Object user: userArray) {
-                System.out.println(user);
+
+            for (int i = 0; i < userArray.size(); i++) {
+                assertTrue(test.get(i).equals(userArray.get(i)));
             }
         }
 

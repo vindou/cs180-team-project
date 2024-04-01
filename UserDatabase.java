@@ -20,7 +20,7 @@ public class UserDatabase implements Database {
     // Names have at least one space, so you can differentiate
     // the search based on this.
     public ArrayList<Object> readDatabase() {
-        ArrayList<Object> userArrayList = new ArrayList<>();
+        ArrayList<Object> userArrayList = new ArrayList<Object>();
         FileInputStream fis;
         ObjectInputStream ois;
         try {

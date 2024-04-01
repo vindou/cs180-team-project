@@ -211,9 +211,10 @@ public class User implements Serializable
         }
     }
 
-    public boolean equals(User comparedUser) {
+    public boolean equals(Object comparedUser) {
+        User translated = (User) comparedUser;
         boolean equality = false;
-        if (this.username.equals(comparedUser.getUsername())) {
+        if (this.username.equals(translated.getUsername())) {
             equality = true;
         }
         return equality;
