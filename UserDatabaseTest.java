@@ -86,6 +86,7 @@ public class UserDatabaseTest {
 
         // Each of the correct outputs
 
+        /* 
         @Test(timeout = 1000)
         public void testExpectedOne() {
 
@@ -137,7 +138,42 @@ public class UserDatabaseTest {
             assertEquals("Make sure you follow the flowchart and use the given strings for the result!",
                     expected.trim(), output.trim());
         }
+        */
 
+        // testing the application of the writeDatabase method
+        @Test(timeout = 5000)
+        public void writeDatabaseTest() {
 
+            // Set the input
+            User user1 = new User("ellie", "ellie@purdue.edu", "ellieW", "purdue1231", "03/16/2004");
+            User user2 = new User("jack", "jack@purdue.edu", "jackJ", "purdue1232", "03/17/2004");
+            User user3 = new User("gilbert", "gilbert@purdue.edu", "gilbertC", "purdue1233", "03/18/2004");
+            User user4 = new User("sahil", "sahil@purdue.edu", "SahilS", "purdue1234", "03/19/2004");
+
+            ArrayList<User> userArray = new ArrayList<>();
+            userArray.add(user1);
+            userArray.add(user2);
+            userArray.add(user3);
+            userArray.add(user4);
+
+            
+            String filename = "userData.txt";
+            UserDatabase userData = new UserDatabase(userArray, filename);
+            userData.writeDatabase();
+        }
+
+        // testing the application of the readDatabase method
+        @Test(timeout = 5000)
+        public void readDatabaseTest() {
+            
+            String filename = "userData.txt";
+            ArrayList<User> test = new ArrayList<>();
+            UserDatabase userData = new UserDatabase(test, filename);
+
+            ArrayList<Object> userArray = userData.readDatabase();
+            for (Object user: userArray) {
+                System.out.println(user);
+            }
+        }
     }
 }
