@@ -27,6 +27,7 @@ import static org.junit.Assert.*;
  * @author Sahil Shetty, Jack Juncker
  * @version April 1, 2024
  */
+
 @RunWith(Enclosed.class)
 public class UserDatabaseTest {
     public static void main(String[] args) {

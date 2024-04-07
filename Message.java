@@ -8,7 +8,7 @@ import java.time.LocalTime;
  * @author Jack Juncker, Ellie Williams
  * @version Mar 25th, 2024.
  */
-public abstract class Message {
+public class Message {
     // timeSent: A LocalTime field representing
     // the exact time in EST that the message was
     // sent (intialized). 
