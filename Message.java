@@ -55,9 +55,4 @@ public class Message {
             this.messageIndex = newIndex;
         }
     }
-
-    // equals: Compares two TextMessage objects and returns
-    // true or false depending on if the rawMessage contents
-    // are the same, and if the indices are equal.
-    public abstract boolean equals(TextMessage comparedMessage);
 }

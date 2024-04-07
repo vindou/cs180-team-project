@@ -32,12 +32,15 @@ public class TextMessage extends Message {
     // equals: Compares two TextMessage objects and returns
     // true or false depending on if the rawMessage contents
     // are the same, and if the indices are equal.
-    @Override
-    public boolean equals(TextMessage comparedMessage) {
+
+    public boolean equals(Object comparedMessage) {
         boolean equality = false;
-        if (this.rawMessage.equals(comparedMessage.getMessage())
-            && this.getIndex() == comparedMessage.getIndex()) {
-            equality = true;
+        if (comparedMessage.getClass().getName().equals("TextMessage")) {
+            TextMessage newMessage = (TextMessage) comparedMessage;
+            if (this.rawMessage.equals(newMessage.getMessage())
+                    && this.getIndex() == newMessage.getIndex()) {
+                equality = true;
+            }
         }
         return equality;
     }
