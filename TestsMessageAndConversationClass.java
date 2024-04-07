@@ -2,12 +2,13 @@ import org.junit.Test;
 import org.junit.After;
 import org.junit.Before;
 
+import org.junit.experimental.runners.Enclosed;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
+import org.junit.runner.RunWith;
 import org.junit.runner.notification.Failure;
 
 import java.io.*;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import static org.junit.Assert.*;
@@ -23,7 +24,8 @@ import static org.junit.Assert.*;
 
 import static org.junit.Assert.assertEquals;
 
-public class UserTests {
+@RunWith(Enclosed.class)
+public class TestsMessageAndConversationClass {
 
     public static void main(String[] args) {
         Result result = JUnitCore.runClasses(TestCase.class);
@@ -68,7 +70,6 @@ public class UserTests {
             System.setIn(testIn);
         }
 
-
         // MESSAGE SUPERCLASS TEST CASES
         @Test(timeout = 2000)
         public void testMessageSuperClassConstructor() {
@@ -88,7 +89,7 @@ public class UserTests {
             Message testMessage = new Message(testUser);
 
             int testIndex = 4;
-            try{
+            try {
                 testMessage.setIndex(testIndex);
             } catch (ActionNotAllowedException ignored) {}
             int comparedIndex = testMessage.getIndex();
@@ -97,7 +98,6 @@ public class UserTests {
         }
 
         // TEXTMESSAGE SUBCLASS TESTS
-
         @Test(timeout = 2000)
         public void testTextMessageConstructor() {
             User testUser = new User("ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
@@ -260,21 +260,6 @@ public class UserTests {
             Conversation testConversation = new Conversation("cs 180 group", testArray, cd);
 
             assertEquals(testConversation.fileNameString(), "Conversation #" + testConversation.getID());
-        }
-
-        @Test(timeout = 2000)
-        public void testUserDatabase() {
-
-            User user1 = new User("ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
-            User user2 = new User("pete", "pete@purdue.edu", "purduepete", "purduemascot4", "08/02/1869");
-
-            ArrayList<User> userArray = new ArrayList<>();
-            userArray.add(user1);
-            userArray.add(user2);
-
-            UserDatabase userDatabase = new UserDatabase(userArray, "testDatabase");
-            userDatabase.writeDatabase();
-            assertEquals(userArray, userDatabase.readDatabase());
         }
     }
 }
