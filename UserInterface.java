@@ -30,9 +30,9 @@ public interface UserInterface {
     public void setBlocked(ArrayList<User> blocked);
 
     // friend related methods
-    public ArrayList<User> addFriend(User user);
-    public ArrayList<User> blockFriend(User user);
-    public ArrayList<User> removeFriend(User user);
+    public boolean addFriend(User user);
+    public boolean blockFriend(User user);
+    public boolean removeFriend(User user);
 
     // helper methods may be needed later
 }

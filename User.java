@@ -135,49 +135,33 @@ public class User implements Serializable, UserInterface {
     } // toString
 
     //Adds a User to the friends ArrayList<>
-    public ArrayList<User> addFriend(User user) {
-        try {
-            if (friends.contains(user)) {
-                throw new ActionNotAllowedException("Error: User already added");
-            } else {
-                friends.add(user);
-            }
-
-        } catch (ActionNotAllowedException e) {
-            e.printStackTrace();
+    public boolean addFriend(User user) {
+        boolean success = false;
+        if (!friends.contains(user)) {
+            success = true;
+            friends.add(user);
         }
-        return friends;
+        return success;
     } // addFriend
 
     // adds a User to the blocked Arraylist<>
-    public ArrayList<User> blockFriend(User user) {
-        try {
-            if (blocked.contains(user)) {
-                throw new ActionNotAllowedException("User already blocked");
-
-            }else {
-                blocked.add(user);
-            }
-        } catch (ActionNotAllowedException e) {
-            e.printStackTrace();
+    public boolean blockFriend(User user) {
+        boolean success = false;
+        if (!blocked.contains(user)) {
+            success = true;
+            blocked.add(user);
         }
-
-        return blocked;
-    } // blockFriend
+        return success;
+    }// blockFriend
 
     //removes a User from the friends ArrayList
-    public ArrayList<User> removeFriend(User user) {
-        try {
-            if (friends.contains(user)) {
-                friends.remove(user);
-            } else {
-                throw new ActionNotAllowedException("Error - User is not in friends list");
-            }
-
-        } catch (ActionNotAllowedException e) {
-            e.printStackTrace();
+    public boolean removeFriend(User user) {
+        boolean success = false;
+        if (friends.contains(user)) {
+            friends.remove(user);
+            success = true;
         }
-        return friends;
+        return success;
     } // removeFriend
 
     // Encrypts the password to an different String by shifting characters by 5
