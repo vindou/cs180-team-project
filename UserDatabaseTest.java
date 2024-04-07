@@ -83,66 +83,9 @@ public class UserDatabaseTest {
             System.setIn(testIn);
         }
 
-        // Each of the correct outputs
-
-        /* 
-        @Test(timeout = 1000)
-        public void testExpectedOne() {
-
-            // Set the input
-            String input = "0" + System.lineSeparator();
-
-            // Pair the input with the expected result
-            String expected = "";
-
-            // Runs the program with the input values
-            receiveInput(input);
-            // UserDatabase.main(new String[0]);
-
-            // Retrieves the output from the program
-            String output = getOutput();
-
-            // Trims the output and verifies it is correct.
-            expected = expected.replaceAll("\r\n", "\n");
-            output = output.replaceAll("\r\n", "\n");
-            assertEquals("Make sure you follow the flowchart and use the given strings for the result!",
-                    expected.trim(), output.trim());
-        }
-
-        @Test(timeout = 1000)
-        public void testExpectedTwo() {
-
-            // Set the input
-            String input = "1" + System.lineSeparator() +
-                    "0.12" + System.lineSeparator() +
-                    "1000.00" + System.lineSeparator() +
-                    "320.00" + System.lineSeparator() +
-                    "2" + System.lineSeparator() +
-                    "1" + System.lineSeparator() +
-                    "0" + System.lineSeparator();
-
-            // Pair the input with the expected result
-            String expected = "";
-
-            // Runs the program with the input values
-            receiveInput(input);
-            // UserDatabase.main(new String[0]);
-
-            // Retrieves the output from the program
-            String output = getOutput();
-
-            // Trims the output and verifies it is correct.
-            expected = expected.replaceAll("\r\n", "\n");
-            output = output.replaceAll("\r\n", "\n");
-            assertEquals("Make sure you follow the flowchart and use the given strings for the result!",
-                    expected.trim(), output.trim());
-        }
-        */
-
         // testing the application of the writeDatabase method
         @Test(timeout = 5000)
-        public void writeDatabaseTest() {
-
+        public void writeDatabaseTestOne() {
             // Set the input
             User user1 = new User("ellie", "ellie@purdue.edu", "ellieW", "purdue1231", "03/16/2004");
             User user2 = new User("jack", "jack@purdue.edu", "jackJ", "purdue1232", "03/17/2004");
@@ -154,13 +97,11 @@ public class UserDatabaseTest {
             userArray.add(user2);
             userArray.add(user3);
             userArray.add(user4);
-
             
             String filename = "userData.txt";
-            UserDatabase userData = new UserDatabase(userArray, filename);
-            userData.writeDatabase();
+            UserDatabase userDatabase1 = new UserDatabase(userArray, filename);
+            assertTrue(userDatabase1.writeDatabase());
         }
-
         // testing the application of the readDatabase method
         @Test(timeout = 5000)
         public void readDatabaseTest() {
@@ -169,7 +110,7 @@ public class UserDatabaseTest {
             User user3 = new User("gilbert", "gilbert@purdue.edu", "gilbertC", "purdue1233", "03/18/2004");
             User user4 = new User("sahil", "sahil@purdue.edu", "SahilS", "purdue1234", "03/19/2004");
 
-            ArrayList<User> test = new ArrayList<User>();
+            ArrayList<User> test = new ArrayList<>();
             test.add(user1);
             test.add(user2);
             test.add(user3);

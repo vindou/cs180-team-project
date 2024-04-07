@@ -4,7 +4,6 @@ import java.util.Scanner;
 
 public interface Server {
     public static final Socket socket = new Socket();
-
     public void run();
     public void shutdown(); 
 }
