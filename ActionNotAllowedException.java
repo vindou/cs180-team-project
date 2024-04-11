@@ -1,4 +1,4 @@
-/*
+/**
 * ActionNotAllowedException
 *
 * An exception that is thrown when a forbidden action occurs.
