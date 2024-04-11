@@ -35,7 +35,6 @@ public class ClientClass {
     
     // open messages
 
-        
     // send message
 
     // close messages

@@ -32,15 +32,92 @@ public class ServerClass implements Server {
             ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
             // Create OIS for reading objects
             ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+            BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            PrintWriter writer = new PrintWriter(socket.getOutputStream()); 
             
-            // Example of reading data from the client
-            String clientMessage;
-            while ((clientMessage = reader.readLine()) != null) {
-                System.out.println("Received from client: " + clientMessage);
-                
-                // Example of sending a response back to the client
-                writer.println("Server received: " + clientMessage);
-            }
+                writer.println("What would you like to do: ");
+                writer.println("1) Log In");
+                writer.println("2) Create New Account");
+
+                String clientChoice;
+                while ((clientChoice = reader.readLine()) != null) {
+                    switch (Integer.parseInt(clientChoice)) {
+                        case 1:
+                            writer.println("Please enter your username: ");
+                            String username = reader.readLine();
+                            User thisUser = retrieveUserData(username);
+
+                            writer.println("Please enter your password: ");
+                            String password = reader.readLine();
+                            while (true)
+                            {
+                                if (thisUser.checkPassword(password))
+                                {
+                                    writer.println("Success!");
+                                    // Handoff to method for logged in users
+                                    handleLoggedIn(serverSocket, thisUser);
+                                }
+                                else
+                                {
+                                    while (true)
+                                    {
+                                    writer.println("Incorrect password, would you like to try again? (yes / no)");
+                                    String passAnswer;
+                                    passAnswer = reader.readLine();
+                                    if (passAnswer.toUpperCase().equals("NO"))
+                                    {
+                                        writer.println("Goodbye!");
+                                        return;
+                                    }
+                                    else if (!passAnswer.toUpperCase().equals("YES"))
+                                    {
+                                        writer.println("Not a valid choice.");
+                                        return;
+                                    }
+                                    else
+                                        break;
+                                    }
+                                }
+                            }
+
+                            break;
+                        case 2:
+                            current.setC(replacement);
+                            break;
+                        // Add more cases as needed for other characters
+                        default:
+                            // Do nothing if the character doesn't match
+                            break;
+                    }
+                }
+                // after log in...
+
+                    // Example of sending a response back to the client
+                    writer.println("What would you like to do: ");
+                    
+                    writer.println("2) View Conversations");
+                        // send message
+                        // close conversations
+                    writer.println("3) Start New Conversation ");
+                    writer.println("4) Search Users");
+                        // add user
+                        // block user
+
+                    String userChoice;
+                    while ((userChoice = reader.readLine()) != null) {
+                        switch (Integer.parseInt(userChoice)) {
+                            case 1:
+                                // public ArrayList<Conversation> findAvailableConversations(User user)
+                                break;
+                            case 2:
+                                // something
+                                break;
+                            // Add more cases as needed 
+                            default:
+                                // Do something 
+                                break;
+                        }
+                    }
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -51,6 +128,64 @@ public class ServerClass implements Server {
                 e.printStackTrace();
             }
         }
-    }
+    } 
 
+    private static void handleLoggedIn(Socket serverSocket, User user) {
+        try {
+            // Create OOS for writing objects
+            ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+            // Create OIS for reading objects
+            ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+
+                writer.println("What would you like to do: ");
+                writer.println("1) View Conversations");
+                    // send message
+                    // close conversations
+                writer.println("2) Start New Conversation ");
+                writer.println("3) Search Users");
+                    // add user
+                    // block user
+
+                String userChoice;
+                while ((userChoice = reader.readLine()) != null) {
+                    switch (Integer.parseInt(userChoice)) {
+                        case 1:
+                            // public ArrayList<Conversation> findAvailableConversations(User user)
+                            break;
+                        case 2:
+                            // something
+                            break;
+                        // Add more cases as needed 
+                        default:
+                            // Do something 
+                            break;
+                    }
+                }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                // Close the client socket when done
+                serverSocket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    } 
+
+    // log in
+
+    // create account
+
+    // open conversation
+        // send message
+        // close messages
+
+    // start new conversation
+
+    // Search users
+        // add user as friend
+        // block user
+
+    // edit my user
 }
