@@ -90,34 +90,6 @@ public class ServerClass implements Server {
                             break;
                     }
                 }
-                // after log in...
-
-                    // Example of sending a response back to the client
-                    writer.println("What would you like to do: ");
-                    
-                    writer.println("2) View Conversations");
-                        // send message
-                        // close conversations
-                    writer.println("3) Start New Conversation ");
-                    writer.println("4) Search Users");
-                        // add user
-                        // block user
-
-                    String userChoice;
-                    while ((userChoice = reader.readLine()) != null) {
-                        switch (Integer.parseInt(userChoice)) {
-                            case 1:
-                                // public ArrayList<Conversation> findAvailableConversations(User user)
-                                break;
-                            case 2:
-                                // something
-                                break;
-                            // Add more cases as needed 
-                            default:
-                                // Do something 
-                                break;
-                        }
-                    }
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -150,14 +122,28 @@ public class ServerClass implements Server {
                 while ((userChoice = reader.readLine()) != null) {
                     switch (Integer.parseInt(userChoice)) {
                         case 1:
-                            // public ArrayList<Conversation> findAvailableConversations(User user)
-                            break;
+                            ArrayList<Conversation> convos = findAvailableConversations(user);
+                            int convoNum = 1;
+                            for (Conversation convo : convos)
+                            {
+                                ArrayList<User> recipients = convo.getUsers();
+                                writer.println(convoNum + ") Conversation with " )
+                                for (User user : recipients)
+                                {
+                                    writer.print(user.getUsername() + " ");
+                                }
+                                convoNum++;
+                            }
+
+                            
+
+                            
                         case 2:
                             // something
-                            break;
+                            
                         // Add more cases as needed 
                         default:
-                            // Do something 
+                            writer.println("Goodbye!");
                             break;
                     }
                 }
