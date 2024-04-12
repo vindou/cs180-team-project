@@ -327,8 +327,6 @@ public class ServerClass implements Server {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-
-
                     // Add more cases as needed
                     default:
                         writer.println("Goodbye!");
