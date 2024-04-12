@@ -116,7 +116,7 @@ public class ServerClass implements Server {
                         String newAccBirth;
                         newAccBirth = reader.readLine();
 
-                        User newAccount = new User(newAccName, newAccEmail, newUsername, newAccPass, newAccBirth); // Added semicolon
+                        User newAccount = new User(newAccName, newAccEmail, newUsername, newAccPass, newAccBirth);
                         // HANDOFF TO HANDLE THE LOGGED IN CASE (USED UPON LOGIN TOO)
                         handleLoggedIn(socket, newAccount); // Fixed parameter
                         break;
