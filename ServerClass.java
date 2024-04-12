@@ -38,6 +38,7 @@ public class ServerClass implements Server {
                 writer.println("What would you like to do: ");
                 writer.println("1) Log In");
                 writer.println("2) Create New Account");
+                writer.flush();
 
                 String clientChoice;
                 while ((clientChoice = reader.readLine()) != null) {
@@ -45,16 +46,19 @@ public class ServerClass implements Server {
                         case 1:
                             // CASE FOR LOGGING IN
                             writer.println("Please enter your username: ");
+                            writer.flush();
                             String username = reader.readLine();
                             User thisUser = retrieveUserData(username);
 
                             writer.println("Please enter your password: ");
+                            writer.flush();
                             String password = reader.readLine();
                             while (true)
                             {
                                 if (thisUser.checkPassword(password))
                                 {
                                     writer.println("Success!");
+                                    writer.flush();
                                     // Handoff to method for logged in users
                                     handleLoggedIn(serverSocket, thisUser);
                                 }
@@ -64,16 +68,19 @@ public class ServerClass implements Server {
                                     while (true)
                                     {
                                     writer.println("Incorrect password, would you like to try again? (yes / no)");
+                                    writer.flush();
                                     String passAnswer;
                                     passAnswer = reader.readLine();
                                     if (passAnswer.toUpperCase().equals("NO"))
                                     {
                                         writer.println("Goodbye!");
+                                        writer.flush();
                                         return;
                                     }
                                     else if (!passAnswer.toUpperCase().equals("YES"))
                                     {
                                         writer.println("Not a valid choice.");
+                                        writer.flush();
                                         return;
                                     }
                                     else
@@ -89,28 +96,34 @@ public class ServerClass implements Server {
                             {
                                 boolean taken = false;
                                 writer.println("Please enter a username: ");
+                                writer.flush();
                                 String newUsername;
                                 newUsername = reader.readLine();
                                 if (!userData.retrieveUserData(newUsername).equals(null))
                                 {
                                     taken = true;
                                     writer.println("Sorry, that username is taken.");
+                                    writer.flush();
                                 }
                             } while (taken)
 
                             writer.println("Please enter your name: ");
+                            writer.flush();
                             String newAccName;
                             newAccName = reader.readLine();
 
                             writer.println("Please enter your email: ");
+                            writer.flush();
                             String newAccEmail;
                             newAccEmail = reader.readLine();
 
                             writer.println("Please enter a password: ");
+                            writer.flush();
                             String newAccPass;
                             newAccPass = reader.readLine();
 
                             writer.println("Please enter your birthday: ");
+                            writer.flush();
                             String newAccBirth;
                             newAccBirth = reader.readLine();
 
@@ -153,6 +166,7 @@ public class ServerClass implements Server {
                     // block user
                 writer.println("4) See My Account");
                 writer.println("5) Quit");
+                writer.flush();
 
                 String userChoice;
                 while ((userChoice = reader.readLine()) != null) {
@@ -165,6 +179,7 @@ public class ServerClass implements Server {
                             {
                                 ArrayList<User> recipients = convo.getUsers();
                                 writer.println(convoNum + ". Conversation with " );
+                                writer.flush();
                                 for (User user : recipients)
                                 {
                                     writer.print(user.getUsername() + " ");
@@ -173,6 +188,7 @@ public class ServerClass implements Server {
                             }
                             // CHECK WHICH CONVO THEY WANT
                             writer.println("What conversation number would you like to open?");
+                            writer.flush();
                             int convoChoice;
                             convoChoice = Integer.parseInt(reader.readLine());
 
@@ -182,6 +198,7 @@ public class ServerClass implements Server {
                             // option to send new text 
                             do {
                                 writer.println("What would you like to say?");
+                                writer.flush();
                                 String sendThis;
                                 sendThis = reader.readLine();
                                 if (!(sendThis.equals("")))
@@ -189,6 +206,7 @@ public class ServerClass implements Server {
                                 boolean again = false;
 
                                 writer.println("Would you like to send another message? ('yes' / 'no')");
+                                writer.flush();
                                 String runItBack;
                                 runItBack = reader.readLine();
                                 if (runItBack.toUpperCase().equals("YES"))
@@ -198,6 +216,7 @@ public class ServerClass implements Server {
                         case 2:
                             // WE'RE STARTING A NEW CONVO
                             writer.println("What user would you like to start a new conversation with?");
+                            writer.flush();
                             String newConvoUser;
                             newConvoUser = reader.readLine();
 
@@ -213,6 +232,7 @@ public class ServerClass implements Server {
 
                             // sends new text 
                             writer.println("What would you like to say?");
+                            writer.flush();
                             String sendThis;
                             sendThis = reader.readLine();
                             if (!(sendThis.equals("")))
@@ -222,6 +242,7 @@ public class ServerClass implements Server {
                         case 3: 
                             // Search Users
                             writer.println("Enter the username to search:");
+                            writer.flush();
                             String searchUsername = reader.readLine();
                             User searchedUser = userData.retrieveUserData(searchUsername);
                             if (searchedUser != null) {
@@ -229,23 +250,29 @@ public class ServerClass implements Server {
                                 writer.println("Username: " + searchedUser.getUsername());
                                 writer.println("Name: " + searchedUser.getName());
                                 writer.println("Bio: " + searchedUser.getBio());
+                                writer.flush();
                                 // Provide options to add as friend or block user
                                 writer.println("Would you like to:");
                                 writer.println("1) Add as Friend");
                                 writer.println("2) Block User");
+                                writer.flush();
                                 String actionChoice = reader.readLine();
                                 switch (Integer.parseInt(actionChoice)) {
                                     case 1:
                                         user.addFriend(searchedUser);
                                         writer.println("User added as friend.");
+                                        writer.flush();
                                     case 2:
                                         user.blockFriend(searchedUser);
                                         writer.println("User blocked.");
+                                        writer.flush();
                                     default:
                                         writer.println("Invalid choice.");
+                                        writer.flush();
                                 }
                             } else {
                                 writer.println("User not found.");
+                                writer.flush();
                             }
 
                         case 4:
@@ -257,6 +284,7 @@ public class ServerClass implements Server {
                                 writer.println("Name: " + user.getName());
                                 writer.println("Bio: " + user.getBio());
                                 writer.println("Email: " + user.getEmail());
+                                writer.flush();
                                 
                                 // Provide options to edit account
                                 writer.println("What would you like to edit:");
@@ -264,36 +292,47 @@ public class ServerClass implements Server {
                                 writer.println("2) Change Name");
                                 writer.println("3) Update Bio");
                                 writer.println("4) Change Email");
+                                writer.flush();
                                 int editChoice = Integer.parseInt(reader.readLine());
                                 
                                 switch (editChoice) {
                                     case 1: // Change Username
                                         writer.println("Enter new username:");
+                                        writer.flush();
                                         String newUsername = reader.readLine();
                                         // Check if the new username is not already taken
                                         if (userData.retrieveUserData(newUsername) != null) {
                                             writer.println("Sorry, that username is already taken.");
+                                            writer.flush();
                                         } else {
                                             user.setUsername(newUsername);
                                             writer.println("Username updated successfully.");
+                                            writer.flush();
                                         }
                                     case 2: // Change Name
                                         writer.println("Enter new name:");
+                                        writer.flush();
                                         String newName = reader.readLine();
                                         user.setName(newName);
                                         writer.println("Name updated successfully.");
+                                        writer.flush();
                                     case 3: // Update Bio
                                         writer.println("Enter new bio:");
+                                        writer.flush();
                                         String newBio = reader.readLine();
                                         user.setBio(newBio);
                                         writer.println("Bio updated successfully.");
+                                        writer.flush();
                                     case 4: // Change Email
                                         writer.println("Enter new email:");
+                                        writer.flush();
                                         String newEmail = reader.readLine();
                                         user.setEmail(newEmail);
                                         writer.println("Email updated successfully.");
+                                        writer.flush();
                                     default:
                                         writer.println("Invalid choice.");
+                                        writer.flush();
                                 }
                             } catch (IOException e) {
                                 e.printStackTrace();
@@ -303,6 +342,7 @@ public class ServerClass implements Server {
                         // Add more cases as needed 
                         default:
                             writer.println("Goodbye!");
+                            writer.flush();
                             break;
                     }
                 }
