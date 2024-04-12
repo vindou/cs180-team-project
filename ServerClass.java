@@ -159,9 +159,9 @@ public class ServerClass implements Server {
                     switch (Integer.parseInt(userChoice)) {
                         case 1:
                             // VIEW CONVERSATIONS FOR THIS USER
-                            ArrayList<Conversation> convos = findAvailableConversations(user);
+                            ArrayList<Conversation> convosForUser = findAvailableConversations(user);
                             int convoNum = 1;
-                            for (Conversation convo : convos)
+                            for (Conversation convo : convosForUser)
                             {
                                 ArrayList<User> recipients = convo.getUsers();
                                 writer.println(convoNum + ". Conversation with " );
@@ -177,20 +177,26 @@ public class ServerClass implements Server {
                             convoChoice = Integer.parseInt(reader.readLine());
 
                             // HOPEFULLY PRINTS OUT TEXTS
-                            convos.writeMessageLogs(convos.get(convoChoice-1));
+                            convos.writeMessageLogs(convosForUser.get(convoChoice-1));
 
                             // option to send new text 
-                            writer.println("What would you like to say?");
-                            String sendThis;
-                            sendThis = reader.readLine();
-                            if (!(sendThis.equals("")))
-                                user.sendTextMessage(convos.get(convoChoice-1), userChoice);
-                            
-                            
+                            do {
+                                writer.println("What would you like to say?");
+                                String sendThis;
+                                sendThis = reader.readLine();
+                                if (!(sendThis.equals("")))
+                                    convosForUser.get(convoChoice-1).addMessage(new TextMessage(user, sendThis));
+                                boolean again = false;
 
+                                writer.println("Would you like to send another message? ('yes' / 'no')");
+                                String runItBack;
+                                runItBack = reader.readLine();
+                                if (runItBack.toUpperCase().equals("YES"))
+                                    again = true;
+                            } while (again);
                             
                         case 2:
-                            // WERE STARTING A NEW CONVO
+                            // WE'RE STARTING A NEW CONVO
                             writer.println("What user would you like to start a new conversation with?");
                             String newConvoUser;
                             newConvoUser = reader.readLine();
@@ -198,37 +204,99 @@ public class ServerClass implements Server {
                             userData.writeDatabase();
                             User userForConvo = userData.retrieveUserData(newConvoUser);
 
+                            // DATA FOR INSTANTIATING CONVO
+                            ArrayList<User> theGuys = new ArrayList<>();
+                            theGuys.add(user);
+                            theGuys.add(userForConvo)
 
+                            Conversation theNewConvo = new Conversation(theGuys, convos);
+
+                            // sends new text 
+                            writer.println("What would you like to say?");
+                            String sendThis;
+                            sendThis = reader.readLine();
+                            if (!(sendThis.equals("")))
+                                theNewConvo.addMessage(new TextMessage(user, sendThis));
 
                             
                         case 3: 
-                            // WE ARE SEARCHING USERS
+                            // Search Users
+                            writer.println("Enter the username to search:");
+                            String searchUsername = reader.readLine();
+                            User searchedUser = userData.retrieveUserData(searchUsername);
+                            if (searchedUser != null) {
+                                writer.println("User found:");
+                                writer.println("Username: " + searchedUser.getUsername());
+                                writer.println("Name: " + searchedUser.getName());
+                                writer.println("Bio: " + searchedUser.getBio());
+                                // Provide options to add as friend or block user
+                                writer.println("Would you like to:");
+                                writer.println("1) Add as Friend");
+                                writer.println("2) Block User");
+                                String actionChoice = reader.readLine();
+                                switch (Integer.parseInt(actionChoice)) {
+                                    case 1:
+                                        user.addFriend(searchedUser);
+                                        writer.println("User added as friend.");
+                                    case 2:
+                                        user.blockFriend(searchedUser);
+                                        writer.println("User blocked.");
+                                    default:
+                                        writer.println("Invalid choice.");
+                                }
+                            } else {
+                                writer.println("User not found.");
+                            }
 
                         case 4:
-                            // WE ARE EDITING THE CURRENT USERS ACCOUNT
-                            writer.println(user.getUsername());
-                            writer.println(user.getName());
-                            writer.println(user.getBio());
-                            writer.println(user.getEmail());
-
-                            writer.println("What would you like to do: ");
-                            writer.println("1) Change Username");
-                            writer.println("2) Change Name");
-                            writer.println("3) Update Bio");
-                            writer.println("4) Change Email");
-
-                            int accountChoice;
-                            accountChoice = reader.readLine();
-                            switch Integer.parseInt(accountChoice) {
-                                case 1:
-                                // EDIT USERNAME
-                                case 2:
-                                // EDIT NAME
-                                case 3:
-                                // EDIT BIO
-                                case 4:
-                                // EDIT EMAIL
-
+                            // EDIT CLIENT USER
+                            try 
+                            {
+                                // Present current user's account information
+                                writer.println("Username: " + user.getUsername());
+                                writer.println("Name: " + user.getName());
+                                writer.println("Bio: " + user.getBio());
+                                writer.println("Email: " + user.getEmail());
+                                
+                                // Provide options to edit account
+                                writer.println("What would you like to edit:");
+                                writer.println("1) Change Username");
+                                writer.println("2) Change Name");
+                                writer.println("3) Update Bio");
+                                writer.println("4) Change Email");
+                                int editChoice = Integer.parseInt(reader.readLine());
+                                
+                                switch (editChoice) {
+                                    case 1: // Change Username
+                                        writer.println("Enter new username:");
+                                        String newUsername = reader.readLine();
+                                        // Check if the new username is not already taken
+                                        if (userData.retrieveUserData(newUsername) != null) {
+                                            writer.println("Sorry, that username is already taken.");
+                                        } else {
+                                            user.setUsername(newUsername);
+                                            writer.println("Username updated successfully.");
+                                        }
+                                    case 2: // Change Name
+                                        writer.println("Enter new name:");
+                                        String newName = reader.readLine();
+                                        user.setName(newName);
+                                        writer.println("Name updated successfully.");
+                                    case 3: // Update Bio
+                                        writer.println("Enter new bio:");
+                                        String newBio = reader.readLine();
+                                        user.setBio(newBio);
+                                        writer.println("Bio updated successfully.");
+                                    case 4: // Change Email
+                                        writer.println("Enter new email:");
+                                        String newEmail = reader.readLine();
+                                        user.setEmail(newEmail);
+                                        writer.println("Email updated successfully.");
+                                    default:
+                                        writer.println("Invalid choice.");
+                                }
+                            } catch (IOException e) {
+                                e.printStackTrace();
                             }
 
 
@@ -255,14 +323,14 @@ public class ServerClass implements Server {
     // create account  -- DONE
 
     // open conversations -- DONE
-        // send message
-        // close messages
+        // send message -- DONE
+        // close messages -- MAYBE IDRK WHAT I MEANT BY THIS 
 
-    // start new conversation
+    // start new conversation -- DONE
 
-    // Search users
-        // add user as friend
-        // block user
+    // Search users -- DONE
+        // add user as friend -- DONE
+        // block user -- DONE
 
-    // edit my user
+    // edit my user -- DONE
 }
