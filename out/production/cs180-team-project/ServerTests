@@ -1,0 +1,163 @@
+import junit.framework.TestCase;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.experimental.runners.Enclosed;
+
+import org.junit.runner.JUnitCore;
+import org.junit.runner.Result;
+import org.junit.runner.RunWith;
+import org.junit.runner.notification.Failure;
+
+import javax.swing.*;
+import java.io.*;
+import java.util.ArrayList;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+
+
+public class ServerTests {
+    //Main Method to run test cases below.
+    private static final String WELCOME_MESSAGE = "What would you like to do:\n1) Log In\n2) Create New Account";
+    private static final String USERNAME_PROMPT = "Please enter your username: ";
+    private static final String PASS_PROMPT = "Please enter your password: ";
+    private static final String SUCCESS_MSG = "Success!";
+    private static final String INCORRECT_MSG = "Incorrect password, would you like to try again? (yes / no)";
+    private static final String GOODBYE_MESSAGE = "Goodbye!";
+
+    public static void main(String[] args) {
+        Result result = JUnitCore.runClasses(TestCase.class);
+        System.out.printf("Test Count: %d.\n", result.getRunCount());
+        if (result.wasSuccessful()) {
+            System.out.printf("Excellent - all local tests ran successfully.\n");
+        } else {
+            System.out.printf("Tests failed: %d.\n", result.getFailureCount());
+            for (Failure failure : result.getFailures()) {
+                System.out.println(failure.toString());
+            }
+        }
+    }
+
+    public static class TestCase {
+        private final PrintStream originalOutput = System.out;
+        private final InputStream originalSysin = System.in;
+        @SuppressWarnings("FieldCanBeLocal")
+        private ByteArrayInputStream testIn;
+        @SuppressWarnings("FieldCanBeLocal")
+        private ByteArrayOutputStream testOut;
+
+        @Before
+        public void outputStart() {
+            testOut = new ByteArrayOutputStream();
+            System.setOut(new PrintStream(testOut));
+        }
+
+        @After
+        public void restoreInputAndOutput() {
+            System.setIn(originalSysin);
+            System.setOut(originalOutput);
+        }
+
+        private String getOutput() {
+            return testOut.toString();
+        }
+
+        @SuppressWarnings("SameParameterValue")
+        private void receiveInput(String str) {
+            testIn = new ByteArrayInputStream(str.getBytes());
+            System.setIn(testIn);
+        }
+
+        //TEST 1 - Logging In
+
+        @Test(timeout = 1000)
+        public void logInCorrectPassword() {
+
+            // Set the input
+            String input = "1" + System.lineSeparator() + "elliewilliams" + System.lineSeparator() + "purdue123" +
+                    System.lineSeparator();
+
+            // Pair the input with the expected result
+            String expected = WELCOME_MESSAGE + System.lineSeparator() + USERNAME_PROMPT + System.lineSeparator() + PASS_PROMPT + SUCCESS_MSG;
+
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+            // Redirect System.out to the outputStream
+            PrintStream printStream = new PrintStream(outputStream);
+            System.setOut(printStream);
+
+            // Call the method that writes to System.out (or any PrintWriter)
+            ServerClass.handleClient(Server.socket);
+
+            // Flush the outputStream to ensure all content is captured
+            printStream.flush();
+
+            // Get the captured output from the outputStream
+            String capturedOutput = outputStream.toString();
+
+
+            // Trims the output and verifies it is correct.
+            capturedOutput = capturedOutput.replace("\r\n", "\n");
+            expected = expected.replace("\r\n", "\n");
+            assertEquals(expected.trim(), capturedOutput.trim());
+        }
+
+
+        //TEST 2 - Logging In wrong password
+
+        @Test(timeout = 1000)
+        public void logInWrongPassword() {
+
+            // Set the input
+            String input = "1" + System.lineSeparator() + "elliewilliams" + System.lineSeparator() + "purdue122" +
+                    System.lineSeparator() + "yes" + System.lineSeparator() + "purdue123";
+
+            // Pair the input with the expected result
+            String expected = WELCOME_MESSAGE + System.lineSeparator()
+                    + USERNAME_PROMPT + System.lineSeparator() + PASS_PROMPT + INCORRECT_MSG + PASS_PROMPT + SUCCESS_MSG;
+
+            // Runs the program with the input values
+            receiveInput(input);
+
+
+            // Retrieves the output from the program
+            String output = getOutput();
+
+            // Trims the output and verifies it is correct.
+            output = output.replace("\r\n", "\n");
+            expected = expected.replace("\r\n", "\n");
+            assertEquals(expected.trim(), output.trim());
+        }
+
+        //TEST 3 - Logging In wrong password, then just give up
+
+        @Test(timeout = 1000)
+        public void logInWrongPasswordThenQuit() {
+
+            // Set the input
+            String input = "1" + System.lineSeparator() + "elliewilliams" + System.lineSeparator() + "purdue122" +
+                    System.lineSeparator() + "no";
+
+            // Pair the input with the expected result
+            String expected = WELCOME_MESSAGE + System.lineSeparator()
+                    + USERNAME_PROMPT + System.lineSeparator() + PASS_PROMPT + INCORRECT_MSG + GOODBYE_MESSAGE;
+
+            // Runs the program with the input values
+            receiveInput(input);
+
+
+            // Retrieves the output from the program
+            String output = getOutput();
+
+            // Trims the output and verifies it is correct.
+            output = output.replace("\r\n", "\n");
+            expected = expected.replace("\r\n", "\n");
+            assertEquals(expected.trim(), output.trim());
+        }
+
+
+    }
+}
