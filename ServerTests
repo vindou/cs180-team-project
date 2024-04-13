@@ -17,7 +17,15 @@ import java.util.ArrayList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-
+/**
+ * ServerTests
+ *
+ * A program that tests the functionality of the processing that happens on the Server side of the database.
+ *
+ * @author Ellie Williams
+ *
+ * @version 04/13/2024
+ */
 
 public class ServerTests {
     //Main Method to run test cases below.
@@ -27,6 +35,12 @@ public class ServerTests {
     private static final String SUCCESS_MSG = "Success!";
     private static final String INCORRECT_MSG = "Incorrect password, would you like to try again? (yes / no)";
     private static final String GOODBYE_MESSAGE = "Goodbye!";
+    private static final String TAKEN_MSG = "Sorry, that username is taken.";
+    private static final String CREATE_USERNAME = "Please enter a username: ";
+    private static final String CREATE_NAME = "Please enter your name: ";
+    private static final String CREATE_EMAIL = "Please enter your email: ";
+    private static final String CREATE_PASS = "Please enter a password: ";
+    private static final String CREATE_BDAY = "Please enter your birthday: ";
 
     public static void main(String[] args) {
         Result result = JUnitCore.runClasses(TestCase.class);
@@ -75,6 +89,8 @@ public class ServerTests {
 
         @Test(timeout = 1000)
         public void logInCorrectPassword() {
+            // existing users in the database
+            User user1 = new User("Ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
 
             // Set the input
             String input = "1" + System.lineSeparator() + "elliewilliams" + System.lineSeparator() + "purdue123" +
@@ -83,20 +99,9 @@ public class ServerTests {
             // Pair the input with the expected result
             String expected = WELCOME_MESSAGE + System.lineSeparator() + USERNAME_PROMPT + System.lineSeparator() + PASS_PROMPT + SUCCESS_MSG;
 
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-
-            // Redirect System.out to the outputStream
-            PrintStream printStream = new PrintStream(outputStream);
-            System.setOut(printStream);
-
-            // Call the method that writes to System.out (or any PrintWriter)
-            ServerClass.handleClient(Server.socket);
-
-            // Flush the outputStream to ensure all content is captured
-            printStream.flush();
 
             // Get the captured output from the outputStream
-            String capturedOutput = outputStream.toString();
+            String capturedOutput = getOutput();
 
 
             // Trims the output and verifies it is correct.
@@ -110,6 +115,8 @@ public class ServerTests {
 
         @Test(timeout = 1000)
         public void logInWrongPassword() {
+            //existing users in the database
+            User user1 = new User("Ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
 
             // Set the input
             String input = "1" + System.lineSeparator() + "elliewilliams" + System.lineSeparator() + "purdue122" +
@@ -117,7 +124,8 @@ public class ServerTests {
 
             // Pair the input with the expected result
             String expected = WELCOME_MESSAGE + System.lineSeparator()
-                    + USERNAME_PROMPT + System.lineSeparator() + PASS_PROMPT + INCORRECT_MSG + PASS_PROMPT + SUCCESS_MSG;
+                    + USERNAME_PROMPT + System.lineSeparator() + PASS_PROMPT + System.lineSeparator() +
+                    INCORRECT_MSG + System.lineSeparator() + PASS_PROMPT + System.lineSeparator() + SUCCESS_MSG;
 
             // Runs the program with the input values
             receiveInput(input);
@@ -137,13 +145,77 @@ public class ServerTests {
         @Test(timeout = 1000)
         public void logInWrongPasswordThenQuit() {
 
+            //"existing users" in the database
+            User user1 = new User("Ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
+
             // Set the input
             String input = "1" + System.lineSeparator() + "elliewilliams" + System.lineSeparator() + "purdue122" +
                     System.lineSeparator() + "no";
 
             // Pair the input with the expected result
             String expected = WELCOME_MESSAGE + System.lineSeparator()
-                    + USERNAME_PROMPT + System.lineSeparator() + PASS_PROMPT + INCORRECT_MSG + GOODBYE_MESSAGE;
+                    + USERNAME_PROMPT + System.lineSeparator() + PASS_PROMPT + System.lineSeparator()
+                    + INCORRECT_MSG + System.lineSeparator() + GOODBYE_MESSAGE;
+
+            // Runs the program with the input values
+            receiveInput(input);
+
+
+            // Retrieves the output from the program
+            String output = getOutput();
+
+            // Trims the output and verifies it is correct.
+            output = output.replace("\r\n", "\n");
+            expected = expected.replace("\r\n", "\n");
+            assertEquals(expected.trim(), output.trim());
+        }
+
+        //TEST 4 - Create a new User when desired username is available
+
+        @Test(timeout = 1000)
+        public void createNewUserNoIssues() {
+            // existing users in the server
+            User user1 = new User("Ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
+            User user2 = new User("Pete", "pete@purdue.edu", "therealpurduepete", "pete456", "08/02/1869");
+
+            // Set the input
+            String input = "2" + System.lineSeparator() + "jjuncker" + System.lineSeparator() + "Jack"
+                    + System.lineSeparator()  + "ilovecs" + System.lineSeparator() + "04/13/2024";
+
+            // Pair the input with the expected result
+            String expected = WELCOME_MESSAGE + System.lineSeparator()
+                    + CREATE_USERNAME + System.lineSeparator() + CREATE_NAME + System.lineSeparator()
+                    + CREATE_EMAIL + System.lineSeparator() + CREATE_PASS + System.lineSeparator() + CREATE_BDAY;
+
+            // Runs the program with the input values
+            receiveInput(input);
+
+
+            // Retrieves the output from the program
+            String output = getOutput();
+
+            // Trims the output and verifies it is correct.
+            output = output.replace("\r\n", "\n");
+            expected = expected.replace("\r\n", "\n");
+            assertEquals(expected.trim(), output.trim());
+        }
+
+        //TEST 4 - Create a new User when desired username is not available
+
+        @Test(timeout = 1000)
+        public void createNewUserNotAvailable() {
+            // existing users in the server
+            User user1 = new User("Ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
+            User user2 = new User("Pete", "pete@purdue.edu", "therealpurduepete", "pete456", "08/02/1869");
+
+            // Set the input
+            String input = "2" + System.lineSeparator() + "elliewilliams" + System.lineSeparator() + "elliewilliams3" + System.lineSeparator() + "Ellie"
+                    + System.lineSeparator()  + "purdue123" + System.lineSeparator() + "03/16/2004";
+
+            // Pair the input with the expected result
+            String expected = WELCOME_MESSAGE + System.lineSeparator()
+                    + CREATE_USERNAME + System.lineSeparator() + TAKEN_MSG + System.lineSeparator() + CREATE_USERNAME + System.lineSeparator() + CREATE_NAME + System.lineSeparator()
+                    + CREATE_EMAIL + System.lineSeparator() + CREATE_PASS + System.lineSeparator() + CREATE_BDAY;
 
             // Runs the program with the input values
             receiveInput(input);
