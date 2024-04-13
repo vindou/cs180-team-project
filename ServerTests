@@ -83,17 +83,26 @@ public class ServerTests {
             // Pair the input with the expected result
             String expected = WELCOME_MESSAGE + System.lineSeparator() + USERNAME_PROMPT + System.lineSeparator() + PASS_PROMPT + SUCCESS_MSG;
 
-            // Runs the program with the input values
-            receiveInput(input);
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
+            // Redirect System.out to the outputStream
+            PrintStream printStream = new PrintStream(outputStream);
+            System.setOut(printStream);
 
-            // Retrieves the output from the program
-            String output = getOutput();
+            // Call the method that writes to System.out (or any PrintWriter)
+            ServerClass.handleClient(Server.socket);
+
+            // Flush the outputStream to ensure all content is captured
+            printStream.flush();
+
+            // Get the captured output from the outputStream
+            String capturedOutput = outputStream.toString();
+
 
             // Trims the output and verifies it is correct.
-            output = output.replace("\r\n", "\n");
+            capturedOutput = capturedOutput.replace("\r\n", "\n");
             expected = expected.replace("\r\n", "\n");
-            assertEquals(expected.trim(), output.trim());
+            assertEquals(expected.trim(), capturedOutput.trim());
         }
 
 
