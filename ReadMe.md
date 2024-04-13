@@ -31,10 +31,10 @@
 ### Project Structure
 #### Data Storage
 Presented with the choice of developing a social media platform with either the capability to post images and texts, or send text messages, our team chose to develop one that was able to send text messages and initiate group chats. Making this decision, we were able to begin planning out the structure of our application. Below is shown a simple hierarchical chart of how we planned to manage data in our application. Most importantly, we would be storing data in two kinds of databases, one for users, and one for conversations, both storing objects of identical name utilizing Java's ObjectInputStream and file writing capabilities to avoid data loss in the alternative, which was storing data utilizing BufferedWriter and BufferedReader, which would be subject to errors in string concatenation, NumberFormatException(s), string reading, etc. In the bottom right corner there is also a cell with associated fields named "FileMessage," which indicates the possibility of our application being able to be upgraded to include image text messaging. As there is a singular Message superclass implemented currently, different kinds of message subclasses that represent different things can be added with little issue in the application, due to the aforementioned object storage method we utilize.
-![data_hierarchy.png](..%2F..%2FDownloads%2Fdata_hierarchy.png)
+![data_hierarchy.png](data_hierarchy.png)
 #### Server and Client
 With data handling capabilities implemented, we now turned our attention to being able to handle multiple users at once. At its core, the proposed structure of our implementation is incredibly simple, requiring the client to first "log in," letting the server know the identity of the client, and then when the client sends a request of a certain type, the server will associate the request with the user and process the request, returning the correct information to the client.
-![server_client_interaction.png](..%2F..%2FDownloads%2Fserver_client_interaction.png)
+![server_client_interaction.png](server_client_interaction.png)
 Finally, we plan to implement this feature into our application utilizing the data handling capabilities that were created and tested in Phase 1. For example, if a user chooses to send a message in a conversation, we'll utilize the addMessage method written in the Conversation class.
 ### Implementation
 #### Data Storage
