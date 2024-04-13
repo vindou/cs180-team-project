@@ -47,7 +47,9 @@ With data handling capabilities implemented, we now turned our attention to bein
 At its core, the proposed structure of our implementation is incredibly simple, requiring the client to first "log in," 
 letting the server know the identity of the client, and then when the client sends a request of a certain type, the server 
 will associate the request with the user and process the request, returning the correct information to the client.
+
 ![server_client_interaction.png](server_client_interaction.png)
+
 Finally, we plan to implement this feature into our application utilizing the data handling capabilities that were 
 created and tested in Phase 1. For example, if a user chooses to send a message in a conversation, we'll utilize the 
 addMessage method written in the Conversation class.
