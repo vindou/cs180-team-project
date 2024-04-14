@@ -45,6 +45,11 @@ public class ServerTests {
     private static final String CONVO_CHOICE = "What conversation number would you like to open?\n";
     private static final String WHAT_TO_SAY = "What would you like to say?/n";
     private static final String SEND_ANOTHER = "Would you like to send another message? ('yes' / 'no')\n";
+    private static final String WHICH_USER = "What user would you like to start a new conversation with?\n";
+    private static final String USERSEARCH_MENU = "Would you like to:\n1) Add as Friend\n2) Block User\n";
+    private static final String EDITUSER_INITIAL = "Username: elliewilliams\nName: Ellie\n" +
+            "Bio: Student at Purdue University\nEmail: will2613@purdue.edu";
+    private static final String EDIT_MENU = "What would you like to edit:\n1) Change Username\n2) Change Name\n3) Update Bio\n4) Change Email";
 
     public static void main(String[] args) {
         Result result = JUnitCore.runClasses(TestCase.class);
@@ -234,12 +239,11 @@ public class ServerTests {
             assertEquals(expected.trim(), output.trim());
         }
 
-        //HandleLoggedIn Tests
 
-        //TEST 6 - Text in existing convo with user, send multiple texts
+        //TEST 6 - text in existing conversation
 
         @Test(timeout = 1000)
-        public void existingConversation() {
+        public void existingConversationTest() {
             // existing users in the server
             User user1 = new User("Ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
             User user2 = new User("Pete", "pete@purdue.edu", "therealpurduepete", "pete456", "08/02/1869");
@@ -269,9 +273,355 @@ public class ServerTests {
 
             // Pair the input with the expected result
             String expected = CONVO_MENU + System.lineSeparator()
-                    + CONVO_CHOICE + System.lineSeparator() 
+                    + CONVO_CHOICE + System.lineSeparator()
                     + "1. Conversation with Purdue Pete" + System.lineSeparator() + WHAT_TO_SAY + System.lineSeparator()
                     + SEND_ANOTHER + System.lineSeparator() + WHAT_TO_SAY;
+
+            // Runs the program with the input values
+            receiveInput(input);
+
+
+            // Retrieves the output from the program
+            String output = getOutput();
+
+            // Trims the output and verifies it is correct.
+            output = output.replace("\r\n", "\n");
+            expected = expected.replace("\r\n", "\n");
+            assertEquals(expected.trim(), output.trim());
+        }
+
+        //Test 7 - create new conversation
+
+        @Test(timeout = 1000)
+        public void newConversationTest() {
+            // existing users in the server
+            User user1 = new User("Ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
+            User user2 = new User("Pete", "pete@purdue.edu", "therealpurduepete", "pete456", "08/02/1869");
+            User user3 = new User("Michael", "michaelscott@dundermifflin.org", "michaelgscott", "scott127", "05/08/1985");
+
+            // Set the input
+            String input = "2" + System.lineSeparator() + "Pete"
+                    + System.lineSeparator() + "Hi Pete";
+
+            // Pair the input with the expected result
+            String expected = CONVO_MENU + System.lineSeparator()
+                    + WHICH_USER + System.lineSeparator() + WHAT_TO_SAY;
+
+            // Runs the program with the input values
+            receiveInput(input);
+
+
+            // Retrieves the output from the program
+            String output = getOutput();
+
+            // Trims the output and verifies it is correct.
+            output = output.replace("\r\n", "\n");
+            expected = expected.replace("\r\n", "\n");
+            assertEquals(expected.trim(), output.trim());
+        }
+        
+        //Test 8 - search user and add them as a friend
+
+        @Test(timeout = 1000)
+        public void searchUserAddFriendTest() {
+            // existing users in the server
+            User user1 = new User("Ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
+            User user2 = new User("Pete", "pete@purdue.edu", "therealpurduepete", "pete456", "08/02/1869");
+            User user3 = new User("Michael", "michaelscott@dundermifflin.org", "michaelgscott", "scott127", "05/08/1985");
+
+            // Set the input
+            String input = "3" + System.lineSeparator() + "therealpurduepete"
+                    + System.lineSeparator() + "1";
+
+            // Pair the input with the expected result
+            String expected = CONVO_MENU + System.lineSeparator()
+                    + "Enter the username to search: " + System.lineSeparator() + "User found:\n" +
+                    "Username: therealpurduepete\nName: Pete\nBio: Mascot at Purdue University" + USERSEARCH_MENU + System.lineSeparator() + "User added as friend.";
+                    
+
+            // Runs the program with the input values
+            receiveInput(input);
+
+
+            // Retrieves the output from the program
+            String output = getOutput();
+
+            // Trims the output and verifies it is correct.
+            output = output.replace("\r\n", "\n");
+            expected = expected.replace("\r\n", "\n");
+            assertEquals(expected.trim(), output.trim());
+        }
+        
+        //Test 9 - search User and block them
+
+        @Test(timeout = 1000)
+        public void searchUserBlockTest() {
+            // existing users in the server
+            User user1 = new User("Ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
+            User user2 = new User("Pete", "pete@purdue.edu", "therealpurduepete", "pete456", "08/02/1869");
+            User user3 = new User("Michael", "michaelscott@dundermifflin.org", "michaelgscott", "scott127", "05/08/1985");
+
+            // Set the input
+            String input = "3" + System.lineSeparator() + "therealpurduepete"
+                    + System.lineSeparator() + "2";
+
+            // Pair the input with the expected result
+            String expected = CONVO_MENU + System.lineSeparator()
+                    + "Enter the username to search: " + System.lineSeparator() + "User found:\n" +
+                    "Username: therealpurduepete\nName: Pete\nBio: Mascot at Purdue University" + USERSEARCH_MENU + System.lineSeparator() + "User blocked.";
+
+
+            // Runs the program with the input values
+            receiveInput(input);
+
+
+            // Retrieves the output from the program
+            String output = getOutput();
+
+            // Trims the output and verifies it is correct.
+            output = output.replace("\r\n", "\n");
+            expected = expected.replace("\r\n", "\n");
+            assertEquals(expected.trim(), output.trim());
+        }
+
+        //Test 10 - search User and do something not in the menu
+
+        @Test(timeout = 1000)
+        public void searchUserInvalidTest() {
+            // existing users in the server
+            User user1 = new User("Ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
+            User user2 = new User("Pete", "pete@purdue.edu", "therealpurduepete", "pete456", "08/02/1869");
+            User user3 = new User("Michael", "michaelscott@dundermifflin.org", "michaelgscott", "scott127", "05/08/1985");
+
+            // Set the input
+            String input = "3" + System.lineSeparator() + "therealpurduepete"
+                    + System.lineSeparator() + "3";
+
+            // Pair the input with the expected result
+            String expected = CONVO_MENU + System.lineSeparator()
+                    + "Enter the username to search: " + System.lineSeparator() + "User found:\n" +
+                    "Username: therealpurduepete\nName: Pete\nBio: Mascot at Purdue University" + USERSEARCH_MENU + System.lineSeparator() + "Invalid choice.";
+
+
+            // Runs the program with the input values
+            receiveInput(input);
+
+
+            // Retrieves the output from the program
+            String output = getOutput();
+
+            // Trims the output and verifies it is correct.
+            output = output.replace("\r\n", "\n");
+            expected = expected.replace("\r\n", "\n");
+            assertEquals(expected.trim(), output.trim());
+        }
+
+        //Test 11 - search User but the User does not exist in the database
+
+        @Test(timeout = 1000)
+        public void searchUserNotFoundTest() {
+            // existing users in the server
+            User user1 = new User("Ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
+            User user2 = new User("Pete", "pete@purdue.edu", "therealpurduepete", "pete456", "08/02/1869");
+            User user3 = new User("Michael", "michaelscott@dundermifflin.org", "michaelgscott", "scott127", "05/08/1985");
+
+            // Set the input
+            String input = "3" + System.lineSeparator() + "gilbertchang";
+
+            // Pair the input with the expected result
+            String expected = CONVO_MENU + System.lineSeparator()
+                    + "Enter the username to search: " + System.lineSeparator() + "User not found.";
+
+            // Runs the program with the input values
+            receiveInput(input);
+
+
+            // Retrieves the output from the program
+            String output = getOutput();
+
+            // Trims the output and verifies it is correct.
+            output = output.replace("\r\n", "\n");
+            expected = expected.replace("\r\n", "\n");
+            assertEquals(expected.trim(), output.trim());
+        }
+
+        //Test 12 - Edit username with no issues
+
+        @Test(timeout = 1000)
+        public void editUsernameUniqueTest() {
+            // existing users in the server
+            User user1 = new User("Ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
+            User user2 = new User("Pete", "pete@purdue.edu", "therealpurduepete", "pete456", "08/02/1869");
+            User user3 = new User("Michael", "michaelscott@dundermifflin.org", "michaelgscott", "scott127", "05/08/1985");
+
+            // Set the input
+            String input = "4" + System.lineSeparator() + "1"
+                    + System.lineSeparator() + "elliewi11iams";
+
+            // Pair the input with the expected result
+            String expected = CONVO_MENU + System.lineSeparator()
+                    + EDITUSER_INITIAL + EDIT_MENU + System.lineSeparator() + 
+                    "Enter new username:\n" + System.lineSeparator() + "Username updated successfully.";
+
+
+            // Runs the program with the input values
+            receiveInput(input);
+
+
+            // Retrieves the output from the program
+            String output = getOutput();
+
+            // Trims the output and verifies it is correct.
+            output = output.replace("\r\n", "\n");
+            expected = expected.replace("\r\n", "\n");
+            assertEquals(expected.trim(), output.trim());
+        }
+
+        //Test 12 - Edit username with no issues
+
+        @Test(timeout = 1000)
+        public void editUsernameTakenTest() {
+            // existing users in the server
+            User user1 = new User("Ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
+            User user2 = new User("Pete", "pete@purdue.edu", "therealpurduepete", "pete456", "08/02/1869");
+            User user3 = new User("Michael", "michaelscott@dundermifflin.org", "michaelgscott", "scott127", "05/08/1985");
+
+            // Set the input
+            String input = "4" + System.lineSeparator() + "1"
+                    + System.lineSeparator() + "elliewilliams";
+
+            // Pair the input with the expected result
+            String expected = CONVO_MENU + System.lineSeparator()
+                    + EDITUSER_INITIAL + EDIT_MENU + System.lineSeparator() +
+                    "Enter new username:\n" + System.lineSeparator() + "Sorry, that username is already taken.";
+
+
+            // Runs the program with the input values
+            receiveInput(input);
+
+
+            // Retrieves the output from the program
+            String output = getOutput();
+
+            // Trims the output and verifies it is correct.
+            output = output.replace("\r\n", "\n");
+            expected = expected.replace("\r\n", "\n");
+            assertEquals(expected.trim(), output.trim());
+        }
+
+        //Test 13 - Change name
+
+        @Test(timeout = 1000)
+        public void editNameTest() {
+            // existing users in the server
+            User user1 = new User("Ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
+            User user2 = new User("Pete", "pete@purdue.edu", "therealpurduepete", "pete456", "08/02/1869");
+            User user3 = new User("Michael", "michaelscott@dundermifflin.org", "michaelgscott", "scott127", "05/08/1985");
+
+            // Set the input
+            String input = "4" + System.lineSeparator() + "2"
+                    + System.lineSeparator() + "Elizabeth";
+
+            // Pair the input with the expected result
+            String expected = CONVO_MENU + System.lineSeparator()
+                    + EDITUSER_INITIAL + EDIT_MENU + System.lineSeparator() +
+                    "Enter new name:\n" + System.lineSeparator() + "Name updated successfully.";
+
+
+            // Runs the program with the input values
+            receiveInput(input);
+
+
+            // Retrieves the output from the program
+            String output = getOutput();
+
+            // Trims the output and verifies it is correct.
+            output = output.replace("\r\n", "\n");
+            expected = expected.replace("\r\n", "\n");
+            assertEquals(expected.trim(), output.trim());
+        }
+
+        //Test 14 - Update bio
+
+        @Test(timeout = 1000)
+        public void updateBioTest() {
+            // existing users in the server
+            User user1 = new User("Ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
+            User user2 = new User("Pete", "pete@purdue.edu", "therealpurduepete", "pete456", "08/02/1869");
+            User user3 = new User("Michael", "michaelscott@dundermifflin.org", "michaelgscott", "scott127", "05/08/1985");
+
+            // Set the input
+            String input = "4" + System.lineSeparator() + "3"
+                    + System.lineSeparator() + "I study statistics at Purdue.";
+
+            // Pair the input with the expected result
+            String expected = CONVO_MENU + System.lineSeparator()
+                    + EDITUSER_INITIAL + EDIT_MENU + System.lineSeparator() +
+                    "Enter new bio:\n" + System.lineSeparator() + "Bio updated successfully.";
+
+
+            // Runs the program with the input values
+            receiveInput(input);
+
+
+            // Retrieves the output from the program
+            String output = getOutput();
+
+            // Trims the output and verifies it is correct.
+            output = output.replace("\r\n", "\n");
+            expected = expected.replace("\r\n", "\n");
+            assertEquals(expected.trim(), output.trim());
+        }
+
+        //Test 15 - change email
+
+        @Test(timeout = 1000)
+        public void changeEmail() {
+            // existing users in the server
+            User user1 = new User("Ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
+            User user2 = new User("Pete", "pete@purdue.edu", "therealpurduepete", "pete456", "08/02/1869");
+            User user3 = new User("Michael", "michaelscott@dundermifflin.org", "michaelgscott", "scott127", "05/08/1985");
+
+            // Set the input
+            String input = "4" + System.lineSeparator() + "4"
+                    + System.lineSeparator() + "elliewilliams316@gmail.com";
+
+            // Pair the input with the expected result
+            String expected = CONVO_MENU + System.lineSeparator()
+                    + EDITUSER_INITIAL + EDIT_MENU + System.lineSeparator() +
+                    "Enter new email:\n" + System.lineSeparator() + "Email updated successfully.";
+
+
+            // Runs the program with the input values
+            receiveInput(input);
+
+
+            // Retrieves the output from the program
+            String output = getOutput();
+
+            // Trims the output and verifies it is correct.
+            output = output.replace("\r\n", "\n");
+            expected = expected.replace("\r\n", "\n");
+            assertEquals(expected.trim(), output.trim());
+        }
+
+        //Test 16 - invalid EditMenu choice
+
+        @Test(timeout = 1000)
+        public void invalidEditChoiceTest() {
+            // existing users in the server
+            User user1 = new User("Ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
+            User user2 = new User("Pete", "pete@purdue.edu", "therealpurduepete", "pete456", "08/02/1869");
+            User user3 = new User("Michael", "michaelscott@dundermifflin.org", "michaelgscott", "scott127", "05/08/1985");
+
+            // Set the input
+            String input = "4" + System.lineSeparator() + "5";
+
+            // Pair the input with the expected result
+            String expected = CONVO_MENU + System.lineSeparator()
+                    + EDITUSER_INITIAL + EDIT_MENU + System.lineSeparator() +
+                    "Invalid choice.";
+
 
             // Runs the program with the input values
             receiveInput(input);
@@ -290,3 +640,7 @@ public class ServerTests {
         }
     }
 
+
+
+        }
+    }

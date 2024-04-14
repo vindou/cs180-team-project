@@ -3,74 +3,25 @@ import java.net.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class ServerClass extends Thread {
-    private ServerSocket serverSocket;
-
-
-    public ServerClass(int port) throws IOException {
-        serverSocket = new ServerSocket(port);
-    }
-
-    public void start() {
-        System.out.println("Server started. Listening for connections...");
-        while (true) {
-            try {
-                Socket clientSocket = serverSocket.accept();
-                System.out.println("Client connected: " + clientSocket.getInetAddress());
-                // Delegate client handling to a new thread
-                Thread thread = new Thread(new ClientHandler(clientSocket));
-                thread.start();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    public void shutdown() throws IOException {
-        serverSocket.close();
-    }
-
-    public static void main(String[] args) throws IOException {
-        ServerClass server = new ServerClass(4202);
-        server.start();
-    }
-}
-//-------------------------------------------------------------------------------------------//
-/*
-public class ServerClass implements Server {
-
-    // start up databases
+public class ClientHandler implements Runnable {
+    private Socket clientSocket;
     public static ArrayList<User> userArray = new ArrayList<>(); // Added ()
     public static UserDatabase userData = new UserDatabase(userArray, "userData.txt");
-    public static ConversationDatabase convos = new ConversationDatabase("conversationData.txt"); // Added ;
+    public static ConversationDatabase convos = new ConversationDatabase("conversationData.txt");
 
-    public static void main(String[] args) throws IOException {
-        // Keep listening for connections as long as the server is running
-        ServerSocket serverSocket = new ServerSocket(4202);
-        while (true) {
-            Thread thread = new Thread();
-            // Call start() to start the execution of the thread
-            thread.start();
-        }
+    public ClientHandler(Socket clientSocket) {
+        this.clientSocket = clientSocket;
     }
 
-    public void run()  {
-        // Create a ServerSocket to listen for incoming connection
-        System.out.println("Waiting for the client to connect...");
-        Socket socket = serverSocket.accept();
-        System.out.println("Client connected!");
-
-        // Handle the client connection in a separate thread
-    }
-
-    private static void handleClient(Socket socket) {
+    @Override
+    public void run() {
         try {
             // Create OOS for writing objects
-            ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+            ObjectOutputStream oos = new ObjectOutputStream(clientSocket.getOutputStream());
             // Create OIS for reading objects
-            ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
-            BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            PrintWriter writer = new PrintWriter(socket.getOutputStream());
+            ObjectInputStream ois = new ObjectInputStream(clientSocket.getInputStream());
+            BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            PrintWriter writer = new PrintWriter(clientSocket.getOutputStream());
 
             writer.println("What would you like to do: ");
             writer.println("1) Log In");
@@ -95,7 +46,7 @@ public class ServerClass implements Server {
                                 writer.println("Success!");
                                 writer.flush();
                                 // Handoff to method for logged in users
-                                handleLoggedIn(socket, thisUser); // Fixed parameter
+                                handleLoggedIn(clientSocket, thisUser); // Fixed parameter
                             } else {
                                 // MAKE SURE THEY DIDNT JUST MESS UP PASSWORD
                                 while (true) {
@@ -152,7 +103,7 @@ public class ServerClass implements Server {
 
                         User newAccount = new User(newAccName, newAccEmail, newUsername, newAccPass, newAccBirth);
                         // HANDOFF TO HANDLE THE LOGGED IN CASE (USED UPON LOGIN TOO)
-                        handleLoggedIn(socket, newAccount); // Fixed parameter
+                        handleLoggedIn(clientSocket, newAccount); // Fixed parameter
                         break;
                     // Add more cases as needed for other characters
                     default:
@@ -167,7 +118,7 @@ public class ServerClass implements Server {
         } finally {
             try {
                 // Close the client socket when done
-                socket.close();
+                clientSocket.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -363,7 +314,7 @@ public class ServerClass implements Server {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                    // Add more cases as needed
+                        // Add more cases as needed
                     default:
                         writer.println("Goodbye!");
                         writer.flush();
@@ -378,25 +329,4 @@ public class ServerClass implements Server {
             throw new RuntimeException(e);
         }
     }
-
-    protected void finalize() throws IOException {
-        serverSocket.close();
-    }
-
-    // log in -- DONE
-
-    // create account  -- DONE
-
-    // open conversations -- DONE
-    // send message -- DONE
-    // close messages -- MAYBE IDRK WHAT I MEANT BY THIS
-
-    // start new conversation -- DONE
-
-    // Search users -- DONE
-    // add user as friend -- DONE
-    // block user -- DONE
-
-    // edit my user -- DONE
 }
-*/

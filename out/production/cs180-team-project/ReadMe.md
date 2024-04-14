@@ -147,6 +147,11 @@ database. We then read that same data from the database and compared it to the i
 method. Finally, we chose a random user from our example data and tested to see if the retrieveUserData method would  
 find the user from the database. All tests passed.
 
+#### ServerTests.java
+In order to test the full functionality of the Server, several test cases needed to be run. First, we tested the Login functionality, in cases where the User entered a correct and incorrect password. We also tested the creation of a new user in cases where the desired username was available and not available. Since we are creating a Messaging system, we wanted to ensure that Users could view their current conversations, as well as start a new conversation with a User. Searching for Users and adding/blocking them is a very important part of our program, so we tested that in cases where the User was a part of the database, as well as the case when the User did not exist. Finally, the last functionality of the Server that we tested was the ability to edit the User. We tested editing the username (in cases where the username was already taken and not), editing the name, editing the bio, and changing the email. 
+
+#### IO Testing
+
 ## Submissions
 ### Phase 1
 - Vocareum: Ellie Williams
