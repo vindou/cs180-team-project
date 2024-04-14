@@ -11,23 +11,31 @@ public class ServerClass implements Server {
     public static ConversationDatabase convos = new ConversationDatabase("conversationData.txt"); // Added ;
 
     public static void main(String[] args) throws IOException {
-        // Create a ServerSocket to listen for incoming connections
-        ServerSocket serverSocket = new ServerSocket(4202); // Choose an appropriate port
-
         // Keep listening for connections as long as the server is running
         while (true) {
-            // Accept a new client connection
-            // System.out.println's will be removed later, currently just for testing
+            Thread thread = new Thread();
+            // Call start() to start the execution of the thread
+            thread.start();
+        }
+    }
+
+    public void run()
+    {
+        // Create a ServerSocket to listen for incoming connections
+        try {
+            ServerSocket serverSocket = new ServerSocket(4202);
             System.out.println("Waiting for the client to connect...");
             Socket socket = serverSocket.accept();
             System.out.println("Client connected!");
 
             // Handle the client connection in a separate thread
-            new Thread(() -> handleClient(socket)).start(); // Fixed parameter
+            new Thread(() -> handleClient(socket)).start();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    private static void handleClient(Socket socket) { // Fixed parameter
+    private static void handleClient(Socket socket) {
         try {
             // Create OOS for writing objects
             ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
@@ -49,7 +57,7 @@ public class ServerClass implements Server {
                         writer.println("Please enter your username: ");
                         writer.flush();
                         String username = reader.readLine();
-                        User thisUser = retrieveUserData(username);
+                        User thisUser = userData.retrieveUserData(username);
 
                         writer.println("Please enter your password: ");
                         writer.flush();
@@ -83,18 +91,16 @@ public class ServerClass implements Server {
 
                     case 2:
                         // NEW ACCOUNT CREATION
-                        do {
-                            boolean taken = false;
-                            writer.println("Please enter a username: ");
+                        boolean taken = false;
+                        writer.println("Please enter a username: ");
+                        writer.flush();
+                        String newUsername;
+                        newUsername = reader.readLine();
+                        if (!userData.retrieveUserData(newUsername).equals(null)) {
+                            taken = true;
+                            writer.println("Sorry, that username is taken.");
                             writer.flush();
-                            String newUsername;
-                            newUsername = reader.readLine();
-                            if (!userData.retrieveUserData(newUsername).equals(null)) {
-                                taken = true;
-                                writer.println("Sorry, that username is taken.");
-                                writer.flush();
-                            }
-                        } while (taken);
+                        }
 
                         writer.println("Please enter your name: ");
                         writer.flush();
@@ -128,6 +134,8 @@ public class ServerClass implements Server {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (ActionNotAllowedException e) {
+            throw new RuntimeException(e);
         } finally {
             try {
                 // Close the client socket when done
@@ -166,7 +174,7 @@ public class ServerClass implements Server {
                 switch (Integer.parseInt(userChoice)) {
                     case 1:
                         // VIEW CONVERSATIONS FOR THIS USER
-                        ArrayList<Conversation> convosForUser = findAvailableConversations(user);
+                        ArrayList<Conversation> convosForUser = convos.findAvailableConversations(user);
                         int convoNum = 1;
                         for (Conversation convo : convosForUser) {
                             ArrayList<User> recipients = convo.getUsers();
@@ -187,6 +195,7 @@ public class ServerClass implements Server {
                         convos.writeMessageLogs(convosForUser.get(convoChoice - 1));
 
                         // option to send new text
+                        boolean again = false;
                         do {
                             writer.println("What would you like to say?");
                             writer.flush();
@@ -194,7 +203,6 @@ public class ServerClass implements Server {
                             sendThis = reader.readLine();
                             if (!(sendThis.equals("")))
                                 convosForUser.get(convoChoice - 1).addMessage(new TextMessage(user, sendThis));
-                            boolean again = false;
 
                             writer.println("Would you like to send another message? ('yes' / 'no')");
                             writer.flush();
@@ -331,12 +339,21 @@ public class ServerClass implements Server {
                     default:
                         writer.println("Goodbye!");
                         writer.flush();
+                        writer.close();
+                        reader.close();
                         break;
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (ActionNotAllowedException e) {
+            throw new RuntimeException(e);
         }
+    }
+
+    public void shutdown()
+    {
+
     }
 
     // log in -- DONE

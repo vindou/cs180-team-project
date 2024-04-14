@@ -4,10 +4,11 @@ import java.util.Scanner;
 
 public class ClientClass {
 
-    public static void main(String[] args) throws IOException {
-        Socket socket = new Socket("localhost", 4202); // Change "localhost" to server IP if needed
+    public static void main(String[] args) {
+
         
         try {
+            Socket socket = new Socket("localhost", 4202); // Change "localhost" to server IP if needed
             // Create OOS for writing objects
             ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
             // Create OIS for reading objects
@@ -44,18 +45,10 @@ public class ClientClass {
             reader.close();
             socket.close();
             scanner.close();
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                socket.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
     }
-
-    
     // open messages
 
     // send message
