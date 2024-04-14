@@ -12,6 +12,7 @@ public class ServerClass implements Server {
 
     public static void main(String[] args) throws IOException {
         // Keep listening for connections as long as the server is running
+        ServerSocket serverSocket = new ServerSocket(4202);
         while (true) {
             Thread thread = new Thread();
             // Call start() to start the execution of the thread
@@ -19,9 +20,8 @@ public class ServerClass implements Server {
         }
     }
 
-    public void run() throws IOException {
-        // Create a ServerSocket to listen for incoming connections
-        ServerSocket serverSocket = new ServerSocket(4202);
+    public void run()  {
+        // Create a ServerSocket to listen for incoming connection
         System.out.println("Waiting for the client to connect...");
         Socket socket = serverSocket.accept();
         System.out.println("Client connected!");
@@ -345,9 +345,8 @@ public class ServerClass implements Server {
         }
     }
 
-    public void shutdown()
-    {
-
+    protected void finalize() throws IOException {
+        serverSocket.close();
     }
 
     // log in -- DONE
