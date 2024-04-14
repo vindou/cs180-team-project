@@ -19,20 +19,14 @@ public class ServerClass implements Server {
         }
     }
 
-    public void run()
-    {
+    public void run() throws IOException {
         // Create a ServerSocket to listen for incoming connections
-        try {
-            ServerSocket serverSocket = new ServerSocket(4202);
-            System.out.println("Waiting for the client to connect...");
-            Socket socket = serverSocket.accept();
-            System.out.println("Client connected!");
+        ServerSocket serverSocket = new ServerSocket(4202);
+        System.out.println("Waiting for the client to connect...");
+        Socket socket = serverSocket.accept();
+        System.out.println("Client connected!");
 
-            // Handle the client connection in a separate thread
-            new Thread(() -> handleClient(socket)).start();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        // Handle the client connection in a separate thread
     }
 
     private static void handleClient(Socket socket) {
