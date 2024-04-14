@@ -265,11 +265,12 @@ public class ServerTests {
 
             // Set the input
             String input = "1" + System.lineSeparator() + "1" + System.lineSeparator() + "Hello"
-                    + System.lineSeparator() + "yes" + + System.lineSeparator() + "ilovecs" + System.lineSeparator() + "no";
+                    + System.lineSeparator() + "yes" + System.lineSeparator() + "ilovecs" + System.lineSeparator() + "no";
 
             // Pair the input with the expected result
             String expected = CONVO_MENU + System.lineSeparator()
-                    + CONVO_CHOICE + System.lineSeparator() + WHAT_TO_SAY + System.lineSeparator()
+                    + CONVO_CHOICE + System.lineSeparator() 
+                    + "1. Conversation with Purdue Pete" + System.lineSeparator() + WHAT_TO_SAY + System.lineSeparator()
                     + SEND_ANOTHER + System.lineSeparator() + WHAT_TO_SAY;
 
             // Runs the program with the input values
@@ -288,4 +289,4 @@ public class ServerTests {
 
         }
     }
-}
+
