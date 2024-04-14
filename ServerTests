@@ -41,6 +41,10 @@ public class ServerTests {
     private static final String CREATE_EMAIL = "Please enter your email: ";
     private static final String CREATE_PASS = "Please enter a password: ";
     private static final String CREATE_BDAY = "Please enter your birthday: ";
+    private static final String CONVO_MENU = "What would you like to do: \n1) View Conversations\n2) Start New Conversation\n3) Search Users\n4) See My Account\n5) Quit";
+    private static final String CONVO_CHOICE = "What conversation number would you like to open?\n";
+    private static final String WHAT_TO_SAY = "What would you like to say?/n";
+    private static final String SEND_ANOTHER = "Would you like to send another message? ('yes' / 'no')\n";
 
     public static void main(String[] args) {
         Result result = JUnitCore.runClasses(TestCase.class);
@@ -180,7 +184,7 @@ public class ServerTests {
 
             // Set the input
             String input = "2" + System.lineSeparator() + "jjuncker" + System.lineSeparator() + "Jack"
-                    + System.lineSeparator()  + "ilovecs" + System.lineSeparator() + "04/13/2024";
+                    + System.lineSeparator() + "ilovecs" + System.lineSeparator() + "04/13/2024";
 
             // Pair the input with the expected result
             String expected = WELCOME_MESSAGE + System.lineSeparator()
@@ -200,7 +204,7 @@ public class ServerTests {
             assertEquals(expected.trim(), output.trim());
         }
 
-        //TEST 4 - Create a new User when desired username is not available
+        //TEST 5 - Create a new User when desired username is not available
 
         @Test(timeout = 1000)
         public void createNewUserNotAvailable() {
@@ -210,7 +214,7 @@ public class ServerTests {
 
             // Set the input
             String input = "2" + System.lineSeparator() + "elliewilliams" + System.lineSeparator() + "elliewilliams3" + System.lineSeparator() + "Ellie"
-                    + System.lineSeparator()  + "purdue123" + System.lineSeparator() + "03/16/2004";
+                    + System.lineSeparator() + "purdue123" + System.lineSeparator() + "03/16/2004";
 
             // Pair the input with the expected result
             String expected = WELCOME_MESSAGE + System.lineSeparator()
@@ -230,6 +234,58 @@ public class ServerTests {
             assertEquals(expected.trim(), output.trim());
         }
 
+        //HandleLoggedIn Tests
 
+        //TEST 6 - Text in existing convo with user, send multiple texts
+
+        @Test(timeout = 1000)
+        public void existingConversation() {
+            // existing users in the server
+            User user1 = new User("Ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
+            User user2 = new User("Pete", "pete@purdue.edu", "therealpurduepete", "pete456", "08/02/1869");
+            User user3 = new User("Michael", "michaelscott@dundermifflin.org", "michaelgscott", "scott127", "05/08/1985");
+
+            ArrayList<User> usersInConvo1 = new ArrayList<>();
+            usersInConvo1.add(user1);
+            usersInConvo1.add(user2);
+            ConversationDatabase cdb = new ConversationDatabase();
+
+            Conversation conversation1 = new Conversation("Conversation1", usersInConvo1, cdb);
+
+            ArrayList<User> usersInConvo2 = new ArrayList<>();
+            usersInConvo1.add(user2);
+            usersInConvo1.add(user3);
+
+            Conversation conversation2 = new Conversation("Conversation2", usersInConvo2, cdb);
+            usersInConvo2.add(user2);
+            usersInConvo2.add(user3);
+
+            ArrayList<Conversation> convosForUser = new ArrayList<Conversation>();
+            convosForUser.add(conversation1);
+
+            // Set the input
+            String input = "1" + System.lineSeparator() + "1" + System.lineSeparator() + "Hello"
+                    + System.lineSeparator() + "yes" + + System.lineSeparator() + "ilovecs" + System.lineSeparator() + "no";
+
+            // Pair the input with the expected result
+            String expected = CONVO_MENU + System.lineSeparator()
+                    + CONVO_CHOICE + System.lineSeparator() + WHAT_TO_SAY + System.lineSeparator()
+                    + SEND_ANOTHER + System.lineSeparator() + WHAT_TO_SAY;
+
+            // Runs the program with the input values
+            receiveInput(input);
+
+
+            // Retrieves the output from the program
+            String output = getOutput();
+
+            // Trims the output and verifies it is correct.
+            output = output.replace("\r\n", "\n");
+            expected = expected.replace("\r\n", "\n");
+            assertEquals(expected.trim(), output.trim());
+        }
+
+
+        }
     }
 }
