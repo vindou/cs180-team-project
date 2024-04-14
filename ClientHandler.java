@@ -27,7 +27,7 @@ public class ClientHandler implements Runnable {
             writer.flush();
 
             String clientChoice;
-            while ((reader.readLine()) != null) {
+            while (true) {
                 clientChoice = reader.readLine();
                 switch (Integer.parseInt(clientChoice)) {
                     case 1:
@@ -131,21 +131,20 @@ public class ClientHandler implements Runnable {
             ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
 
             PrintWriter writer = new PrintWriter(socket.getOutputStream());
+            BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-            writer.println("""
+            String userChoice;
+            while (true) {
+                writer.println("""
                     What would you like to do:\s
                     1) View Conversations
                     2) Start New Conversation
                     3) Search Users
                     4) See My Account
                     5) Quitend""");
-            // search should have add user and block user
-            writer.flush();
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-
-            String userChoice;
-            while ((userChoice = reader.readLine()) != null) {
+                // search should have add user and block user
+                writer.flush();
+                userChoice = reader.readLine();
                 switch (Integer.parseInt(userChoice)) {
                     case 1:
                         // VIEW CONVERSATIONS FOR THIS USER
@@ -187,6 +186,8 @@ public class ClientHandler implements Runnable {
                             runItBack = reader.readLine();
                             if (runItBack.equalsIgnoreCase("YES"))
                                 again = true;
+                            else
+                                break;
                         } while (again);
 
                     case 2:
@@ -213,6 +214,7 @@ public class ClientHandler implements Runnable {
                         sendThis = reader.readLine();
                         if (!(sendThis.isEmpty()))
                             theNewConvo.addMessage(new TextMessage(user, sendThis));
+                        continue;
 
 
                     case 3:
