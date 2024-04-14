@@ -41,6 +41,7 @@ string reading, etc. In the bottom right corner there is also a cell with associ
 indicates the possibility of our application being able to be upgraded to include image text messaging. As there is a 
 singular Message superclass implemented currently, different kinds of message subclasses that represent different things 
 can be added with little issue in the application, due to the aforementioned object storage method we utilize.
+
 ![data_hierarchy.png](data_hierarchy.png)
 #### Server and Client
 With data handling capabilities implemented, we now turned our attention to being able to handle multiple users at once.
@@ -96,47 +97,33 @@ retrieveUserData method which looks for a specific user object in the specific f
 
 #### Server Client Interaction
 ##### ServerClass.java
-Includes three key fields: userArray, userData, convos, of the ArrayList<User>, UserDatabase, ConversationDatabase classes
+Includes three key fields: userArray, userData, convos, of the ArrayList<User>, UserDatabase, ConversationDatabase classes.
+Main function "runs" the class, meaning that the singular method, known as handleClient, is perpetually running,
+which handles information sent from Client objects. 
 
 ##### ClientClass.java
+Main method handles client requests to the server. Uses a case-switch statement in order to send different request types
+depending on what the user wants. 
 
 ## Compiling and Testing
 ### Compiling
 To compile the various files of this application, it's recommended that the entire project be downloaded off of Github or
-Vocareum, depending on who you are, and opened in IntelliJ. To fastest way to compile all the files in the project is to use the keyboard shortcut "Ctrl + R" on Windows or "Cmd + R" on Mac, in order to Run an arbitrary class file in the project, automatically compiling all other files.
+Vocareum, depending on who you are, and opened in IntelliJ. To fastest way to compile all the files in the project is to 
+use the keyboard shortcut "Ctrl + R" on Windows or "Cmd + R" on Mac, in order to Run an arbitrary class file in the 
+project, automatically compiling all other files.
 ### Testing
-
-## Submissions
-### Phase 1
-- Vocareum: Ellie Williams
-#### Phase 2
-- Vocareum: Ellie Williams
-
-#### Testing User.java
-
-In order to test the User class and its various methods, several test cases were created. Firstly, the User constructor itself was tested to ensure that the getters/setters were returning expected values. The add/block/remove user  
-methods were tested in both successful and unsuccessful cases (namely, when an exception was or was not thrown).   
-We also tested the method which compared two Users alphabetically by their first names, with several different scenarios.  
-Finally, the encrypt method for passwords was tested by comparing the program's output with the expected output.
-
-#### Testing TextMessage.java and Message.java
-
-There are two main tests written in UserTests.java for Message.java methods. The first one is a constructor method and  
-it simply checks, using the getter methods, that the fields in the newly created Message object  
-are equivalent to what they're expected to be. The second test, tests if an index setter method does  
-what it's expected to do. In our implementation, adding (sending) a message in a conversation  
-requires it's associated method to change the  
-message index of the new message to the size of the message ArrayList, so it's crucial  
-that this method functions.
+#### TestsMessageAndConversationClass.java
+There are two main tests written in TestsMessageAndConversationClass.java for Message.java methods. The first one is a constructor method and
+it simply checks, using the getter methods, that the fields in the newly created Message object are equivalent to what 
+they're expected to be. The second test, tests if an index setter method does what it's expected to do. In our 
+implementation, adding (sending) a message in a conversation requires it's associated method to change the message index
+of the new message to the size of the message ArrayList, so it's crucial that this method functions.
 
 There are several tests for TextMessage.java. The first one test the constructor in an identical way to how  
 Message.java's constructor is tested. The second one tests the edit message method in the subclass,  
 by comparing the final rawMessage field of a TextMessage object to what it's expected to be. The third checks  
 our equality method using a simple assertTrue method call. The final test tests our toString method, which converts  
 the Message object into a string for file writing.
-
-
-#### Testing ConversationDatabase.java and Conversation.java
 
 Because the Conversation.java constructor inherently relies on the ConversationDatabase constructor,  
 one encompassing test was written in order to test both. This test just compares the expected  
@@ -148,9 +135,22 @@ to check that the size of the user ArrayLists are what they are expected to be a
 have been called. The addMessage and deleteMessage accomplish this in the exact same way, using the assertEquals  
 method call.
 
-#### Testing UserDatabase.java
-
+#### TestsUserClass.java
+In order to test the User class and its various methods, several test cases were created. Firstly, the User constructor
+itself was tested to ensure that the getters/setters were returning expected values. The add/block/remove user  
+methods were tested in both successful and unsuccessful cases (namely, when an exception was or was not thrown).   
+We also tested the method which compared two Users alphabetically by their first names, with several different scenarios.  
+Finally, the encrypt method for passwords was tested by comparing the program's output with the expected output.
+#### TestsUserDatabase.java
 The UserDatabase writes and reads data from the same files. Therefore, to test it, we first wrote test data to the  
 database. We then read that same data from the database and compared it to the input we put for the writeDatabase  
 method. Finally, we chose a random user from our example data and tested to see if the retrieveUserData method would  
 find the user from the database. All tests passed.
+
+## Submissions
+### Phase 1
+- Vocareum: Ellie Williams
+#### Phase 2
+- Vocareum: Ellie Williams
+
+
