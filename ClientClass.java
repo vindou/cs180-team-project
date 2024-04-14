@@ -20,22 +20,25 @@ public class ClientClass {
 
         // Keep reading server messages and interacting until "Goodbye!" is received
         while (true) {
+            String line = reader.readLine();
 
-            // Read server message and print it to the console
-            serverMessage = reader.readLine();
-
-            System.out.println("Server: " + serverMessage);
+            serverMessage = serverMessage + "\n" + line;
 
             // If the server indicates that the interaction is over, break out of the loop
             if (serverMessage.equals("Goodbye!")) {
+                System.out.println(serverMessage);
                 break;
             }
 
-            String userInput = scanner.nextLine();
-            writer.println(userInput);
-            writer.flush();
+            // Read server message and print it to the console
 
-
+            if (line.endsWith("end")) {
+                System.out.println("Server: " + serverMessage.substring(0,serverMessage.length()-3));
+                serverMessage = "";
+                String userInput = scanner.nextLine();
+                writer.println(userInput);
+                writer.flush();
+            }
         }
 
         // Close resources
