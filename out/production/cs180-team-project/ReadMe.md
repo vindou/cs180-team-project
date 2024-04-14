@@ -19,6 +19,7 @@
         - Sever Client Interaction
             - ServerClass.java
             - ClientClass.java
+            - ClientHandler.java
         - User Interface (COMING SOON)
 - Compiling and Testing
     - Compiling
@@ -97,13 +98,18 @@ retrieveUserData method which looks for a specific user object in the specific f
 
 #### Server Client Interaction
 ##### ServerClass.java
-Includes three key fields: userArray, userData, convos, of the ArrayList<User>, UserDatabase, ConversationDatabase classes.
-Main function "runs" the class, meaning that the singular method, known as handleClient, is perpetually running,
-which handles information sent from Client objects. 
+Contains the key field private ServerSocket serverSocket, which is used to create Threads that call upon the run() method in the ClientHandler class. This class acts as the server, with the ClientHandler being the middleman between it and the Client.
+
+##### ClientHandler.java
+Working in tandem with the ServerClass, the ClientHandler class does the computing, reading in client input and handling getting 
+the correct output sent to the client in the ClientClass. Includes three key fields: userArray, userData, convos, of the ArrayList<User>, UserDatabase, ConversationDatabase classes. Main function "runs" the class, meaning that the singular method, known as handleClient, is perpetually running,
+which handles information sent from Client objects.
 
 ##### ClientClass.java
 Main method handles client requests to the server. Uses a case-switch statement in order to send different request types
 depending on what the user wants. 
+
+
 
 ## Compiling and Testing
 ### Compiling

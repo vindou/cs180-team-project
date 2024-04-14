@@ -71,33 +71,23 @@ public class ClientHandler implements Runnable {
                         boolean taken = false;
                         writer.println("Please enter a username: end");
                         writer.flush();
-                        String newUsername;
-                        newUsername = reader.readLine();
-                        if (!userData.retrieveUserData(newUsername).equals(null)) {
-                            taken = true;
-                            writer.println("Sorry, that username is taken.end");
-                            writer.flush();
-                        }
+                        String newUsername = reader.readLine();
 
                         writer.println("Please enter your name: end");
                         writer.flush();
-                        String newAccName;
-                        newAccName = reader.readLine();
+                        String newAccName = reader.readLine();
 
                         writer.println("Please enter your email: end");
                         writer.flush();
-                        String newAccEmail;
-                        newAccEmail = reader.readLine();
+                        String newAccEmail = reader.readLine();
 
                         writer.println("Please enter a password: end");
                         writer.flush();
-                        String newAccPass;
-                        newAccPass = reader.readLine();
+                        String newAccPass = reader.readLine();
 
                         writer.println("Please enter your birthday: end");
                         writer.flush();
-                        String newAccBirth;
-                        newAccBirth = reader.readLine();
+                        String newAccBirth = reader.readLine();
 
                         User newAccount = new User(newAccName, newAccEmail, newUsername, newAccPass, newAccBirth);
                         // HANDOFF TO HANDLE THE LOGGED IN CASE (USED UPON LOGIN TOO)
