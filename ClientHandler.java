@@ -23,9 +23,7 @@ public class ClientHandler implements Runnable {
             BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             PrintWriter writer = new PrintWriter(clientSocket.getOutputStream());
 
-            writer.println("What would you like to do: ");
-            writer.println("1) Log In");
-            writer.println("2) Create New Account");
+            writer.println("What would you like to do: \n1) Log In\n2) Create New Account");
             writer.flush();
 
             String clientChoice;
@@ -134,16 +132,9 @@ public class ClientHandler implements Runnable {
 
             PrintWriter writer = new PrintWriter(socket.getOutputStream());
 
-            writer.println("What would you like to do: ");
-            writer.println("1) View Conversations");
-            // send message
-            // close conversations
-            writer.println("2) Start New Conversation");
-            writer.println("3) Search Users");
-            // add user
-            // block user
-            writer.println("4) See My Account");
-            writer.println("5) Quit");
+            writer.println("What would you like to do: \n1) View Conversations\n2) Start New Conversation" +
+                    "3) Search Users\n4) See My Account\n5) Quit");
+            // search should have add user and block user
             writer.flush();
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -224,15 +215,11 @@ public class ClientHandler implements Runnable {
                         String searchUsername = reader.readLine();
                         User searchedUser = userData.retrieveUserData(searchUsername);
                         if (searchedUser != null) {
-                            writer.println("User found:");
-                            writer.println("Username: " + searchedUser.getUsername());
-                            writer.println("Name: " + searchedUser.getName());
-                            writer.println("Bio: " + searchedUser.getBio());
+                            writer.println("User found:\nUsername: " + searchedUser.getUsername() +
+                                    "\nName: " + searchedUser.getName() + "\nBio: " + searchedUser.getBio());
                             writer.flush();
                             // Provide options to add as friend or block user
-                            writer.println("Would you like to:");
-                            writer.println("1) Add as Friend");
-                            writer.println("2) Block User");
+                            writer.println("Would you like to:\n1) Add as Friend\n2) Block User");
                             writer.flush();
                             String actionChoice = reader.readLine();
                             switch (Integer.parseInt(actionChoice)) {
@@ -257,18 +244,13 @@ public class ClientHandler implements Runnable {
                         // EDIT CLIENT USER
                         try {
                             // Present current user's account information
-                            writer.println("Username: " + user.getUsername());
-                            writer.println("Name: " + user.getName());
-                            writer.println("Bio: " + user.getBio());
-                            writer.println("Email: " + user.getEmail());
+                            writer.println("Username: " + user.getUsername() + "\nName: " + user.getName() +
+                                    "\nBio: " + user.getBio() + "Email: " + user.getEmail());
                             writer.flush();
 
                             // Provide options to edit account
-                            writer.println("What would you like to edit:");
-                            writer.println("1) Change Username");
-                            writer.println("2) Change Name");
-                            writer.println("3) Update Bio");
-                            writer.println("4) Change Email");
+                            writer.println("What would you like to edit:\n1) Change Username\n2) Change Name" +
+                                    "3) Update Bio\n4) Change Email");
                             writer.flush();
                             int editChoice = Integer.parseInt(reader.readLine());
 

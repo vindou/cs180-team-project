@@ -16,13 +16,14 @@ public class ClientClass {
         // Scanner for reading user input from the terminal
         Scanner scanner = new Scanner(System.in);
 
-        String serverMessage;
+        String serverMessage = "";
 
         // Keep reading server messages and interacting until "Goodbye!" is received
         while (true) {
 
             // Read server message and print it to the console
             serverMessage = reader.readLine();
+
             System.out.println("Server: " + serverMessage);
 
             // If the server indicates that the interaction is over, break out of the loop
