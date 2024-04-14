@@ -45,6 +45,7 @@ public class ServerTests {
     private static final String CONVO_CHOICE = "What conversation number would you like to open?\n";
     private static final String WHAT_TO_SAY = "What would you like to say?/n";
     private static final String SEND_ANOTHER = "Would you like to send another message? ('yes' / 'no')\n";
+    private static final String WHICH_USER = "What user would you like to start a new conversation with?";
 
     public static void main(String[] args) {
         Result result = JUnitCore.runClasses(TestCase.class);
@@ -234,12 +235,11 @@ public class ServerTests {
             assertEquals(expected.trim(), output.trim());
         }
 
-        //HandleLoggedIn Tests
 
-        //TEST 6 - Text in existing convo with user, send multiple texts
+        //TEST 6 - text in existing conversation
 
         @Test(timeout = 1000)
-        public void existingConversation() {
+        public void existingConversationTest() {
             // existing users in the server
             User user1 = new User("Ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
             User user2 = new User("Pete", "pete@purdue.edu", "therealpurduepete", "pete456", "08/02/1869");
@@ -269,9 +269,39 @@ public class ServerTests {
 
             // Pair the input with the expected result
             String expected = CONVO_MENU + System.lineSeparator()
-                    + CONVO_CHOICE + System.lineSeparator() 
+                    + CONVO_CHOICE + System.lineSeparator()
                     + "1. Conversation with Purdue Pete" + System.lineSeparator() + WHAT_TO_SAY + System.lineSeparator()
                     + SEND_ANOTHER + System.lineSeparator() + WHAT_TO_SAY;
+
+            // Runs the program with the input values
+            receiveInput(input);
+
+
+            // Retrieves the output from the program
+            String output = getOutput();
+
+            // Trims the output and verifies it is correct.
+            output = output.replace("\r\n", "\n");
+            expected = expected.replace("\r\n", "\n");
+            assertEquals(expected.trim(), output.trim());
+        }
+        
+        //Test 7 - create new conversation
+
+        @Test(timeout = 1000)
+        public void newConversationTest() {
+            // existing users in the server
+            User user1 = new User("Ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
+            User user2 = new User("Pete", "pete@purdue.edu", "therealpurduepete", "pete456", "08/02/1869");
+            User user3 = new User("Michael", "michaelscott@dundermifflin.org", "michaelgscott", "scott127", "05/08/1985");
+
+            // Set the input
+            String input = "2" + System.lineSeparator() + "Pete"
+                    + System.lineSeparator() + "Hi Pete";
+
+            // Pair the input with the expected result
+            String expected = CONVO_MENU + System.lineSeparator()
+                    + WHICH_USER + System.lineSeparator() + WHAT_TO_SAY;
 
             // Runs the program with the input values
             receiveInput(input);
@@ -289,4 +319,3 @@ public class ServerTests {
 
         }
     }
-
