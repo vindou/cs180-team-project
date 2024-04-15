@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class ClientClass {
     public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
-        Socket socket = new Socket("localhost", 4202); // Change "localhost" to server IP if needed
+        Socket socket = new Socket("localhost", 4205); // Change "localhost" to server IP if needed
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         PrintWriter writer = new PrintWriter(socket.getOutputStream());

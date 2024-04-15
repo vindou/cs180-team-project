@@ -10,7 +10,7 @@ public class ServerClass extends Thread {
         serverSocket = new ServerSocket(port);
     }
 
-    public void start() {
+    public void run() {
         System.out.println("Server started. Listening for connections...");
         while (true) {
             try {
@@ -30,7 +30,7 @@ public class ServerClass extends Thread {
     }
 
     public static void main(String[] args) throws IOException {
-        ServerClass server = new ServerClass(4202);
+        ServerClass server = new ServerClass(4205);
         server.start();
     }
 }
