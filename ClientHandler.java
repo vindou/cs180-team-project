@@ -68,7 +68,6 @@ public class ClientHandler implements Runnable {
 
                     case 2:
                         // NEW ACCOUNT CREATION
-                        boolean taken = false;
                         writer.println("Please enter a username: end");
                         writer.flush();
                         String newUsername = reader.readLine();
