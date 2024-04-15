@@ -6,7 +6,6 @@ import java.util.Scanner;
 public class ServerClass extends Thread {
     private ServerSocket serverSocket;
 
-
     public ServerClass(int port) throws IOException {
         serverSocket = new ServerSocket(port);
     }
