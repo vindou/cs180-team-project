@@ -26,14 +26,15 @@ public class ClientClass {
             }
 
             // Read server message and print it to the console
-
-            if (line.endsWith("end")) {
-                System.out.println("Server: " + serverMessage.substring(0,serverMessage.length()-3));
-                serverMessage = "";
-                String userInput = scanner.nextLine();
-                writer.write(userInput);
-                writer.println();
-                writer.flush();
+            if (line != null) {
+                if (line.endsWith("end")) {
+                    System.out.println("Server: " + serverMessage.substring(0,serverMessage.length()-3));
+                    serverMessage = "";
+                    String userInput = scanner.nextLine();
+                    writer.write(userInput);
+                    writer.println();
+                    writer.flush();
+                }
             }
         }
 
@@ -43,13 +44,4 @@ public class ClientClass {
         socket.close();
         scanner.close();
     }
-    // open messages
-
-    // send message
-
-    // close messages
-
-    // view other user
-
-    // edit my user
 }
