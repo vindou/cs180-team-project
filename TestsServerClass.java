@@ -24,7 +24,26 @@ import static org.junit.Assert.*;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * This class tests the various methods in the Server class
+ *
+ *
+ *
+ * @author Gilbert Chang
+ * @version April 15, 2024.
+ */
+
 @RunWith(Enclosed.class)
+
+/**
+ * This class tests the various methods in the Server class
+ *
+ *
+ *
+ * @author Gilbert Chang
+ * @version April 15, 2024.
+ */
+
 public class TestsServerClass {
     public static void main(String[] args) {
         Result result = JUnitCore.runClasses(TestCase.class);
@@ -39,6 +58,14 @@ public class TestsServerClass {
         }
     }
 
+    /**
+     * This class tests the various methods in the Server class
+     *
+     *
+     *
+     * @author Gilbert Chang
+     * @version April 15, 2024.
+     */
     public static class TestCase {
         private final PrintStream originalOutput = System.out;
         private final InputStream originalSysin = System.in;

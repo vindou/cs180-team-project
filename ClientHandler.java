@@ -3,6 +3,14 @@ import java.net.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ * This class is intended to instantiate an object
+ * that handles server interactions with a client.
+ *
+ * @author Ellie Williams, Jack Juncker
+ * @version April 1st, 2024.
+ */
+
 public class ClientHandler implements Runnable {
     private Socket clientSocket;
     private static ArrayList<Object> userArray = new ArrayList<>();

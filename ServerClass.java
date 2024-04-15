@@ -2,6 +2,16 @@ import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
 
+/**
+ * This class represents a server class that can be called to
+ * instantiate a running server that accepts connections through
+ * a specified port.
+ *
+ *
+ * @author Jack Juncker, Ellie Williams
+ * @version April 2nd, 2024.
+ */
+
 public class ServerClass extends Thread {
     private ServerSocket serverSocket;
     private static ArrayList<Object> userArray = new ArrayList<>(); // Moved to ServerClass
@@ -87,7 +97,7 @@ public class ServerClass extends Thread {
     }
     public synchronized boolean createConversation(Conversation conversation) {
         try {
-            ArrayList<Object> originalArray =convos.getConversationArray();
+            ArrayList<Object> originalArray = convos.getConversationArray();
             originalArray.add(conversation);
             convos.setConversationArray(originalArray);
             return true;

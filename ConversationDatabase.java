@@ -84,24 +84,22 @@ public class ConversationDatabase implements Database {
     // Writes all the conversation file names to a single file
     // returns true or false depending on completion.
     public boolean writeDatabase() {
-       boolean completion = true;
+        boolean completion = true;
         File f = new File(this.filePath);
-       try {
-           FileOutputStream fos = new FileOutputStream(f, false);
-           ObjectOutputStream oos = new ObjectOutputStream(fos);
+        try {
+            FileOutputStream fos = new FileOutputStream(f, false);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            for (Object conversationObj : conversationArray) {
+                Conversation conversation = (Conversation) conversationObj;
+                oos.writeObject(conversation);
+            }
+            fos.close();
+            oos.close();
+        } catch (Exception e) {
+            completion = false;
+        }
 
-           for (Object conversationObj : conversationArray) {
-               Conversation conversation = (Conversation) conversationObj;
-               oos.writeObject(conversation);
-           }
-
-           fos.close();
-           oos.close();
-       } catch (Exception e) {
-           completion = false;
-       }
-
-       return completion;
+        return completion;
     }
 
     public boolean writeMessageLogs(Conversation conversation) {

@@ -12,6 +12,9 @@ import java.io.*;
 import java.util.ArrayList;
 
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+
+@RunWith(Enclosed.class)
 
 /**
  * This class tests the various methods in the User class
@@ -22,9 +25,6 @@ import static org.junit.Assert.*;
  * @version Mar 30th, 2024.
  */
 
-import static org.junit.Assert.assertEquals;
-
-@RunWith(Enclosed.class)
 public class TestsMessageAndConversationClass {
 
     public static void main(String[] args) {
@@ -91,10 +91,11 @@ public class TestsMessageAndConversationClass {
             int testIndex = 4;
             try {
                 testMessage.setIndex(testIndex);
-            } catch (ActionNotAllowedException ignored) {}
-            int comparedIndex = testMessage.getIndex();
-
-            assertEquals(testIndex, comparedIndex);
+                int comparedIndex = testMessage.getIndex();
+                assertEquals(testIndex, comparedIndex);
+            } catch (ActionNotAllowedException ignored) {
+                ignored.printStackTrace();
+            }
         }
 
         // TEXTMESSAGE SUBCLASS TESTS
@@ -178,9 +179,10 @@ public class TestsMessageAndConversationClass {
 
             try {
                 testConversation.addUser(user2);
-            } catch (ActionNotAllowedException ignored) {}
-
-            assertEquals(testConversation.getUsers().size(), 2);
+                assertEquals(testConversation.getUsers().size(), 2);
+            } catch (ActionNotAllowedException ignored) {
+                ignored.printStackTrace();
+            }
         }
 
         @Test(timeout = 2000)
@@ -197,9 +199,10 @@ public class TestsMessageAndConversationClass {
 
             try {
                 testConversation.removeUser(user2);
-            } catch (ActionNotAllowedException ignored) {}
-
-            assertEquals(testConversation.getUsers().size(), 1);
+                assertEquals(testConversation.getUsers().size(), 1);
+            } catch (ActionNotAllowedException ignored) {
+                ignored.printStackTrace();
+            }
         }
 
         @Test(timeout = 2000)
@@ -218,11 +221,10 @@ public class TestsMessageAndConversationClass {
 
             try {
                 testConversation.addMessage(tM);
+                assertEquals(1, testConversation.getMessages().size());
             } catch (ActionNotAllowedException e) {
                 e.printStackTrace();
             }
-
-            assertEquals(1, testConversation.getMessages().size());
         }
 
         @Test(timeout = 3000)

@@ -152,7 +152,7 @@ public class User implements Serializable, UserInterface {
             blocked.add(user);
         }
         return success;
-    }// blockFriend
+    } // blockFriend
 
     //removes a User from the friends ArrayList
     public boolean removeFriend(User user) {

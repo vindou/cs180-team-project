@@ -15,6 +15,18 @@ import java.util.ArrayList;
 
 import static org.junit.Assert.*;
 
+/**
+ *
+ * TestsUserClass
+ *
+ * This program tests the functionality of the User class in our project.
+ *
+ * @author Ellie Williams
+ *
+ * @version 04/01/24
+ *
+ */
+
 @RunWith(Enclosed.class)
 public class TestsUserClass {
     public static void main(String[] args) {
@@ -29,7 +41,17 @@ public class TestsUserClass {
             }
         }
     }
-
+    /**
+     *
+     * TestsUserClass
+     *
+     * This program tests the functionality of the User class in our project.
+     *
+     * @author Ellie Williams
+     *
+     * @version 04/01/24
+     *
+     */
     public static class TestCase {
         private final PrintStream originalOutput = System.out;
         private final InputStream originalSysin = System.in;

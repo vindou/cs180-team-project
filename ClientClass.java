@@ -2,6 +2,15 @@ import java.io.*;
 import java.net.*;
 import java.util.Scanner;
 
+/**
+ * This class is intended to be ran when
+ * interacting with the server through the
+ * terminal.
+ *
+ * @author Ellie Williams, Jack Juncker
+ * @version April 1st, 2024.
+ */
+
 public class ClientClass {
     public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
         Socket socket = new Socket("localhost", 4205); // Change "localhost" to server IP if needed

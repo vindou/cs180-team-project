@@ -89,7 +89,7 @@ public class TestsUserDatabase {
             userArray.add(user2);
             userArray.add(user3);
             userArray.add(user4);
-            
+
             String filename = "userData.txt";
             UserDatabase userDatabase1 = new UserDatabase(userArray, filename);
             assertTrue(userDatabase1.writeDatabase());
@@ -107,7 +107,7 @@ public class TestsUserDatabase {
             test.add(user2);
             test.add(user3);
             test.add(user4);
-            
+
             String filename = "userData.txt";
             UserDatabase userData = new UserDatabase(test, filename);
             userData.writeDatabase();

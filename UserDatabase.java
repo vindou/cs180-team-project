@@ -3,6 +3,18 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+/**
+ *
+ * UserDatabase
+ *
+ * This class stores Users in a Database
+ *
+ * @author Gilbert Chang
+ *
+ * @version 04/06/2024
+ *
+ */
+
 public class UserDatabase implements Database {
     // An ArrayList containing every user on the platform.
     private ArrayList<Object> userArray;
@@ -44,7 +56,7 @@ public class UserDatabase implements Database {
     }
     // Writes all user data to one file, given the fileName.
     // Make sure to get all the fields on one line.
-    public boolean writeDatabase(){
+    public boolean writeDatabase() {
         try {
             FileOutputStream fos = new FileOutputStream(f);
             ObjectOutputStream oos = new ObjectOutputStream(fos);

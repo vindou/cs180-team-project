@@ -153,13 +153,14 @@ database. We then read that same data from the database and compared it to the i
 method. Finally, we chose a random user from our example data and tested to see if the retrieveUserData method would  
 find the user from the database. All tests passed.
 
-#### ServerTests.java
-In order to test the full functionality of the Server, several test cases needed to be run. First, we tested the Login 
-functionality, in cases where the User entered a correct and incorrect password. We also tested the creation of a new user
-in cases where the desired username was available and not available. Since we are creating a Messaging system, we wanted to 
-ensure that Users could view their current conversations, as well as start a new conversation with a User. Searching for 
-Users and adding/blocking them is a very important part of our program, so we tested that in cases where the User was a 
-part of the database, as well as the case when the User did not exist. Finally, the last functionality of the Server that we tested was the ability to edit the User. We tested editing the username (in cases where the username was already taken and not), editing the name, editing the bio, and changing the email. 
+#### TestsServerClass.java
+In order to test the various cross-connection object editing capabilities of our Server and ClientHandler classes,
+we wrote 6 test cases testing each relevant method in ServerClass.java, which request that the original copy of data
+stored by the server object be modified in a specific way. All of these methods have the synchronized modifier to ensure
+that concurrency is possible when operating on a single variable with multiple threads. Moreover, methods
+such as testing sending messages were not tested because they were simply just packaged calls of the original associated
+methods in the Conversation class or User class. To run the test cases, simply just run the main method
+of TestsServerClass.java.
 
 #### IO Testing
 
@@ -172,5 +173,6 @@ users or starting conversations won't be doable, as you'll be the only user on t
 - Vocareum: Ellie Williams
 #### Phase 2
 - Vocareum: Ellie Williams
+
 
 

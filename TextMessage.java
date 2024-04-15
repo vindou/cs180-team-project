@@ -9,16 +9,16 @@
  */
 
 public class TextMessage extends Message {
-    
+
     // rawMessage: String field representing
     // the raw string content of a text message.
     private String rawMessage;
-    
+
     public TextMessage(User sender, String rawMessage) {
         super(sender);
         this.rawMessage = rawMessage;
     }
-    
+
     public String getMessage() {
         return this.rawMessage;
     }
@@ -46,7 +46,7 @@ public class TextMessage extends Message {
     }
 
     public String toString() {
-        return this.getSender().getUsername() 
+        return this.getSender().getUsername()
                 + ":["
                 + this.getTimeSent().toString()
                 + "]: \""

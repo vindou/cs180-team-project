@@ -16,11 +16,11 @@ public class Conversation implements Serializable {
     // DM File with usernames in it
 
     // Unique integer ID for a conversation 
-    private int conversationID; 
+    private int conversationID;
 
     // Database to write to and refer to
     private ConversationDatabase conversationDatabase;
-    
+
     // Users Field: A list representing the users
     // involved in the conversation. Allows for
     // group chats to be made. 
@@ -43,9 +43,9 @@ public class Conversation implements Serializable {
         this.deletedMsgs = null;
     }
 
-    public Conversation (String conversationName
-                        , ArrayList<User> users
-                        , ConversationDatabase conversationDatabase) {
+    public Conversation(String conversationName
+            , ArrayList<User> users
+            , ConversationDatabase conversationDatabase) {
         this.conversationName = conversationName;
         this.conversationID = generateID(conversationDatabase);
         this.conversationDatabase = conversationDatabase;
@@ -78,7 +78,7 @@ public class Conversation implements Serializable {
     // Returns the user at the index in the list specified
     public User getUserAt(int index) throws ActionNotAllowedException {
         if (index < 0 || index >= this.users.size()) {
-            throw new ActionNotAllowedException("This conversation doesn't have this many users involved!");    
+            throw new ActionNotAllowedException("This conversation doesn't have this many users involved!");
         } else {
             return this.users.get(index);
         }
@@ -86,11 +86,11 @@ public class Conversation implements Serializable {
 
     // Returns an ArrayList<String> of all the messages in the DM
     public ArrayList<Message> getMessages() {
-        return this.msgs; 
+        return this.msgs;
     }
 
     public ArrayList<Message> getDeletedMessages() {
-        return this.deletedMsgs; 
+        return this.deletedMsgs;
     }
 
     public int getID() {
@@ -99,11 +99,11 @@ public class Conversation implements Serializable {
 
     public boolean addUser(User newUser) throws ActionNotAllowedException {
         boolean validation = true;
-        boolean completion = false; 
-        
+        boolean completion = false;
+
         for (User currentUser : this.users) {
             if (newUser.equals(currentUser)) {
-                validation = false; 
+                validation = false;
                 throw new ActionNotAllowedException("User already a part of this conversation!");
             }
         }
@@ -111,27 +111,27 @@ public class Conversation implements Serializable {
             this.users.add(newUser);
             completion = true;
         }
-        
+
         return completion;
     }
 
     public boolean removeUser(User targetUser) throws ActionNotAllowedException {
         boolean validation = false;
-        boolean completion = false; 
-        
+        boolean completion = false;
+
         for (User currentUser : this.users) {
             if (targetUser.equals(currentUser)) {
-                validation = true; 
+                validation = true;
             }
         }
         if (validation) {
             this.users.remove(targetUser);
             completion = true;
         } else {
-            completion = false; 
+            completion = false;
             throw new ActionNotAllowedException("User already a part of this conversation!");
         }
-        
+
         return completion;
     }
 
@@ -144,7 +144,7 @@ public class Conversation implements Serializable {
 
     // Allows for users to delete messages by removing them
     // from the msgs ArrayList. Checks if the index and
-    // message content is the same. 
+    // message content is the same.
     public void deleteMessage(Message deletedMessage) throws ActionNotAllowedException {
         Message targetMessage = this.msgs.get(deletedMessage.getIndex());
         if (targetMessage.equals(deletedMessage)) {
@@ -160,7 +160,7 @@ public class Conversation implements Serializable {
         int proposedID = 0;
         do {
             proposedID = (int) (Math.random() * 1000000);
-            
+
             innerloop:
             for (Object individualConversation : database.getConversationArray()) {
                 Conversation tempConvo = (Conversation) individualConversation;

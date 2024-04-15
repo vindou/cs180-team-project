@@ -29,7 +29,7 @@ public class Message {
         // the program intializes the Message object
         this.timeSent = LocalTime.now();
 
-        this.messageIndex = 0; 
+        this.messageIndex = 0;
     }
 
     public User getSender() {
@@ -48,7 +48,7 @@ public class Message {
     // to direct set the index of a message
     // that's newly added to it's ArrayList to the
     // size of the ArrayList. 
-    public void setIndex(int newIndex) throws ActionNotAllowedException{
+    public void setIndex(int newIndex) throws ActionNotAllowedException {
         if (newIndex < 0) {
             throw new ActionNotAllowedException("Index out of bounds!");
         } else {
