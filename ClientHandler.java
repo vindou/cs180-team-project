@@ -135,12 +135,9 @@ public class ClientHandler implements Runnable {
             PrintWriter writer = new PrintWriter(socket.getOutputStream());
             BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-            System.out.println("SUCCESSFULLY ENTERED LOGGED IN PHASE");
-
             String userChoice;
             outerloop:
             while (true) {
-                System.out.println("reached the top");
                 writer.println("""
                     What would you like to do:\s
                     1) View Conversations

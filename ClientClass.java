@@ -20,7 +20,7 @@ public class ClientClass {
             serverMessage = serverMessage + "\n" + line;
 
             // If the server indicates that the interaction is over, break out of the loop
-            if (serverMessage.equals("Goodbye!")) {
+            if (line.equals("Goodbye!")) {
                 System.out.println(serverMessage);
                 break;
             }
@@ -34,6 +34,10 @@ public class ClientClass {
                     writer.write(userInput);
                     writer.println();
                     writer.flush();
+                }
+                if (line.endsWith("pass")) {
+                    System.out.println("Server: " + serverMessage.substring(0,serverMessage.length()-4));
+                    serverMessage = "";
                 }
             }
         }

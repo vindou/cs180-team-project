@@ -34,6 +34,9 @@ public class ConversationDatabase implements Database {
     public ArrayList<Object> getConversationArray() {
         return this.conversationArray;
     }
+    public void setConversationArray(ArrayList<Object> proposedArray) {
+        this.conversationArray = proposedArray;
+    }
 
     public String getFilePath() {
         return this.filePath;
