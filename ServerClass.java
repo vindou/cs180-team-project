@@ -35,7 +35,6 @@ public class ServerClass extends Thread {
         server.start();
     }
 }
-// moved to ClientHandler
 //-------------------------------------------------------------------------------------------//
 /*
 public class ServerClass implements Server {

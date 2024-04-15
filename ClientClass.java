@@ -6,10 +6,7 @@ public class ClientClass {
 
     public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
         Socket socket = new Socket("localhost", 4202); // Change "localhost" to server IP if needed
-        // Create OOS for writing objects
-        ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-        // Create OIS for reading objects
-        ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+
         BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         PrintWriter writer = new PrintWriter(socket.getOutputStream());
 
@@ -21,7 +18,6 @@ public class ClientClass {
         // Keep reading server messages and interacting until "Goodbye!" is received
         while (true) {
             String line = reader.readLine();
-
             serverMessage = serverMessage + "\n" + line;
 
             // If the server indicates that the interaction is over, break out of the loop
@@ -36,7 +32,8 @@ public class ClientClass {
                 System.out.println("Server: " + serverMessage.substring(0,serverMessage.length()-3));
                 serverMessage = "";
                 String userInput = scanner.nextLine();
-                writer.println(userInput);
+                writer.write(userInput);
+                writer.println();
                 writer.flush();
             }
         }
