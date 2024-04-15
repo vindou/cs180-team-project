@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 public class ClientHandler implements Runnable {
     private Socket clientSocket;
-    public static ArrayList<User> userArray = new ArrayList<>(); // Added ()
+    public static ArrayList<Object> userArray = new ArrayList<>(); // Added ()
     public static UserDatabase userData = new UserDatabase(userArray, "userData.txt");
     public static ConversationDatabase convos = new ConversationDatabase("conversationData.txt");
 
@@ -16,10 +16,6 @@ public class ClientHandler implements Runnable {
     @Override
     public void run() {
         try {
-            // Create OOS for writing objects
-            ObjectOutputStream oos = new ObjectOutputStream(clientSocket.getOutputStream());
-            // Create OIS for reading objects
-            ObjectInputStream ois = new ObjectInputStream(clientSocket.getInputStream());
             BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             PrintWriter writer = new PrintWriter(clientSocket.getOutputStream());
 
@@ -27,45 +23,67 @@ public class ClientHandler implements Runnable {
             writer.flush();
 
             String clientChoice;
+            outerloop:
             while (true) {
                 clientChoice = reader.readLine();
                 switch (Integer.parseInt(clientChoice)) {
                     case 1:
                         // CASE FOR LOGGING IN
-                        writer.println("Please enter your username: end");
-                        writer.flush();
-                        String username = reader.readLine();
-                        User thisUser = userData.retrieveUserData(username);
-
-                        writer.println("Please enter your password: end");
-                        writer.flush();
-                        String password = reader.readLine();
-                        while (true) {
-                            if (thisUser.checkPassword(password)) {
-                                writer.println("Success!end");
+                        boolean invalidUsername = false;
+                        User thisUser = new User();
+                        do {
+                            writer.println("Please enter your username: end");
+                            writer.flush();
+                            String username = reader.readLine();
+                            try {
+                                thisUser = userData.retrieveUserData(username);
+                                invalidUsername = false;
+                            } catch (ActionNotAllowedException e) {
+                                invalidUsername = true;
+                                writer.println("User not found, try again? (yes / no)end");
                                 writer.flush();
-                                // Handoff to method for logged in users
-                                handleLoggedIn(clientSocket, thisUser); // Fixed parameter
-                            } else {
-                                // MAKE SURE THEY DIDNT JUST MESS UP PASSWORD
-                                while (true) {
-                                    writer.println("Incorrect password, would you like to try again? (yes / no)end");
+
+                                String passAnswer = reader.readLine();
+                                if (passAnswer.equalsIgnoreCase("NO")) {
+                                    writer.println("Goodbye!");
                                     writer.flush();
-                                    String passAnswer;
-                                    passAnswer = reader.readLine();
-                                    if (passAnswer.equalsIgnoreCase("NO")) {
-                                        writer.println("Goodbye!");
+                                    break outerloop;
+                                } else if (!passAnswer.equalsIgnoreCase("YES")) {
+                                    writer.println("Not a valid choice.pass");
+                                    writer.flush();
+                                }
+                            }
+                        } while (invalidUsername);
+
+                        if (!invalidUsername) {
+                            writer.println("Please enter your password: end");
+                            writer.flush();
+                            String password = reader.readLine();
+                            while (true) {
+                                if (thisUser.checkPassword(password)) {
+                                    writer.println("Success!pass");
+                                    writer.flush();
+                                    // Handoff to method for logged in users
+                                    handleLoggedIn(clientSocket, thisUser); // Fixed parameter
+                                } else {
+                                    // MAKE SURE THEY DIDNT JUST MESS UP PASSWORD
+                                    while (true) {
+                                        writer.println("Incorrect password, would you like to try again? (yes / no)end");
                                         writer.flush();
-                                        return;
-                                    } else if (!passAnswer.equalsIgnoreCase("YES")) {
-                                        writer.println("Not a valid choice.end");
-                                        writer.flush();
-                                    } else
-                                        break;
+                                        String passAnswer;
+                                        passAnswer = reader.readLine();
+                                        if (passAnswer.equalsIgnoreCase("NO")) {
+                                            writer.println("Goodbye!");
+                                            writer.flush();
+                                            break outerloop;
+                                        } else if (!passAnswer.equalsIgnoreCase("YES")) {
+                                            writer.println("Not a valid choice.end");
+                                            writer.flush();
+                                        }
+                                    }
                                 }
                             }
                         }
-
                     case 2:
                         // NEW ACCOUNT CREATION
                         writer.println("Please enter a username: end");
@@ -89,6 +107,8 @@ public class ClientHandler implements Runnable {
                         String newAccBirth = reader.readLine();
 
                         User newAccount = new User(newAccName, newAccEmail, newUsername, newAccPass, newAccBirth);
+                        userArray.add(newAccount);
+                        userData = new UserDatabase(userArray, "userData.txt");
                         // HANDOFF TO HANDLE THE LOGGED IN CASE (USED UPON LOGIN TOO)
                         handleLoggedIn(clientSocket, newAccount); // Fixed parameter
                         break;
@@ -98,32 +118,27 @@ public class ClientHandler implements Runnable {
                         break;
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ActionNotAllowedException e) {
-            throw new RuntimeException(e);
-        } finally {
-            try {
-                // Close the client socket when done
-                clientSocket.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        } catch (IOException ignored) {}
+
+        try {
+
+            clientSocket.close();
+        } catch (IOException ignored) {}
     }
 
     private static void handleLoggedIn(Socket socket, User user) { // Fixed parameter
+        System.out.println("SUCCESSFULLY ENTERED LOGGED IN PHASE");
         try {
-            // Create OOS for writing objects
-            ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-            // Create OIS for reading objects
-            ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
 
             PrintWriter writer = new PrintWriter(socket.getOutputStream());
             BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
+            System.out.println("SUCCESSFULLY ENTERED LOGGED IN PHASE");
+
             String userChoice;
+            outerloop:
             while (true) {
+                System.out.println("reached the top");
                 writer.println("""
                     What would you like to do:\s
                     1) View Conversations
@@ -138,47 +153,55 @@ public class ClientHandler implements Runnable {
                     case 1:
                         // VIEW CONVERSATIONS FOR THIS USER
                         ArrayList<Conversation> convosForUser = convos.findAvailableConversations(user);
-                        int convoNum = 1;
-                        for (Conversation convo : convosForUser) {
-                            ArrayList<User> recipients = convo.getUsers();
-                            writer.println(convoNum + ". Conversation with end");
-                            writer.flush();
-                            String names = "";
-                            for (User recipient : recipients) { // Fixed variable name
-                                names = names + (recipient.getUsername() + " "); // Fixed variable name
+                        if (convosForUser.size() > 0) {
+                            int convoNum = 1;
+                            for (Conversation convo : convosForUser) {
+                                ArrayList<User> recipients = convo.getUsers();
+                                writer.println(convoNum + ". Conversation with end");
+                                writer.flush();
+                                String names = "";
+                                for (User recipient : recipients) { // Fixed variable name
+                                    names = names + (recipient.getUsername() + " "); // Fixed variable name
+                                }
+                                writer.println(names + "end");
+                                convoNum++;
                             }
-                            writer.println(names + "end");
-                            convoNum++;
+
+                            // CHECK WHICH CONVO THEY WANT
+                            writer.println("What conversation number would you like to open?end");
+                            writer.flush();
+                            int convoChoice;
+                            convoChoice = Integer.parseInt(reader.readLine());
+
+                            // HOPEFULLY PRINTS OUT TEXTS
+                            convos.writeMessageLogs(convosForUser.get(convoChoice - 1));
+
+                            // option to send new text
+                            boolean again = false;
+                            innerloop:
+                            do {
+                                writer.println("What would you like to say?end");
+                                writer.flush();
+                                String sendThis;
+                                sendThis = reader.readLine();
+                                if (!(sendThis.isEmpty()))
+                                    convosForUser.get(convoChoice - 1).addMessage(new TextMessage(user, sendThis));
+
+                                writer.println("Would you like to send another message? ('yes' / 'no')end");
+                                writer.flush();
+                                String runItBack;
+                                runItBack = reader.readLine();
+                                if (runItBack.equalsIgnoreCase("YES")) {
+                                    again = true;
+                                } else {
+                                    break innerloop;
+                                }
+                            } while (again);
+                        } else {
+                            writer.println("You have no conversations open!pass");
+                            writer.flush();
                         }
-                        // CHECK WHICH CONVO THEY WANT
-                        writer.println("What conversation number would you like to open?end");
-                        writer.flush();
-                        int convoChoice;
-                        convoChoice = Integer.parseInt(reader.readLine());
-
-                        // HOPEFULLY PRINTS OUT TEXTS
-                        convos.writeMessageLogs(convosForUser.get(convoChoice - 1));
-
-                        // option to send new text
-                        boolean again = false;
-                        do {
-                            writer.println("What would you like to say?end");
-                            writer.flush();
-                            String sendThis;
-                            sendThis = reader.readLine();
-                            if (!(sendThis.isEmpty()))
-                                convosForUser.get(convoChoice - 1).addMessage(new TextMessage(user, sendThis));
-
-                            writer.println("Would you like to send another message? ('yes' / 'no')end");
-                            writer.flush();
-                            String runItBack;
-                            runItBack = reader.readLine();
-                            if (runItBack.equalsIgnoreCase("YES"))
-                                again = true;
-                            else
-                                break;
-                        } while (again);
-
+                        break;
                     case 2:
                         // WE'RE STARTING A NEW CONVO
                         writer.println("What user would you like to start a new conversation with?end");
@@ -187,70 +210,78 @@ public class ClientHandler implements Runnable {
                         newConvoUser = reader.readLine();
 
                         userData.writeDatabase();
-                        User userForConvo = userData.retrieveUserData(newConvoUser);
 
-                        // DATA FOR INSTANTIATING CONVO
-                        ArrayList<User> theGuys = new ArrayList<>();
-                        theGuys.add(user);
-                        theGuys.add(userForConvo); // Added semicolon
+                        try {
+                            User userForConvo = userData.retrieveUserData(newConvoUser);
 
-                        Conversation theNewConvo = new Conversation(theGuys, convos);
+                            // DATA FOR INSTANTIATING CONVO
+                            ArrayList<User> theGuys = new ArrayList<>();
+                            theGuys.add(user);
+                            theGuys.add(userForConvo); // Added semicolon
 
-                        // sends new text
-                        writer.println("What would you like to say?end");
-                        writer.flush();
-                        String sendThis;
-                        sendThis = reader.readLine();
-                        if (!(sendThis.isEmpty()))
-                            theNewConvo.addMessage(new TextMessage(user, sendThis));
-                        continue;
+                            Conversation theNewConvo = new Conversation(theGuys, convos);
 
+                            // sends new text
+                            writer.println("What would you like to say?end");
+                            writer.flush();
+                            String sendThis;
+                            sendThis = reader.readLine();
+                            if ( !(sendThis.isEmpty()) ) {
+                                theNewConvo.addMessage(new TextMessage(user, sendThis));
+                                writer.println("Message sent.pass");
+                            }
+                        } catch (ActionNotAllowedException e) {
+                            writer.println("Can't find that user!pass");
+                        }
 
+                        break;
                     case 3:
                         // Search Users
                         writer.println("Enter the username to search:end");
                         writer.flush();
                         String searchUsername = reader.readLine();
-                        User searchedUser = userData.retrieveUserData(searchUsername);
-                        if (searchedUser != null) {
-                            writer.println("User found:\nUsername: " + searchedUser.getUsername() +
-                                    "\nName: " + searchedUser.getName() + "\nBio: " + searchedUser.getBio() + "end");
-                            writer.flush();
-                            // Provide options to add as friend or block user
-                            writer.println("""
-                                            Would you like to:
-                                            1) Add as Friend
-                                            2) Block Userend""");
-                            writer.flush();
-                            String actionChoice = reader.readLine();
-                            switch (Integer.parseInt(actionChoice)) {
-                                case 1:
-                                    user.addFriend(searchedUser);
-                                    writer.println("User added as friend.end");
-                                    writer.flush();
-                                case 2:
-                                    user.blockFriend(searchedUser);
-                                    writer.println("User blocked.end");
-                                    writer.flush();
-                                default:
-                                    writer.println("Invalid choice.end");
-                                    writer.flush();
+                        try {
+                            User searchedUser = userData.retrieveUserData(searchUsername);
+                            if (searchedUser != null) {
+                                writer.println("User found:\nUsername: " + searchedUser.getUsername() +
+                                        "\nName: " + searchedUser.getName() + "\nBio: " + searchedUser.getBio() + "end");
+                                writer.flush();
+                                // Provide options to add as friend or block user
+                                writer.println("""
+                                        Would you like to:
+                                        1) Add as Friend
+                                        2) Block Userend""");
+                                writer.flush();
+                                String actionChoice = reader.readLine();
+                                switch (Integer.parseInt(actionChoice)) {
+                                    case 1:
+                                        user.addFriend(searchedUser);
+                                        writer.println("User added as friend.pass");
+                                        writer.flush();
+                                        break;
+                                    case 2:
+                                        user.blockFriend(searchedUser);
+                                        writer.println("User blocked.pass");
+                                        writer.flush();
+                                        break;
+                                    default:
+                                        writer.println("Invalid choice.pass");
+                                        writer.flush();
+                                        break;
+                                }
                             }
-                        } else {
-                            writer.println("User not found.end");
+                        } catch (ActionNotAllowedException e) {
+                            writer.println("User not found.pass");
                             writer.flush();
                         }
-
+                        break;
                     case 4:
                         // EDIT CLIENT USER
                         try {
                             // Present current user's account information
                             writer.println("Username: " + user.getUsername() + "\nName: " + user.getName() +
-                                    "\nBio: " + user.getBio() + "Email: " + user.getEmail() + "end");
-                            writer.flush();
-
-                            // Provide options to edit account
-                            writer.println("""
+                                    "\nBio: " + user.getBio() + "\nEmail: " + user.getEmail() + "\n" +
+                                    """
                                     What would you like to edit:
                                     1) Change Username
                                     2) Change Name
@@ -265,43 +296,49 @@ public class ClientHandler implements Runnable {
                                     writer.flush();
                                     String newUsername = reader.readLine();
                                     // Check if the new username is not already taken
-                                    if (userData.retrieveUserData(newUsername) != null) {
-                                        writer.println("Sorry, that username is already taken.end");
+                                    try {
+                                        userData.retrieveUserData(newUsername);
+                                        writer.println("Sorry, that username is already taken.pass");
                                         writer.flush();
-                                    } else {
+                                    } catch (ActionNotAllowedException e) {
                                         user.setUsername(newUsername);
-                                        writer.println("Username updated successfully.end");
+                                        writer.println("Username updated successfully.pass");
                                         writer.flush();
                                     }
+                                    break;
                                 case 2: // Change Name
-                                    writer.println("Enter new name:end");
+                                    writer.println("Enter new name: end");
                                     writer.flush();
                                     String newName = reader.readLine();
                                     user.setName(newName);
-                                    writer.println("Name updated successfully.end");
+                                    writer.println("Name updated successfully.pass");
                                     writer.flush();
+                                    break;
                                 case 3: // Update Bio
                                     writer.println("Enter new bio:end");
                                     writer.flush();
                                     String newBio = reader.readLine();
                                     user.setBio(newBio);
-                                    writer.println("Bio updated successfully.end");
+                                    writer.println("Bio updated successfully.pass");
                                     writer.flush();
+                                    break;
                                 case 4: // Change Email
                                     writer.println("Enter new email:end");
                                     writer.flush();
                                     String newEmail = reader.readLine();
                                     user.setEmail(newEmail);
-                                    writer.println("Email updated successfully.end");
+                                    writer.println("Email updated successfully.pass");
                                     writer.flush();
+                                    break;
                                 default:
                                     writer.println("Invalid choice.end");
                                     writer.flush();
+                                    break;
                             }
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                        // Add more cases as needed
+                        break;
                     default:
                         writer.println("Goodbye!");
                         writer.flush();
@@ -310,8 +347,7 @@ public class ClientHandler implements Runnable {
                         break;
                 }
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ignored) {
         } catch (ActionNotAllowedException e) {
             throw new RuntimeException(e);
         }

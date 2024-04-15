@@ -1,17 +1,23 @@
 import java.io.*;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class UserDatabase implements Database {
     // An ArrayList containing every user on the platform.
-    private ArrayList<User> userArray;
+    private ArrayList<Object> userArray;
     // The file name that the data should be written to.
     private String fileName;
     private File f;
-    public UserDatabase(ArrayList<User> userArray, String fileName) {
+    public UserDatabase(ArrayList<Object> userArray, String fileName) {
         this.userArray = userArray;
         this.fileName = fileName;
         this.f = new File(fileName);
+    }
+    public UserDatabase(String fileName) {
+        this.fileName = fileName;
+        this.f = new File(fileName);
+        this.userArray = readDatabase();
     }
     // Create multiple methods to allow users to
     // search for other users in a database.
@@ -42,8 +48,9 @@ public class UserDatabase implements Database {
         try {
             FileOutputStream fos = new FileOutputStream(f);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
-            for (User user: userArray) {
-                oos.writeObject(user);
+            for (Object user: userArray) {
+                User translatedUser = (User) user;
+                oos.writeObject(translatedUser);
             }
             oos.flush();
             fos.close();
@@ -56,7 +63,7 @@ public class UserDatabase implements Database {
     }
     // Finds the file with the same name as the string fileName and
     // returns a User object with the data in that file.
-    public User retrieveUserData(String username) throws ActionNotAllowedException{
+    public User retrieveUserData(String username) throws ActionNotAllowedException {
         try {
             FileInputStream fis = new FileInputStream(f);
             ObjectInputStream ois = new ObjectInputStream(fis);
@@ -73,5 +80,25 @@ public class UserDatabase implements Database {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public ArrayList<Object> getUserArray() {
+        return userArray;
+    }
+
+    public void setUserArray(ArrayList<Object> proposedArray) {
+        this.userArray = proposedArray;
+    }
+
+    public ArrayList<User> searchForUsers(String query) {
+        ArrayList<User> result = new ArrayList<>();
+        for (Object objects : userArray) {
+            User castUser = (User) objects;
+            if (castUser.getUsername().contains(query)) {
+                result.add(castUser);
+            }
+        }
+
+        return result;
     }
 }

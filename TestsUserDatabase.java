@@ -84,7 +84,7 @@ public class TestsUserDatabase {
             User user3 = new User("gilbert", "gilbert@purdue.edu", "gilbertC", "purdue1233", "03/18/2004");
             User user4 = new User("sahil", "sahil@purdue.edu", "SahilS", "purdue1234", "03/19/2004");
 
-            ArrayList<User> userArray = new ArrayList<>();
+            ArrayList<Object> userArray = new ArrayList<>();
             userArray.add(user1);
             userArray.add(user2);
             userArray.add(user3);
@@ -102,7 +102,7 @@ public class TestsUserDatabase {
             User user3 = new User("gilbert", "gilbert@purdue.edu", "gilbertC", "purdue1233", "03/18/2004");
             User user4 = new User("sahil", "sahil@purdue.edu", "SahilS", "purdue1234", "03/19/2004");
 
-            ArrayList<User> test = new ArrayList<>();
+            ArrayList<Object> test = new ArrayList<>();
             test.add(user1);
             test.add(user2);
             test.add(user3);
@@ -128,7 +128,7 @@ public class TestsUserDatabase {
             User user3 = new User("gilbert", "gilbert@purdue.edu", "gilbertC", "purdue1233", "03/18/2004");
             User user4 = new User("sahil", "sahil@purdue.edu", "SahilS", "purdue1234", "03/19/2004");
 
-            ArrayList<User> userArray = new ArrayList<>();
+            ArrayList<Object> userArray = new ArrayList<>();
             userArray.add(user1);
             userArray.add(user2);
             userArray.add(user3);
