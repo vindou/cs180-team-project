@@ -27,6 +27,7 @@ import static org.junit.Assert.assertTrue;
  * @version 04/13/2024
  */
 
+@RunWith(Enclosed.class)
 public class ServerTests {
     //Main Method to run test cases below.
     private static final String WELCOME_MESSAGE = "What would you like to do:\n1) Log In\n2) Create New Account";
