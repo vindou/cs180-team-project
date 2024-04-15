@@ -154,9 +154,18 @@ method. Finally, we chose a random user from our example data and tested to see 
 find the user from the database. All tests passed.
 
 #### ServerTests.java
-In order to test the full functionality of the Server, several test cases needed to be run. First, we tested the Login functionality, in cases where the User entered a correct and incorrect password. We also tested the creation of a new user in cases where the desired username was available and not available. Since we are creating a Messaging system, we wanted to ensure that Users could view their current conversations, as well as start a new conversation with a User. Searching for Users and adding/blocking them is a very important part of our program, so we tested that in cases where the User was a part of the database, as well as the case when the User did not exist. Finally, the last functionality of the Server that we tested was the ability to edit the User. We tested editing the username (in cases where the username was already taken and not), editing the name, editing the bio, and changing the email. 
+In order to test the full functionality of the Server, several test cases needed to be run. First, we tested the Login 
+functionality, in cases where the User entered a correct and incorrect password. We also tested the creation of a new user
+in cases where the desired username was available and not available. Since we are creating a Messaging system, we wanted to 
+ensure that Users could view their current conversations, as well as start a new conversation with a User. Searching for 
+Users and adding/blocking them is a very important part of our program, so we tested that in cases where the User was a 
+part of the database, as well as the case when the User did not exist. Finally, the last functionality of the Server that we tested was the ability to edit the User. We tested editing the username (in cases where the username was already taken and not), editing the name, editing the bio, and changing the email. 
 
 #### IO Testing
+
+To test the IO capabilities of our server-client interactions, first run ServerClass.java (its main method), then run 
+Client Class, and follow the prompts. Keep in mind that the files will most likely be blank, so things like searching for
+users or starting conversations won't be doable, as you'll be the only user on that instance of the platform. 
 
 ## Submissions
 ### Phase 1
