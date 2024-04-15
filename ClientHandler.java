@@ -5,12 +5,14 @@ import java.util.Scanner;
 
 public class ClientHandler implements Runnable {
     private Socket clientSocket;
-    public static ArrayList<Object> userArray = new ArrayList<>(); // Added ()
-    public static UserDatabase userData = new UserDatabase(userArray, "userData.txt");
-    public static ConversationDatabase convos = new ConversationDatabase("conversationData.txt");
+    private static ArrayList<Object> userArray = new ArrayList<>();
+    private static UserDatabase userData;
+    private static ConversationDatabase convos;
 
-    public ClientHandler(Socket clientSocket) {
+    public ClientHandler(Socket clientSocket, UserDatabase userData, ConversationDatabase convos) {
         this.clientSocket = clientSocket;
+        ClientHandler.userData = userData;
+        ClientHandler.convos = convos;
     }
 
     @Override

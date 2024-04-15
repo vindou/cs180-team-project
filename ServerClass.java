@@ -1,11 +1,17 @@
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
 
 public class ServerClass extends Thread {
     private ServerSocket serverSocket;
+    private static ArrayList<Object> userArray = new ArrayList<>(); // Moved to ServerClass
+    private static UserDatabase userData; // Moved to ServerClass
+    private static ConversationDatabase convos; // Moved to ServerClass
 
     public ServerClass(int port) throws IOException {
         serverSocket = new ServerSocket(port);
+        userData = new UserDatabase(userArray, "userData.txt"); // Initialize UserDatabase
+        convos = new ConversationDatabase("conversationData.txt"); // Initialize ConversationDatabase
     }
 
     public void run() {
@@ -15,7 +21,7 @@ public class ServerClass extends Thread {
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("Client connected: " + clientSocket.getInetAddress());
                 // Delegate client handling to a new thread
-                Thread thread = new Thread(new ClientHandler(clientSocket));
+                Thread thread = new Thread(new ClientHandler(clientSocket, userData, convos));
                 thread.start();
             } catch (IOException e) {
                 e.printStackTrace();
