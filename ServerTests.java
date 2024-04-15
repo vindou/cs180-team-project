@@ -253,7 +253,7 @@ public class ServerTests {
             ArrayList<User> usersInConvo1 = new ArrayList<>();
             usersInConvo1.add(user1);
             usersInConvo1.add(user2);
-            ConversationDatabase cdb = new ConversationDatabase();
+            ConversationDatabase cdb = new ConversationDatabase("existingConversationTest.txt");
 
             Conversation conversation1 = new Conversation("Conversation1", usersInConvo1, cdb);
 
@@ -636,11 +636,6 @@ public class ServerTests {
             expected = expected.replace("\r\n", "\n");
             assertEquals(expected.trim(), output.trim());
         }
-
-
-        }
-    }
-
 
 
         }
