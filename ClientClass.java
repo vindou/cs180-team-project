@@ -3,7 +3,6 @@ import java.net.*;
 import java.util.Scanner;
 
 public class ClientClass {
-
     public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
         Socket socket = new Socket("localhost", 4202); // Change "localhost" to server IP if needed
         // Create OOS for writing objects
