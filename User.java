@@ -131,7 +131,9 @@ public class User implements Serializable, UserInterface {
     //Adds a User to the friends ArrayList<>
     public boolean addFriend(User user) {
         boolean success = false;
-        if (!friends.contains(user)) {
+        this.unblockUser(user);
+
+        if (!friends.contains(user) && !this.equals(user)) {
             success = true;
             friends.add(user);
         }
@@ -141,7 +143,9 @@ public class User implements Serializable, UserInterface {
     // adds a User to the blocked Arraylist<>
     public boolean blockFriend(User user) {
         boolean success = false;
-        if (!blocked.contains(user)) {
+        this.removeFriend(user);
+
+        if (!blocked.contains(user) && !user.equals(this)) {
             success = true;
             blocked.add(user);
         }
@@ -156,7 +160,17 @@ public class User implements Serializable, UserInterface {
             success = true;
         }
         return success;
-    } // removeFriend
+    }// removeFriend
+
+    public boolean unblockUser(User user) {
+        boolean success = false;
+        if (blocked.contains(user)) {
+            blocked.remove(user);
+            success = true;
+        }
+
+        return success;
+    }
 
     // Encrypts the password to an different String by shifting characters by 5
     public static String encrypt(String text)

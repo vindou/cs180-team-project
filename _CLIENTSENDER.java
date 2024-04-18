@@ -181,6 +181,27 @@ public class _CLIENTSENDER implements Runnable {
         }
         return success;
     }
+
+    public synchronized boolean removeFriendRequest(User removedFriend) throws IOException
+            , ClassNotFoundException {
+        boolean success;
+        objectSender.writeObject("FRIEND_REMOVAL_REQUEST");
+        objectSender.flush();
+
+        objectSender.writeObject(removedFriend);
+        objectSender.flush();
+
+        String responseStatus = (String) objectReader.readObject();
+
+        if (responseStatus.equals("FRIEND_REMOVAL_SUCCESS")) {
+            success = true;
+        } else if (responseStatus.equals("FRIEND_REMOVAL_FAILURE")) {
+            success = false;
+        } else {
+            success = false;
+        }
+        return success;
+    }
     public synchronized boolean blockUserRequest(User proposedBlock) throws IOException
             , ClassNotFoundException {
         boolean success;
@@ -199,6 +220,29 @@ public class _CLIENTSENDER implements Runnable {
         } else {
             success = false;
         }
+        return success;
+    }
+    public synchronized boolean addConversationRequest(String conversationName, User otherUser)
+            throws IOException
+            , ClassNotFoundException {
+        boolean success;
+        objectSender.writeObject("ADD_CONVERSATION_REQUEST");
+        objectSender.flush();
+
+        objectSender.writeObject(otherUser);
+        objectSender.flush();
+
+        objectSender.writeObject(conversationName);
+        objectSender.flush();
+
+        String response = (String) objectReader.readObject();
+
+        if (response.equals("CONVERSATION_ADDITION_SUCCESS")) {
+            success = true;
+        } else {
+            success = false;
+        }
+
         return success;
     }
     public synchronized ArrayList<Conversation> convosAvailableRequest() throws IOException
@@ -292,15 +336,25 @@ public class _CLIENTSENDER implements Runnable {
             return null;
         }
     }
-    public synchronized void resourceShutdown() throws IOException {
-        objectSender.writeObject("CLIENT_SHUTDOWN");
+
+    public synchronized ArrayList<User> requestFriends() throws IOException
+            , ClassNotFoundException {
+        objectSender.writeObject("FRIEND_REQUEST_QUERY");
         objectSender.flush();
 
-        route.close();
-        objectReader.close();
-        objectSender.close();
-        objectReader.close();
-        objectSender.close();
+        Object responseStatus = objectReader.readObject();
+
+        if (responseStatus.equals("FRIENDS_FOUND")) {
+            try {
+                return (ArrayList<User>) objectReader.readObject();
+            } catch (ClassNotFoundException e) {
+                return null;
+            }
+        } else if (responseStatus.equals("NO_FRIENDS")) {
+            return null;
+        } else {
+            return null;
+        }
     }
 
     @Override

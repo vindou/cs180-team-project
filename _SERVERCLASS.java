@@ -87,12 +87,39 @@ public class _SERVERCLASS {
         // can be added or not
         return assocUser.addFriend(proposedFriend);
     }
+
+    public synchronized boolean removeFriend(User assocUser, User removedFriend) {
+        // can be added or not
+        return assocUser.removeFriend(removedFriend);
+    }
     public synchronized boolean blockUser(User assocUser, User proposedBlock) {
        assocUser.removeFriend(proposedBlock);
        return assocUser.blockFriend(proposedBlock);
     }
+
+    public synchronized ArrayList<User> getFriendList(User assocUser) {
+        return assocUser.getFriends();
+    }
     public synchronized ArrayList<Conversation> convosAvailable(User assocUser) {
         return conversationDatabase.findAvailableConversations(assocUser);
+    }
+    public synchronized boolean createConversation(ArrayList<User> users, String conversationName) {
+        Conversation proposedConversation = new Conversation(conversationName, users, conversationDatabase);
+        boolean isBlocked = false;
+
+        for (User subUser : users) {
+            for (User otherUser : users) {
+                if (otherUser.getBlocked().contains(subUser)) {
+                    isBlocked = true;
+                }
+            }
+        }
+
+        if (isBlocked) {
+            return false;
+        } else {
+            return conversationDatabase.addConversation(proposedConversation);
+        }
     }
     public synchronized boolean sendMessage(Conversation assocConversation, TextMessage sentMessage) {
         try {

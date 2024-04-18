@@ -81,6 +81,17 @@ public class _CLIENTHANDLER implements Runnable {
                             objectSender.writeObject("FRIEND_ADDITION_FAILURE");
                             objectSender.flush();
                         }
+                    } else if (clientRequest.equals("FRIEND_REMOVAL_REQUEST")) {
+                        User proposedRemoval = (User) objectReader.readObject();
+                        boolean success = this.accessedServer.removeFriend(this.assocUser, proposedRemoval);
+
+                        if (success) {
+                            objectSender.writeObject("FRIEND_REMOVAL_SUCCESS");
+                            objectSender.flush();
+                        } else {
+                            objectSender.writeObject("FRIEND_REMOVAL_FAILURE");
+                            objectSender.flush();
+                        }
                     } else if (clientRequest.equals("BLOCK_USER_REQUEST")) {
                         User proposedBlock = (User) objectReader.readObject();
                         boolean success = this.accessedServer.blockUser(this.assocUser, proposedBlock);
@@ -90,6 +101,19 @@ public class _CLIENTHANDLER implements Runnable {
                             objectSender.flush();
                         } else {
                             objectSender.writeObject("BLOCK_FAILURE");
+                            objectSender.flush();
+                        }
+                    } else if (clientRequest.equals("FRIEND_REQUEST_QUERY")) {
+                        ArrayList<User> friends = accessedServer.getFriendList(this.assocUser);
+
+                        if (friends.size() > 0) {
+                            objectSender.writeObject("FRIENDS_FOUND");
+                            objectSender.flush();
+
+                            objectSender.writeObject(friends);
+                            objectSender.flush();
+                        } else {
+                            objectSender.writeObject("NO_FRIENDS");
                             objectSender.flush();
                         }
                     } else if (clientRequest.equals("CONVOS_REQUEST")) {
@@ -141,6 +165,22 @@ public class _CLIENTHANDLER implements Runnable {
                             objectSender.flush();
 
                             objectSender.writeObject(foundUsers);
+                            objectSender.flush();
+                        }
+                    } else if (clientRequest.equals("ADD_CONVERSATION_REQUEST")) {
+                        User otherUser = (User) objectReader.readObject();
+                        ArrayList<User> users = new ArrayList<>();
+
+                        users.add(this.assocUser);
+                        users.add(otherUser);
+
+                        String conversationName = (String) objectReader.readObject();
+
+                        if (accessedServer.createConversation(users, conversationName)) {
+                            objectSender.writeObject("CONVERSATION_ADDITION_SUCCESS");
+                            objectSender.flush();
+                        } else {
+                            objectSender.writeObject("CONVERSATION_ADDITION_FAILED");
                             objectSender.flush();
                         }
                     } else if (clientRequest.equals("CLIENT_SHUTDOWN")) {

@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.net.Socket;
 import java.util.ArrayList;
 
@@ -142,6 +143,8 @@ public class _USERINTERFACE implements Runnable {
                     if (clientSender.getLogInSuccess()) {
                         cardLayout.show(mainPanel, "Conversation Main Page");
                         System.out.println("SUCCESSFUL LOGIN");
+                        mainPanel.add(createConversationMainPage(),"Conversation Main Page");
+                        cardLayout.show(mainPanel, "Conversation Main Page");
                     } else {
                         finalLogIn.setLabel("Account not found, try again.");
                     }
@@ -282,6 +285,7 @@ public class _USERINTERFACE implements Runnable {
                             registerPassword.getText(),
                             registerBirthday.getText())) && validFields) {
                         System.out.println("SUCCESSFUL REGISTRATION");
+                        mainPanel.add(createConversationMainPage(),"Conversation Main Page");
                         cardLayout.show(mainPanel, "Conversation Main Page");
                     } else {
                         finalRegistration.setLabel("Invalid Fields! Try again");
@@ -368,7 +372,7 @@ public class _USERINTERFACE implements Runnable {
                     if (searchResults.size() > 0) {
                         for (User user : searchResults) {
                             global.gridy++;
-                            searchResultsPanel.add(userProfileButton(user.getUsername()), global);
+                            searchResultsPanel.add(userProfileButton(user), global);
                         }
                     } else {
                         global.gridy = 1;
@@ -390,6 +394,8 @@ public class _USERINTERFACE implements Runnable {
             returnToConversationPage.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                    mainPanel.remove(3);
+                    mainPanel.add(createConversationMainPage(),"Conversation Main Page");
                     cardLayout.show(mainPanel, "Conversation Main Page");
                 }
             });
@@ -408,11 +414,122 @@ public class _USERINTERFACE implements Runnable {
 
         return button;
     }
-    private JButton userProfileButton(String username) {
-        JButton button = new JButton(username);
+    private JButton userProfileButton(User user) {
+        JButton button = new JButton(user.getUsername());
         button.setPreferredSize(new Dimension(165, 35));
 
         button.setHorizontalTextPosition(SwingConstants.LEFT);
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int choice = JOptionPane.showOptionDialog(
+                        null,
+                        "User Actions",
+                        "Actions: ",
+                        JOptionPane.YES_NO_CANCEL_OPTION,
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        new String[]{"Add Friend",
+                                "Block User",
+                                "Start Conversation",
+                                "Remove Friend"},
+                        "Add Friend");
+
+                if (choice == JOptionPane.YES_OPTION) {
+                    try {
+                        if (clientSender.addFriendRequest(user)) {
+                            JOptionPane.showMessageDialog(null,
+                                    "Success",
+                                    "User Friended",
+                                    JOptionPane.PLAIN_MESSAGE);
+                            mainPanel.remove(3);
+                            mainPanel.add(createConversationMainPage(),"Conversation Main Page");
+                            cardLayout.show(mainPanel, "Conversation Main Page");
+                        } else {
+                            JOptionPane.showMessageDialog(null,
+                                    "You cannot friend this user, they may be blocked,\n" +
+                                            "or you may already be friends with them.",
+                                    "Error",
+                                    JOptionPane.ERROR_MESSAGE);
+                        }
+                    } catch (IOException | ClassNotFoundException ex) {
+                        JOptionPane.showMessageDialog(null,
+                                "You cannot friend this user, they may be blocked,\n" +
+                                        "or you may already be friends with them.",
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
+                } else if (choice == JOptionPane.NO_OPTION) {
+                    try {
+                        if (clientSender.blockUserRequest(user)) {
+                            JOptionPane.showMessageDialog(null,
+                                    "User Blocked",
+                                    "Success",
+                                    JOptionPane.PLAIN_MESSAGE);
+                            mainPanel.remove(3);
+                            mainPanel.add(createConversationMainPage(),"Conversation Main Page");
+                            cardLayout.show(mainPanel, "Conversation Main Page");
+                        } else {
+                            JOptionPane.showMessageDialog(null,
+                                    "You cannot block this user, they may be blocked already.",
+                                    "Error",
+                                    JOptionPane.ERROR_MESSAGE);
+                        }
+                    } catch (IOException | ClassNotFoundException ex) {
+                        JOptionPane.showMessageDialog(null,
+                                "Error blocking user, try another time!",
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
+                } else if (choice == JOptionPane.CANCEL_OPTION) {
+                    String conversationName = JOptionPane.showInputDialog(null,
+                            "What would you like to name this chat?");
+                    try {
+                        if (clientSender.addConversationRequest(conversationName, user)) {
+                            JOptionPane.showMessageDialog(null,
+                                    "Conversation created!",
+                                    "Success",
+                                    JOptionPane.PLAIN_MESSAGE);
+                            mainPanel.remove(3);
+                            mainPanel.add(createConversationMainPage(),"Conversation Main Page");
+                            cardLayout.show(mainPanel, "Conversation Main Page");
+                        } else {
+                            JOptionPane.showMessageDialog(null,
+                                    "You cannot chat with this person.",
+                                    "Error",
+                                    JOptionPane.ERROR_MESSAGE);
+                        }
+                    } catch (IOException | ClassNotFoundException ex) {
+                        JOptionPane.showMessageDialog(null,
+                                "Error creating conversation, try another time!",
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
+                } else if (choice == 3) {
+                    try {
+                        if (clientSender.removeFriendRequest(user)) {
+                            JOptionPane.showMessageDialog(null,
+                                    "Success",
+                                    "User Unfriended",
+                                    JOptionPane.PLAIN_MESSAGE);
+                            mainPanel.remove(3);
+                            mainPanel.add(createConversationMainPage(),"Conversation Main Page");
+                            cardLayout.show(mainPanel, "Conversation Main Page");
+                        } else {
+                            JOptionPane.showMessageDialog(null,
+                                    "You cannot unfriend this user.",
+                                    "Error",
+                                    JOptionPane.ERROR_MESSAGE);
+                        }
+                    } catch (IOException | ClassNotFoundException ex) {
+                        JOptionPane.showMessageDialog(null,
+                                "Error unfriending! Try again later.",
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
+        });
 
         return button;
     }
@@ -441,9 +558,24 @@ public class _USERINTERFACE implements Runnable {
 
         trueContent.add(new JLabel("Friends"), global);
 
-        global.gridy = 1;
-        trueContent.add(userProfileButton("test"), global);
-
+        try {
+            ArrayList<User> friends = clientSender.requestFriends();
+            if (friends != null) {
+                for (User friend : friends) {
+                    global.gridy++;
+                    System.out.println("friend added to list");
+                    trueContent.add(userProfileButton(friend), global);
+                }
+            } else {
+                global.gridy = 1;
+                global.anchor = GridBagConstraints.CENTER;
+                trueContent.add(new JLabel("No Friends..."), global);
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            global.gridy = 1;
+            global.anchor = GridBagConstraints.CENTER;
+            trueContent.add(new JLabel("No Friends..."), global);
+        }
         return trueContent;
     }
     private JPanel createConversationMainPage() {
@@ -493,7 +625,7 @@ public class _USERINTERFACE implements Runnable {
         mainPanel.add(createMainPage(), "Main Page");
         mainPanel.add(createRegistrationPanel(), "Register");
         mainPanel.add(createLogInPanel(), "LogIn");
-        mainPanel.add(createConversationMainPage(),"Conversation Main Page");
+        // mainPanel.add(createConversationMainPage(),"Conversation Main Page");
 
         frame.add(mainPanel);
         frame.setSize(1000,800);

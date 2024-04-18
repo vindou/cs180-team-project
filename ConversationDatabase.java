@@ -117,4 +117,9 @@ public class ConversationDatabase implements Database {
         }
         return completion;
     }
+
+    public boolean addConversation(Conversation conversation) {
+        this.conversationArray.add(conversation);
+        return true;
+    }
 }
