@@ -68,7 +68,7 @@ public class ConversationDatabase implements Database {
 
     // Returns the conversations that a user is involved in.
     public ArrayList<Conversation> findAvailableConversations(User user) {
-        ArrayList<Conversation> availableConversations = new ArrayList<Conversation>();
+        ArrayList<Conversation> availableConversations = new ArrayList<>();
 
         for (Object conversationObj : this.conversationArray) {
             Conversation conversation = (Conversation) conversationObj;

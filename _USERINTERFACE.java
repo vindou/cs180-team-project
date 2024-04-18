@@ -1,33 +1,49 @@
+import javax.sound.sampled.Line;
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.io.IOException;
+import java.net.Socket;
+import java.util.ArrayList;
 
 public class _USERINTERFACE implements Runnable {
     private JFrame frame;
     private JPanel mainPanel;
     private CardLayout cardLayout;
-
+    private _CLIENTSENDER clientSender;
+    private String[] registrationFieldData = new String[5];
+    private String[] logInFieldData = new String[2];
     public _USERINTERFACE() {
-        frame = new JFrame("User Interface");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.frame = new JFrame("User Interface");
+        this.mainPanel = new JPanel();
+        this.cardLayout = new CardLayout();
+        this.clientSender = null;
+    }
 
-        mainPanel = new JPanel();
-        cardLayout = new CardLayout();
-        mainPanel.setLayout(cardLayout);
+    public void updateLogInFieldData() {
+        this.logInFieldData = new String[]{usernameField.getText()
+                , passwordField.getText()};
+    }
+    public String[] getLogInFieldData() {
+        return this.logInFieldData;
+    }
+    public String[] getRegistrationFieldData() {
+        return this.registrationFieldData;
+    }
+    public void updateRegistrationFieldData() {
+        this.registrationFieldData = new String[]{registerName.getText()
+                , registerEmail.getText()
+                , registerUsername.getText()
+                , registerPassword.getText()
+                , registerBirthday.getText()};
+    }
 
-        // Adding your pages to the main panel
-        mainPanel.add(createMainPage(), "Main Page");
-        mainPanel.add(createRegistrationPanel(), "Register");
-        mainPanel.add(createLogInPanel(), "LogIn");
-
-        frame.add(mainPanel);
-        frame.setSize(1000,800);
-        frame.setVisible(true);
+    public void setClientSender(_CLIENTSENDER clientSender) {
+        this.clientSender = clientSender;
     }
 
     private JPanel createMainPage() {
@@ -67,9 +83,76 @@ public class _USERINTERFACE implements Runnable {
 
     // FIELDS
     private JButton returnToMainPage = new JButton("Return to Main Page");
+    private JButton returnToMainPage2 = new JButton("Return to Main Page");
 
     // LOG IN FIELDS
     private JButton logIn = new JButton("Log In");
+    private JLabel loggingIn = new JLabel("Welcome back!");
+    private JTextField usernameField = new JTextField(10);
+    private JTextField passwordField = new JTextField(10);
+    private JButton finalLogIn = new JButton("Log In");
+
+    private JPanel createLogInPanel() {
+        GridBagConstraints global = new GridBagConstraints();
+        global.gridx = 0;
+        global.gridy = 0;
+        global.insets = new Insets(10, 10, 10, 10);
+        global.anchor = GridBagConstraints.CENTER;
+        JPanel trueContent = new JPanel(new GridBagLayout());
+        trueContent.add(returnToMainPage2, global);
+
+        global.gridy = 1;
+        trueContent.add(loggingIn, global);
+
+        global.gridy = 2;
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.insets = new Insets(10, 10, 10, 10); // Padding
+        gbc.anchor = GridBagConstraints.CENTER;
+        JPanel logInPrompts = new JPanel(new GridBagLayout());
+        logInPrompts.add(new JLabel("Username"), gbc);
+
+        gbc.gridx = 2;
+        logInPrompts.add(usernameField, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        logInPrompts.add(new JLabel("Password"), gbc);
+
+        gbc.gridx = 2;
+        logInPrompts.add(passwordField, gbc);
+        trueContent.add(logInPrompts, global);
+
+        global.gridx = 0;
+        global.gridy = 3;
+        trueContent.add(finalLogIn, global);
+
+        returnToMainPage2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                cardLayout.show(mainPanel, "Main Page");
+            }
+        });
+
+        finalLogIn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    if (clientSender.getLogInSuccess()) {
+                        cardLayout.show(mainPanel, "Conversation Main Page");
+                        System.out.println("SUCCESSFUL LOGIN");
+                    } else {
+                        finalLogIn.setLabel("Account not found, try again.");
+                    }
+                } catch (IOException | ClassNotFoundException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+        return trueContent;
+    }
 
     // REGISTRATION FIELDS
 
@@ -91,14 +174,13 @@ public class _USERINTERFACE implements Runnable {
         global.anchor = GridBagConstraints.CENTER;
         JPanel trueContent = new JPanel(new GridBagLayout());
         trueContent.add(returnToMainPage, global);
+
         global.gridy = 1;
         trueContent.add(registration, global);
 
         global.gridy = 2;
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
         gbc.insets = new Insets(10, 10, 10, 10); // Padding
         gbc.anchor = GridBagConstraints.CENTER;
 
@@ -125,7 +207,7 @@ public class _USERINTERFACE implements Runnable {
         gbc.gridx = 1;
         panel.add(registerUsername, gbc);
         gbc.gridx = 2;
-        JLabel userNameErrorLabel = new JLabel("Invalid email format");
+        JLabel userNameErrorLabel = new JLabel("Username not available");
         userNameErrorLabel.setForeground(Color.RED);
         userNameErrorLabel.setVisible(false); // Initially hidden
         panel.add(userNameErrorLabel, gbc);
@@ -147,17 +229,10 @@ public class _USERINTERFACE implements Runnable {
         birthdayErrorLabel.setVisible(false); // Initially hidden
         panel.add(birthdayErrorLabel, gbc);
 
-        gbc.gridx = 0;
-        gbc.gridy = 6;
-        finalRegistration.setVisible(false);
-        panel.add(finalRegistration, gbc);
-
-
         registerEmail.addFocusListener(new FocusAdapter() {
             @Override
             public void focusLost(FocusEvent e) {
-                String email = registerEmail.getText();
-                if (!isValidEmail(email)) {
+                if (!clientSender.getRegistrationFieldValidity()[0]) {
                     emailErrorLabel.setVisible(true);
                 } else {
                     emailErrorLabel.setVisible(false);
@@ -168,11 +243,10 @@ public class _USERINTERFACE implements Runnable {
         registerBirthday.addFocusListener(new FocusAdapter() {
             @Override
             public void focusLost(FocusEvent e) {
-                String birthday = registerBirthday.getText();
-                if (!isValidBirthday(birthday)) {
-                    birthdayErrorLabel.setVisible(true);
-                } else {
+                if (clientSender.getRegistrationFieldValidity()[2]) {
                     birthdayErrorLabel.setVisible(false);
+                } else {
+                    birthdayErrorLabel.setVisible(true);
                 }
             }
         });
@@ -180,15 +254,13 @@ public class _USERINTERFACE implements Runnable {
         registerUsername.addFocusListener(new FocusAdapter() {
             @Override
             public void focusLost(FocusEvent e) {
-                String username = registerUsername.getText();
-                if (!isValidUsername(username, new UserDatabase("userData.txt"))) {
-                    userNameErrorLabel.setVisible(true);
-                } else {
+                if (clientSender.getRegistrationFieldValidity()[1]) {
                     userNameErrorLabel.setVisible(false);
+                } else {
+                    userNameErrorLabel.setVisible(true);
                 }
             }
         });
-
         returnToMainPage.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -196,113 +268,206 @@ public class _USERINTERFACE implements Runnable {
             }
         });
 
-        DocumentListener validationListener = new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                validateData();
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                validateData();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                validateData();
-            }
-        };
-
-        registerEmail.getDocument().addDocumentListener(validationListener);
-        registerUsername.getDocument().addDocumentListener(validationListener);
-        registerBirthday.getDocument().addDocumentListener(validationListener);
-
         trueContent.add(panel, global);
+
+        global.gridy = 3;
+        finalRegistration.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    boolean validFields = true;
+                    if (clientSender.registrationRequest(new User(registerName.getText(),
+                            registerEmail.getText(),
+                            registerUsername.getText(),
+                            registerPassword.getText(),
+                            registerBirthday.getText())) && validFields) {
+                        System.out.println("SUCCESSFUL REGISTRATION");
+                        cardLayout.show(mainPanel, "Conversation Main Page");
+                    } else {
+                        finalRegistration.setLabel("Invalid Fields! Try again");
+                    }
+                } catch (IOException | ClassNotFoundException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+        trueContent.add(finalRegistration, global);
+        return trueContent;
+    }
+
+    // LOGGED IN PAGE
+    String searchBarField = " Search for users";
+    JTextField userSearchBar = new JTextField(searchBarField, 50);
+    JButton searchButton = new JButton("Search");
+    private JPanel searchBar() {
+        GridBagConstraints global = new GridBagConstraints();
+        global.gridx = 0;
+        global.gridy = 0;
+        global.insets = new Insets(30, 10, 10, 10);
+        global.anchor = GridBagConstraints.WEST;
+        JPanel trueContent = new JPanel(new GridBagLayout());
+
+        userSearchBar.setBorder(new LineBorder(Color.black, 1));
+        userSearchBar.setPreferredSize(new Dimension(750, 30));
+
+        trueContent.add(userSearchBar, global);
+
+        global.gridx = 1;
+        searchButton.setPreferredSize(new Dimension(115, 40));
+        trueContent.add(searchButton, global);
 
         return trueContent;
     }
 
-    private void validateData() {
-        boolean isValid = true;
-        if (!isValidBirthday(registerBirthday.getText())) {
-            isValid = false;
-        }
-        if (!isValidEmail(registerEmail.getText())) {
-            isValid = false;
-        }
+    private JPanel createSearchResultsPage() {
+        String query = userSearchBar.getText();
+        System.out.println(query);
+        if (!query.equals(searchBarField)) {
+            GridBagConstraints global = new GridBagConstraints();
+            global.gridx = 0;
+            global.gridy = 0;
+            global.insets = new Insets(30, 10, 10, 10);
+            global.anchor = GridBagConstraints.WEST;
+            JPanel searchResultsPanel = new JPanel(new GridBagLayout());
 
-        if (!isValidUsername( registerUsername.getText(), new UserDatabase("userData.txt"))) {
-            isValid = false;
+            searchResultsPanel.add(searchBar(), global);
+
+            try {
+                ArrayList<User> searchResults = clientSender.requestUserQuery(query);
+
+                if (searchResults != null) {
+                    if (searchResults.size() > 0) {
+                        for (User user : searchResults) {
+                            global.gridy++;
+                            searchResultsPanel.add(friendProfileButton(user.getUsername()), global);
+                        }
+                    } else {
+                        global.gridy = 1;
+                        searchResultsPanel.add(new JLabel("Sorry! No users found."));
+                    }
+                } else {
+                    global.gridy = 1;
+                    searchResultsPanel.add(new JLabel("Sorry! No users found."));
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+                return null;
+            }
+
+            return searchResultsPanel;
+        } else {
+            return null;
         }
-        finalRegistration.setEnabled(isValid);
     }
 
-    private JPanel createLogInPanel() {
-        JPanel panel = new JPanel();
-        panel.add(new JLabel("Register Page"));
-        return panel;
-    }
+    private JButton conversationButton(String conversationName) {
+        JButton button = new JButton(conversationName);
+        button.setPreferredSize(new Dimension(550, 35));
 
-    public void run() {}
+        button.setHorizontalTextPosition(SwingConstants.LEFT);
+
+        return button;
+    }
+    private JButton friendProfileButton(String username) {
+        JButton button = new JButton(username);
+        button.setPreferredSize(new Dimension(165, 35));
+
+        button.setHorizontalTextPosition(SwingConstants.LEFT);
+
+        return button;
+    }
+    private JPanel conversationPanel() {
+        GridBagConstraints global = new GridBagConstraints();
+        global.gridx = 0;
+        global.gridy = 0;
+        global.insets = new Insets(0, 10, 10, 10);
+        global.anchor = GridBagConstraints.WEST;
+        JPanel trueContent = new JPanel(new GridBagLayout());
+
+        trueContent.add(new JLabel("Conversations Available"), global);
+
+        global.gridy = 1;
+        trueContent.add(conversationButton("test"), global);
+
+        return trueContent;
+    }
+    private JPanel friendsPanel() {
+        GridBagConstraints global = new GridBagConstraints();
+        global.gridx = 0;
+        global.gridy = 0;
+        global.insets = new Insets(0, 0, 10, 10);
+        global.anchor = GridBagConstraints.WEST;
+        JPanel trueContent = new JPanel(new GridBagLayout());
+
+        trueContent.add(new JLabel("Friends"), global);
+
+        global.gridy = 1;
+        trueContent.add(friendProfileButton("test"), global);
+
+        return trueContent;
+    }
+    private JPanel createConversationMainPage() {
+        GridBagConstraints global = new GridBagConstraints();
+        global.gridx = 0;
+        global.gridy = 0;
+        global.insets = new Insets(1, 10, 1, 10);
+        global.anchor = GridBagConstraints.CENTER;
+        JPanel trueContent = new JPanel(new GridBagLayout());
+        trueContent.add(new JLabel("Welcome to your home page!"), global);
+
+        global.gridy = 1;
+        trueContent.add(searchBar(), global);
+
+        global.anchor = GridBagConstraints.WEST;
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.insets = new Insets(10, 0, 10, 10);
+        gbc.anchor = GridBagConstraints.WEST;
+        JPanel bottomContent = new JPanel(new GridBagLayout());
+
+        bottomContent.add(conversationPanel(), gbc);
+        gbc.gridx = 1;
+        bottomContent.add(friendsPanel(), gbc);
+
+        global.gridy = 2;
+        trueContent.add(bottomContent, global);
+
+        searchButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mainPanel.add(createSearchResultsPage(), "Search Results");
+                cardLayout.show(mainPanel, "Search Results");
+            }
+        });
+
+        return trueContent;
+    }
+    @Override
+    public void run() {
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        mainPanel.setLayout(cardLayout);
+
+        // Adding your pages to the main panel
+        mainPanel.add(createMainPage(), "Main Page");
+        mainPanel.add(createRegistrationPanel(), "Register");
+        mainPanel.add(createLogInPanel(), "LogIn");
+        mainPanel.add(createConversationMainPage(),"Conversation Main Page");
+
+
+
+        frame.add(mainPanel);
+        frame.setSize(1000,800);
+        frame.setVisible(true);
+    }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new _USERINTERFACE());
-    }
-
-    // DATA VALIDATION
-    public boolean isValidEmail(String email) {
-        if (email.split("@").length != 2) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-    public boolean isValidBirthday(String birthday) {
-        if (birthday.split("/").length != 3) {
-            return false;
-        } else {
-            boolean result = true;
-            int currentEntry = 0;
-            int[] entries = new int[3];
-            String[] referenceList = birthday.split("/");
-
-            for (int i = 0; i < referenceList.length; i++) {
-                try {
-                    int entry = Integer.parseInt(referenceList[i]);
-                    if (i == 0 && (entry <= 0 || entry > 12)) {
-                        result = false;
-                        break;
-                    } else if (i == 1 && (entry <= 0 || entry > 30)) {
-                        result = false;
-                        break;
-                    } else if (i == 2 && (entry > 2024 || entry <= 0)) {
-                        result = false;
-                        break;
-                    } else {
-                        entries[i] = entry;
-                    }
-                } catch (NumberFormatException e) {
-                    result = false;
-                    break;
-                }
-            }
-
-            return result;
-        }
-    }
-    public boolean isValidUsername(String username, UserDatabase userDatabase) {
-        boolean result = true;
-
-        if (userDatabase.getUserArray() != null) {
-            for (Object user : userDatabase.getUserArray()) {
-                User translatedUser = (User) user;
-                if (translatedUser.getUsername() == username) {
-                    result = false;
-                    break;
-                }
-            }
-        }
-
-        return result;
     }
 }

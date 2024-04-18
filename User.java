@@ -20,17 +20,11 @@ public class User implements Serializable, UserInterface {
 
     // Instantiates an User object
     public User(String name, String email, String username, String password, String birthday) {
-        try {
-            this.name = name;
-            this.email = email;
-            this.username = username;
-            if (username.contains(" "))
-                throw new ActionNotAllowedException("Usernames cannot contain spaces.");
-            this.password = encrypt(password);
-            this.birthday = birthday;
-        } catch (ActionNotAllowedException e) {
-            e.printStackTrace();
-        }
+        this.name = name;
+        this.email = email;
+        this.username = username;
+        this.password = encrypt(password);
+        this.birthday = birthday;
     }
 
     public User()

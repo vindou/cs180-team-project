@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.io.EOFException;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.net.ServerSocket;
@@ -8,7 +9,7 @@ import java.util.ArrayList;
 public class _SERVERCLASS {
     public UserDatabase userDatabase = new UserDatabase("userData.txt");
     public ConversationDatabase conversationDatabase = new ConversationDatabase("conversationData.txt");
-    private static int PORT_NUM = 5327;
+    private static int PORT_NUM = 5329;
 
     public _SERVERCLASS() {}
     public static void main(String[] args) {
@@ -18,34 +19,40 @@ public class _SERVERCLASS {
             System.out.printf("PORT_NUM = %d\nSERVER ONLINE", PORT_NUM);
             while (true) {
                 Socket clientSocket = serverSocket.accept();
-                System.out.println("CLIENT CONNECTION MADE: " + clientSocket.getInetAddress());
+                System.out.println("\nCLIENT CONNECTION MADE: " + clientSocket.getInetAddress());
 
                 Thread clientThread = new Thread(new _CLIENTHANDLER(mainServer, clientSocket));
                 clientThread.start();
             }
+        } catch (EOFException | NullPointerException e) {
+            e.printStackTrace();
+            System.out.println("CLIENT DISCONNECTED.");
         } catch (IOException e) {
+            e.printStackTrace();
             System.out.println("ERROR: INVALID PORT.");
         }
     }
 
-
-
-    // things that do require logging in
-    // searching for users
-
     public synchronized User verifyLogIn(String username, String password) {
         boolean userFound = false;
+        User foundUser = null;
 
         ArrayList<Object> referenceDatabase = userDatabase.getUserArray();
         for (Object user : referenceDatabase) {
             User castUser = (User) user;
-            if (castUser.getUsername() == username && castUser.checkPassword(password)) {
+            if (castUser.getUsername().equals(username)
+                    || castUser.checkPassword(password)) {
                 userFound = true;
-                return castUser;
+                foundUser = castUser;
+                break;
             }
         }
 
-        return null;
+        if (userFound) {
+            return foundUser;
+        } else {
+            return null;
+        }
     }
     public synchronized boolean registerUser(User newUser) {
         boolean success = true;
@@ -95,5 +102,8 @@ public class _SERVERCLASS {
     }
     public synchronized ArrayList<User> searchForUsers(String query) {
         return userDatabase.searchForUsers(query);
+    }
+    public synchronized boolean checkForUsernameOriginality(String proposedUsername) {
+        return userDatabase.originalUsername(proposedUsername);
     }
 }

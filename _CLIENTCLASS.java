@@ -1,14 +1,22 @@
-import javax.swing.*;
-import java.awt.*;
 import java.io.*;
 import java.net.*;
-import java.util.Scanner;
+
 
 public class _CLIENTCLASS {
-    public static void main(String[] args) throws IOException, ClassNotFoundException {
-        Socket socket = new Socket("localhost", 5327);
-        // INSERT UI
+    public static void main(String[] args) throws ClassNotFoundException {
+        try {
+            System.out.println("Attempting to create socket...");
+            Socket socket = new Socket("localhost", 5329);
+            System.out.println("Socket created successfully");
 
-        // socket.close();
+            _USERINTERFACE userInterface = new _USERINTERFACE();
+            userInterface.run();
+
+            _CLIENTSENDER clientSender = new _CLIENTSENDER(socket, userInterface);
+            userInterface.setClientSender(clientSender);
+            clientSender.run();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

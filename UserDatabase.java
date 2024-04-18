@@ -113,4 +113,18 @@ public class UserDatabase implements Database {
 
         return result;
     }
+
+    public boolean originalUsername(String proposedUsername) {
+        boolean original = false;
+
+        for (Object objects : userArray) {
+            User castUser = (User) objects;
+            if (castUser.getUsername().equals(proposedUsername)) {
+                original = true;
+                break;
+            }
+        }
+
+        return original;
+    }
 }
