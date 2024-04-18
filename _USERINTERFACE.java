@@ -300,6 +300,7 @@ public class _USERINTERFACE implements Runnable {
     String searchBarField = " Search for users";
     JTextField userSearchBar = new JTextField(searchBarField, 50);
     JButton searchButton = new JButton("Search");
+
     private JPanel searchBar() {
         GridBagConstraints global = new GridBagConstraints();
         global.gridx = 0;
@@ -320,6 +321,27 @@ public class _USERINTERFACE implements Runnable {
         return trueContent;
     }
 
+    private JPanel searchResultsPageSearchBar() {
+        GridBagConstraints global = new GridBagConstraints();
+        global.gridx = 0;
+        global.gridy = 0;
+        global.insets = new Insets(30, 10, 10, 10);
+        global.anchor = GridBagConstraints.WEST;
+        JPanel trueContent = new JPanel(new GridBagLayout());
+
+        userSearchBar.setBorder(new LineBorder(Color.black, 1));
+        userSearchBar.setPreferredSize(new Dimension(750, 30));
+
+        trueContent.add(userSearchBar, global);
+
+        global.gridx = 1;
+        searchButton.setPreferredSize(new Dimension(115, 40));
+        trueContent.add(searchButton, global);
+
+        return trueContent;
+    }
+
+    JButton returnToConversationPage = new JButton("Return to Conversations");
     private JPanel createSearchResultsPage() {
         String query = userSearchBar.getText();
         System.out.println(query);
@@ -327,11 +349,17 @@ public class _USERINTERFACE implements Runnable {
             GridBagConstraints global = new GridBagConstraints();
             global.gridx = 0;
             global.gridy = 0;
-            global.insets = new Insets(30, 10, 10, 10);
+            global.insets = new Insets(0, 10, 0, 10);
             global.anchor = GridBagConstraints.WEST;
             JPanel searchResultsPanel = new JPanel(new GridBagLayout());
 
-            searchResultsPanel.add(searchBar(), global);
+            searchResultsPanel.add(returnToConversationPage, global);
+
+            global.gridy = 1;
+            searchResultsPanel.add(searchResultsPageSearchBar(), global);
+
+            global.gridy = 2;
+            searchResultsPanel.add(new JLabel("Users Found"), global);
 
             try {
                 ArrayList<User> searchResults = clientSender.requestUserQuery(query);
@@ -340,7 +368,7 @@ public class _USERINTERFACE implements Runnable {
                     if (searchResults.size() > 0) {
                         for (User user : searchResults) {
                             global.gridy++;
-                            searchResultsPanel.add(friendProfileButton(user.getUsername()), global);
+                            searchResultsPanel.add(userProfileButton(user.getUsername()), global);
                         }
                     } else {
                         global.gridy = 1;
@@ -359,6 +387,13 @@ public class _USERINTERFACE implements Runnable {
                 return null;
             }
 
+            returnToConversationPage.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    cardLayout.show(mainPanel, "Conversation Main Page");
+                }
+            });
+
             return searchResultsPanel;
         } else {
             return null;
@@ -373,7 +408,7 @@ public class _USERINTERFACE implements Runnable {
 
         return button;
     }
-    private JButton friendProfileButton(String username) {
+    private JButton userProfileButton(String username) {
         JButton button = new JButton(username);
         button.setPreferredSize(new Dimension(165, 35));
 
@@ -407,7 +442,7 @@ public class _USERINTERFACE implements Runnable {
         trueContent.add(new JLabel("Friends"), global);
 
         global.gridy = 1;
-        trueContent.add(friendProfileButton("test"), global);
+        trueContent.add(userProfileButton("test"), global);
 
         return trueContent;
     }
@@ -459,8 +494,6 @@ public class _USERINTERFACE implements Runnable {
         mainPanel.add(createRegistrationPanel(), "Register");
         mainPanel.add(createLogInPanel(), "LogIn");
         mainPanel.add(createConversationMainPage(),"Conversation Main Page");
-
-
 
         frame.add(mainPanel);
         frame.setSize(1000,800);

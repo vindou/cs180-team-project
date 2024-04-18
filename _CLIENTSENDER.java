@@ -272,16 +272,13 @@ public class _CLIENTSENDER implements Runnable {
     }
     public synchronized ArrayList<User> requestUserQuery(String query) throws IOException
             , ClassNotFoundException {
-        System.out.println("Sending server request");
         objectSender.writeObject("USER_REQUEST_QUERY");
         objectSender.flush();
 
-        System.out.println("Sending query");
         objectSender.writeObject(query);
         objectSender.flush();
 
         Object responseStatus = objectReader.readObject();
-        System.out.println(responseStatus.getClass().getName());
 
         if (responseStatus.equals("USERS_FOUND")) {
             try {

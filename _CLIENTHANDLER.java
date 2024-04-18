@@ -35,9 +35,6 @@ public class _CLIENTHANDLER implements Runnable {
                         String username = (String) objectReader.readObject();
                         String password = (String) objectReader.readObject();
 
-                        System.out.println(username);
-                        System.out.println(password);
-
                         this.assocUser = this.accessedServer.verifyLogIn(username, password);
                         if (this.assocUser == null) {
                             // LOGIN FAILED
@@ -47,9 +44,6 @@ public class _CLIENTHANDLER implements Runnable {
                         } else {
                             // LOGIN SUCCESS
                             objectSender.writeObject("LOGIN_SUCCESS");
-                            objectSender.flush();
-
-                            objectSender.writeObject(this.assocUser);
                             objectSender.flush();
                         }
                     } else if (clientRequest.equals("REGISTRATION_REQUEST")) {
@@ -137,19 +131,15 @@ public class _CLIENTHANDLER implements Runnable {
                         }
                     } else if (clientRequest.equals("USER_REQUEST_QUERY")) {
                         String query = (String) objectReader.readObject();
-                        System.out.println(query)
                         ArrayList<User> foundUsers = this.accessedServer.searchForUsers(query);
 
                         if (foundUsers.size() == 0) {
-                            System.out.println("Writing status");
                             objectSender.writeObject("USERS_NOT_FOUND");
                             objectSender.flush();
                         } else {
-                            System.out.println("Writing status");
                             objectSender.writeObject("USERS_FOUND");
                             objectSender.flush();
 
-                            System.out.println("Writing array");
                             objectSender.writeObject(foundUsers);
                             objectSender.flush();
                         }
@@ -161,7 +151,7 @@ public class _CLIENTHANDLER implements Runnable {
                 }
             }
         } catch (EOFException e) {
-            e.printStackTrace();
+            accessedServer.saveData();
             System.out.println("CLIENT DISCONNECTED");
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();

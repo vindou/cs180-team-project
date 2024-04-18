@@ -7,16 +7,21 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 public class _SERVERCLASS {
-    public UserDatabase userDatabase = new UserDatabase("userData.txt");
-    public ConversationDatabase conversationDatabase = new ConversationDatabase("conversationData.txt");
+    public static UserDatabase userDatabase = new UserDatabase("userData.txt");
+    public static ConversationDatabase conversationDatabase = new ConversationDatabase("conversationData.txt");
     private static int PORT_NUM = 5329;
 
     public _SERVERCLASS() {}
-    public static void main(String[] args) {
+    public void main(String[] args) {
+        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+            public void run() {
+                saveData();
+            }
+        }, "Shutdown-thread"));
         _SERVERCLASS mainServer = new _SERVERCLASS();
         try {
             ServerSocket serverSocket = new ServerSocket(PORT_NUM);
-            System.out.printf("PORT_NUM = %d\nSERVER ONLINE", PORT_NUM);
+            System.out.printf("PORT_NUM = %d\nSERVER ONLINE\n", PORT_NUM);
             while (true) {
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("\nCLIENT CONNECTION MADE: " + clientSocket.getInetAddress());
@@ -25,14 +30,19 @@ public class _SERVERCLASS {
                 clientThread.start();
             }
         } catch (EOFException | NullPointerException e) {
-            e.printStackTrace();
-            System.out.println("CLIENT DISCONNECTED.");
+            System.out.println("SAVING DATA");
+            System.out.println("CLIENT DISCONNECTED");
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("ERROR: INVALID PORT.");
         }
     }
 
+    public synchronized void saveData() {
+        System.out.println("SAVING DATA");
+        userDatabase.writeDatabase();
+        conversationDatabase.writeDatabase();
+    }
     public synchronized User verifyLogIn(String username, String password) {
         boolean userFound = false;
         User foundUser = null;
