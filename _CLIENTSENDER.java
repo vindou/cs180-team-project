@@ -348,6 +348,7 @@ public class _CLIENTSENDER implements Runnable {
             try {
                 return (ArrayList<User>) objectReader.readObject();
             } catch (ClassNotFoundException e) {
+                e.printStackTrace();
                 return null;
             }
         } else if (responseStatus.equals("NO_FRIENDS")) {

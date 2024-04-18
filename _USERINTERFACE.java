@@ -453,6 +453,7 @@ public class _USERINTERFACE implements Runnable {
                                     JOptionPane.ERROR_MESSAGE);
                         }
                     } catch (IOException | ClassNotFoundException ex) {
+                        ex.printStackTrace();
                         JOptionPane.showMessageDialog(null,
                                 "You cannot friend this user, they may be blocked,\n" +
                                         "or you may already be friends with them.",
@@ -476,6 +477,7 @@ public class _USERINTERFACE implements Runnable {
                                     JOptionPane.ERROR_MESSAGE);
                         }
                     } catch (IOException | ClassNotFoundException ex) {
+                        ex.printStackTrace();
                         JOptionPane.showMessageDialog(null,
                                 "Error blocking user, try another time!",
                                 "Error",
@@ -500,6 +502,7 @@ public class _USERINTERFACE implements Runnable {
                                     JOptionPane.ERROR_MESSAGE);
                         }
                     } catch (IOException | ClassNotFoundException ex) {
+                        ex.printStackTrace();
                         JOptionPane.showMessageDialog(null,
                                 "Error creating conversation, try another time!",
                                 "Error",
@@ -522,6 +525,7 @@ public class _USERINTERFACE implements Runnable {
                                     JOptionPane.ERROR_MESSAGE);
                         }
                     } catch (IOException | ClassNotFoundException ex) {
+                        ex.printStackTrace();
                         JOptionPane.showMessageDialog(null,
                                 "Error unfriending! Try again later.",
                                 "Error",
@@ -559,19 +563,30 @@ public class _USERINTERFACE implements Runnable {
         trueContent.add(new JLabel("Friends"), global);
 
         try {
+            System.out.println("try block entered");
             ArrayList<User> friends = clientSender.requestFriends();
             if (friends != null) {
+                System.out.println("if block entered");
+                System.out.println(friends.size());
                 for (User friend : friends) {
+                    System.out.println("for block entered");
                     global.gridy++;
                     System.out.println("friend added to list");
                     trueContent.add(userProfileButton(friend), global);
                 }
+            } else if (friends != null && friends.size() == 0) {
+                System.out.println("no friends found");
+                global.gridy = 1;
+                global.anchor = GridBagConstraints.CENTER;
+                trueContent.add(new JLabel("No Friends..."), global);
             } else {
+                System.out.println("no friends found");
                 global.gridy = 1;
                 global.anchor = GridBagConstraints.CENTER;
                 trueContent.add(new JLabel("No Friends..."), global);
             }
         } catch (IOException | ClassNotFoundException e) {
+            System.out.println("catch block entered");
             global.gridy = 1;
             global.anchor = GridBagConstraints.CENTER;
             trueContent.add(new JLabel("No Friends..."), global);
@@ -625,7 +640,6 @@ public class _USERINTERFACE implements Runnable {
         mainPanel.add(createMainPage(), "Main Page");
         mainPanel.add(createRegistrationPanel(), "Register");
         mainPanel.add(createLogInPanel(), "LogIn");
-        // mainPanel.add(createConversationMainPage(),"Conversation Main Page");
 
         frame.add(mainPanel);
         frame.setSize(1000,800);

@@ -131,9 +131,9 @@ public class User implements Serializable, UserInterface {
     //Adds a User to the friends ArrayList<>
     public boolean addFriend(User user) {
         boolean success = false;
-        this.unblockUser(user);
 
         if (!friends.contains(user) && !this.equals(user)) {
+            this.unblockUser(user);
             success = true;
             friends.add(user);
         }
@@ -143,9 +143,9 @@ public class User implements Serializable, UserInterface {
     // adds a User to the blocked Arraylist<>
     public boolean blockFriend(User user) {
         boolean success = false;
-        this.removeFriend(user);
 
         if (!blocked.contains(user) && !user.equals(this)) {
+            this.removeFriend(user);
             success = true;
             blocked.add(user);
         }

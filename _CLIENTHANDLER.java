@@ -106,7 +106,7 @@ public class _CLIENTHANDLER implements Runnable {
                     } else if (clientRequest.equals("FRIEND_REQUEST_QUERY")) {
                         ArrayList<User> friends = accessedServer.getFriendList(this.assocUser);
 
-                        if (friends.size() > 0) {
+                        if (!friends.isEmpty()) {
                             objectSender.writeObject("FRIENDS_FOUND");
                             objectSender.flush();
 
