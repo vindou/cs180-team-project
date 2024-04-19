@@ -339,14 +339,18 @@ public class _CLIENTSENDER implements Runnable {
 
     public synchronized ArrayList<User> requestFriends() throws IOException
             , ClassNotFoundException {
+        System.out.println("sending request");
         objectSender.writeObject("FRIEND_REQUEST_QUERY");
         objectSender.flush();
 
-        Object responseStatus = objectReader.readObject();
+        String responseStatus = (String) objectReader.readObject();
+        System.out.println("received response");
 
         if (responseStatus.equals("FRIENDS_FOUND")) {
             try {
-                return (ArrayList<User>) objectReader.readObject();
+                ArrayList<User> response = (ArrayList<User>) objectReader.readObject();
+                System.out.println("response size" + response.size());
+                return response;
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
                 return null;

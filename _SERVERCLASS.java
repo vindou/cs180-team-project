@@ -51,7 +51,7 @@ public class _SERVERCLASS {
         for (Object user : referenceDatabase) {
             User castUser = (User) user;
             if (castUser.getUsername().equals(username)
-                    || castUser.checkPassword(password)) {
+                    && castUser.checkPassword(password)) {
                 userFound = true;
                 foundUser = castUser;
                 break;
@@ -78,16 +78,16 @@ public class _SERVERCLASS {
 
         if (success) {
             referenceDatabase.add(newUser);
-            this.userDatabase.setUserArray(referenceDatabase);
+            userDatabase.setUserArray(referenceDatabase);
         }
 
         return success;
     }
     public synchronized boolean addFriend(User assocUser, User proposedFriend) {
+        boolean success = assocUser.addFriend(proposedFriend);
         // can be added or not
-        return assocUser.addFriend(proposedFriend);
+        return success;
     }
-
     public synchronized boolean removeFriend(User assocUser, User removedFriend) {
         // can be added or not
         return assocUser.removeFriend(removedFriend);
@@ -96,12 +96,16 @@ public class _SERVERCLASS {
        assocUser.removeFriend(proposedBlock);
        return assocUser.blockFriend(proposedBlock);
     }
-
     public synchronized ArrayList<User> getFriendList(User assocUser) {
-        return assocUser.getFriends();
+        ArrayList<User> friends = assocUser.getFriends();
+        System.out.println("server side friend size: " + friends.size());
+        return friends;
     }
     public synchronized ArrayList<Conversation> convosAvailable(User assocUser) {
-        return conversationDatabase.findAvailableConversations(assocUser);
+        System.out.println("sending array");
+        ArrayList<Conversation> convos = conversationDatabase.findAvailableConversations(assocUser);
+        System.out.println(convos.size());
+        return convos;
     }
     public synchronized boolean createConversation(ArrayList<User> users, String conversationName) {
         Conversation proposedConversation = new Conversation(conversationName, users, conversationDatabase);
@@ -116,8 +120,10 @@ public class _SERVERCLASS {
         }
 
         if (isBlocked) {
+            System.out.println("a user blocked the other here");
             return false;
         } else {
+            System.out.println("success adding convo");
             return conversationDatabase.addConversation(proposedConversation);
         }
     }

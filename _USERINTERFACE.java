@@ -348,7 +348,6 @@ public class _USERINTERFACE implements Runnable {
     JButton returnToConversationPage = new JButton("Return to Conversations");
     private JPanel createSearchResultsPage() {
         String query = userSearchBar.getText();
-        System.out.println(query);
         if (!query.equals(searchBarField)) {
             GridBagConstraints global = new GridBagConstraints();
             global.gridx = 0;
@@ -492,9 +491,7 @@ public class _USERINTERFACE implements Runnable {
                                     "Conversation created!",
                                     "Success",
                                     JOptionPane.PLAIN_MESSAGE);
-                            mainPanel.remove(3);
-                            mainPanel.add(createConversationMainPage(),"Conversation Main Page");
-                            cardLayout.show(mainPanel, "Conversation Main Page");
+
                         } else {
                             JOptionPane.showMessageDialog(null,
                                     "You cannot chat with this person.",
@@ -541,17 +538,45 @@ public class _USERINTERFACE implements Runnable {
         GridBagConstraints global = new GridBagConstraints();
         global.gridx = 0;
         global.gridy = 0;
-        global.insets = new Insets(0, 10, 10, 10);
+        global.insets = new Insets(0, 10, 15, 10);
         global.anchor = GridBagConstraints.WEST;
         JPanel trueContent = new JPanel(new GridBagLayout());
 
-        trueContent.add(new JLabel("Conversations Available"), global);
+        trueContent.add(new JLabel("Conversations"), global);
 
-        global.gridy = 1;
-        trueContent.add(conversationButton("test"), global);
+        try {
+            ArrayList<Conversation> conversations = clientSender.convosAvailableRequest();
+            if (conversations != null) {
+                if (conversations.size() > 0) {
+                    System.out.println("entering if block");
+                    global.anchor = GridBagConstraints.CENTER;
+                    for (Conversation conversation : conversations) {
+                        global.gridy++;
+                        trueContent.add(conversationButton(conversation.getConversationName())
+                                , global);
+                    }
+                } else {
+                    System.out.println("fail1");
+                    global.anchor = GridBagConstraints.CENTER;
+                    global.gridy = 1;
+                    trueContent.add(new JLabel("No Conversations Available..."), global);
+                }
+            } else {
+                System.out.println("fail2");
+                global.anchor = GridBagConstraints.CENTER;
+                global.gridy = 1;
+                trueContent.add(new JLabel("No Conversations Available..."), global);
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("fail3");
+            global.anchor = GridBagConstraints.CENTER;
+            global.gridy = 1;
+            trueContent.add(new JLabel("No Conversations Available..."), global);
+        }
 
         return trueContent;
     }
+
     private JPanel friendsPanel() {
         GridBagConstraints global = new GridBagConstraints();
         global.gridx = 0;
@@ -560,39 +585,33 @@ public class _USERINTERFACE implements Runnable {
         global.anchor = GridBagConstraints.WEST;
         JPanel trueContent = new JPanel(new GridBagLayout());
 
-        trueContent.add(new JLabel("Friends"), global);
-
         try {
-            System.out.println("try block entered");
             ArrayList<User> friends = clientSender.requestFriends();
-            if (friends != null) {
-                System.out.println("if block entered");
-                System.out.println(friends.size());
-                for (User friend : friends) {
-                    System.out.println("for block entered");
-                    global.gridy++;
-                    System.out.println("friend added to list");
-                    trueContent.add(userProfileButton(friend), global);
+            if (friends != null && !friends.isEmpty()) {
+                for (User user : friends) {
+                    System.out.println(user.getUsername());
                 }
-            } else if (friends != null && friends.size() == 0) {
-                System.out.println("no friends found");
+
+                trueContent.removeAll(); // Clear the panel before adding buttons
+                trueContent.add(new JLabel("Friends"), global); // Add the label
                 global.gridy = 1;
-                global.anchor = GridBagConstraints.CENTER;
-                trueContent.add(new JLabel("No Friends..."), global);
+                for (User friend : friends) {
+                    trueContent.add(userProfileButton(friend), global);
+                    global.gridy++; // Move to the next row
+                }
             } else {
-                System.out.println("no friends found");
-                global.gridy = 1;
-                global.anchor = GridBagConstraints.CENTER;
-                trueContent.add(new JLabel("No Friends..."), global);
+                // If there are no friends, display a message
+                trueContent.removeAll(); // Clear the panel before adding the label
+                trueContent.add(new JLabel("No Friends..."), global); // Add the label
             }
         } catch (IOException | ClassNotFoundException e) {
-            System.out.println("catch block entered");
-            global.gridy = 1;
-            global.anchor = GridBagConstraints.CENTER;
-            trueContent.add(new JLabel("No Friends..."), global);
+            // Handle exceptions
+            trueContent.removeAll(); // Clear the panel before adding the error message
+            trueContent.add(new JLabel("Error fetching friends..."), global); // Add the error message
         }
         return trueContent;
     }
+
     private JPanel createConversationMainPage() {
         GridBagConstraints global = new GridBagConstraints();
         global.gridx = 0;
@@ -605,13 +624,13 @@ public class _USERINTERFACE implements Runnable {
         global.gridy = 1;
         trueContent.add(searchBar(), global);
 
-        global.anchor = GridBagConstraints.WEST;
+        global.anchor = GridBagConstraints.CENTER;
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.insets = new Insets(10, 0, 10, 10);
-        gbc.anchor = GridBagConstraints.WEST;
+        gbc.anchor = GridBagConstraints.CENTER;
         JPanel bottomContent = new JPanel(new GridBagLayout());
 
         bottomContent.add(conversationPanel(), gbc);
@@ -621,11 +640,26 @@ public class _USERINTERFACE implements Runnable {
         global.gridy = 2;
         trueContent.add(bottomContent, global);
 
+        global.anchor = GridBagConstraints.CENTER;
+        global.gridy = 3;
+        JButton returnToLogIn = new JButton("Log Out");
+        trueContent.add(returnToLogIn, global);
+
         searchButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 mainPanel.add(createSearchResultsPage(), "Search Results");
                 cardLayout.show(mainPanel, "Search Results");
+            }
+        });
+
+        returnToLogIn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                usernameField.setText("");
+                passwordField.setText("");
+                System.out.println("LOGGED OUT");
+                cardLayout.show(mainPanel, "Main Page");
             }
         });
 

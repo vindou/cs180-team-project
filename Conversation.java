@@ -97,6 +97,10 @@ public class Conversation implements Serializable {
         return this.conversationID;
     }
 
+    public String getConversationName() {
+        return this.conversationName;
+    }
+
     public boolean addUser(User newUser) throws ActionNotAllowedException {
         boolean validation = true;
         boolean completion = false;

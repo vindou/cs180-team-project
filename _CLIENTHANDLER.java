@@ -35,12 +35,13 @@ public class _CLIENTHANDLER implements Runnable {
                         String username = (String) objectReader.readObject();
                         String password = (String) objectReader.readObject();
 
+                        System.out.println("Username: " + username);
                         this.assocUser = this.accessedServer.verifyLogIn(username, password);
+
                         if (this.assocUser == null) {
                             // LOGIN FAILED
                             objectSender.writeObject("LOGIN_DENIED");
                             objectSender.flush();
-
                         } else {
                             // LOGIN SUCCESS
                             objectSender.writeObject("LOGIN_SUCCESS");
@@ -105,12 +106,19 @@ public class _CLIENTHANDLER implements Runnable {
                         }
                     } else if (clientRequest.equals("FRIEND_REQUEST_QUERY")) {
                         ArrayList<User> friends = accessedServer.getFriendList(this.assocUser);
+                        System.out.println("friends " + friends.size());
+
+                        for (User user : friends) {
+                            System.out.println(user.getUsername());
+                        }
 
                         if (!friends.isEmpty()) {
+                            objectSender.flush();
                             objectSender.writeObject("FRIENDS_FOUND");
                             objectSender.flush();
 
-                            objectSender.writeObject(friends);
+                            System.out.println("writing friends");
+                            objectSender.writeObject(accessedServer.getFriendList(this.assocUser));
                             objectSender.flush();
                         } else {
                             objectSender.writeObject("NO_FRIENDS");
@@ -177,9 +185,11 @@ public class _CLIENTHANDLER implements Runnable {
                         String conversationName = (String) objectReader.readObject();
 
                         if (accessedServer.createConversation(users, conversationName)) {
+                            System.out.println("convo created");
                             objectSender.writeObject("CONVERSATION_ADDITION_SUCCESS");
                             objectSender.flush();
                         } else {
+                            System.out.println("convo not created");
                             objectSender.writeObject("CONVERSATION_ADDITION_FAILED");
                             objectSender.flush();
                         }

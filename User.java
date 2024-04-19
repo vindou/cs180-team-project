@@ -135,8 +135,9 @@ public class User implements Serializable, UserInterface {
         if (!friends.contains(user) && !this.equals(user)) {
             this.unblockUser(user);
             success = true;
-            friends.add(user);
+            this.friends.add(user);
         }
+
         return success;
     } // addFriend
 
@@ -147,7 +148,7 @@ public class User implements Serializable, UserInterface {
         if (!blocked.contains(user) && !user.equals(this)) {
             this.removeFriend(user);
             success = true;
-            blocked.add(user);
+            this.blocked.add(user);
         }
         return success;
     } // blockFriend
@@ -156,7 +157,7 @@ public class User implements Serializable, UserInterface {
     public boolean removeFriend(User user) {
         boolean success = false;
         if (friends.contains(user)) {
-            friends.remove(user);
+            this.friends.remove(user);
             success = true;
         }
         return success;
@@ -165,7 +166,7 @@ public class User implements Serializable, UserInterface {
     public boolean unblockUser(User user) {
         boolean success = false;
         if (blocked.contains(user)) {
-            blocked.remove(user);
+            this.blocked.remove(user);
             success = true;
         }
 
