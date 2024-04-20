@@ -102,12 +102,18 @@ public class _SERVERCLASS {
         return friends;
     }
     public synchronized ArrayList<Conversation> convosAvailable(User assocUser) {
-        System.out.println("sending array");
         ArrayList<Conversation> convos = conversationDatabase.findAvailableConversations(assocUser);
-        System.out.println(convos.size());
+        System.out.println("Convos available for "
+                + assocUser.getUsername() + ": "
+                + conversationDatabase.findAvailableConversations(assocUser).size());
         return convos;
     }
     public synchronized boolean createConversation(ArrayList<User> users, String conversationName) {
+        for (User user : users) {
+            System.out.println(user.getUsername());
+        }
+        System.out.println(conversationName);
+
         Conversation proposedConversation = new Conversation(conversationName, users, conversationDatabase);
         boolean isBlocked = false;
 
@@ -124,7 +130,9 @@ public class _SERVERCLASS {
             return false;
         } else {
             System.out.println("success adding convo");
-            return conversationDatabase.addConversation(proposedConversation);
+            conversationDatabase.addConversation(proposedConversation);
+            System.out.println(conversationDatabase.getConversationArray().size());
+            return true;
         }
     }
     public synchronized boolean sendMessage(Conversation assocConversation, TextMessage sentMessage) {

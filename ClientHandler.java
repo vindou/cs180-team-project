@@ -226,7 +226,7 @@ public class ClientHandler implements Runnable {
                             theGuys.add(user);
                             theGuys.add(userForConvo); // Added semicolon
 
-                            Conversation theNewConvo = new Conversation(theGuys, convos);
+                            Conversation theNewConvo = new Conversation(theGuys);
 
                             // sends new text
                             writer.println("What would you like to say?end");

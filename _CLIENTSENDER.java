@@ -251,44 +251,56 @@ public class _CLIENTSENDER implements Runnable {
         objectSender.flush();
 
         String responseStatus = (String) objectReader.readObject();
+        System.out.println(responseStatus);
 
         if (responseStatus.equals("CONVOS_FOUND")) {
-            try {
-                return (ArrayList<Conversation>) objectReader.readObject();
-            } catch (ClassNotFoundException e) {
-                return null;
+            int convosAvailable = (int) objectReader.readObject();
+            System.out.println(convosAvailable);
+            ArrayList<Conversation> availableConvos = new ArrayList<>();
+
+            for (int i = 0; i < convosAvailable; i++) {
+                System.out.println("appending convo");
+                Conversation convo = (Conversation) objectReader.readObject();
+                availableConvos.add(convo);
             }
+
+            return availableConvos;
         } else if (responseStatus.equals("NO_CONVOS_FOUND")) {
+            System.out.println("no convos found");
             return null;
         } else {
             return null;
         }
     }
-    public synchronized boolean sendMessageRequest(Conversation assocConvo, TextMessage proposedMessage) throws IOException
+    public synchronized Conversation sendMessageRequest(Conversation assocConvo, String message) throws IOException
             , ClassNotFoundException {
-        boolean success;
+        System.out.println("sending request");
         objectSender.writeObject("SEND_MESSAGE_REQUEST");
         objectSender.flush();
 
         // send conversation
+        System.out.println("writing convo");
         objectSender.writeObject(assocConvo);
         objectSender.flush();
 
         // send message
-        objectSender.writeObject(proposedMessage);
+        System.out.println("writing message");
+        objectSender.writeObject(message);
         objectSender.flush();
 
         String responseStatus = (String) objectReader.readObject();
 
         if (responseStatus.equals("MESSAGE_SENT")) {
-            success = true;
-        } else if (responseStatus.equals("MESSAGE_SEND_FAILED")) {
-            success = false;
-        } else {
-            success = false;
-        }
+            System.out.println("message sent");
 
-        return success;
+            Conversation newConvo = (Conversation) objectReader.readObject();
+            return newConvo;
+        } else if (responseStatus.equals("MESSAGE_SEND_FAILED")) {
+            System.out.println("message not sent");
+            return null;
+        } else {
+            return null;
+        }
     }
     public synchronized boolean deleteMessageRequest(Conversation assocConvo, TextMessage proposedDelete) throws IOException
             , ClassNotFoundException {
@@ -339,22 +351,21 @@ public class _CLIENTSENDER implements Runnable {
 
     public synchronized ArrayList<User> requestFriends() throws IOException
             , ClassNotFoundException {
-        System.out.println("sending request");
         objectSender.writeObject("FRIEND_REQUEST_QUERY");
         objectSender.flush();
 
         String responseStatus = (String) objectReader.readObject();
-        System.out.println("received response");
 
         if (responseStatus.equals("FRIENDS_FOUND")) {
-            try {
-                ArrayList<User> response = (ArrayList<User>) objectReader.readObject();
-                System.out.println("response size" + response.size());
-                return response;
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-                return null;
+            int size = (int) objectReader.readObject();
+            ArrayList<User> resultingArray = new ArrayList<>();
+
+            for (int i = 0; i < size; i++) {
+                User indFriend = (User) objectReader.readObject();
+                resultingArray.add(indFriend);
             }
+
+            return resultingArray;
         } else if (responseStatus.equals("NO_FRIENDS")) {
             return null;
         } else {

@@ -1,3 +1,4 @@
+import java.io.Serializable;
 import java.time.LocalTime;
 /**
  * This class represents a Message object in our team project
@@ -8,7 +9,7 @@ import java.time.LocalTime;
  * @author Jack Juncker, Ellie Williams
  * @version Mar 25th, 2024.
  */
-public class Message {
+public class Message implements Serializable {
     // timeSent: A LocalTime field representing
     // the exact time in EST that the message was
     // sent (intialized). 

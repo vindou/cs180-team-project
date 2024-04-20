@@ -324,7 +324,6 @@ public class _USERINTERFACE implements Runnable {
 
         return trueContent;
     }
-
     private JPanel searchResultsPageSearchBar() {
         GridBagConstraints global = new GridBagConstraints();
         global.gridx = 0;
@@ -344,8 +343,8 @@ public class _USERINTERFACE implements Runnable {
 
         return trueContent;
     }
-
     JButton returnToConversationPage = new JButton("Return to Conversations");
+
     private JPanel createSearchResultsPage() {
         String query = userSearchBar.getText();
         if (!query.equals(searchBarField)) {
@@ -404,15 +403,97 @@ public class _USERINTERFACE implements Runnable {
             return null;
         }
     }
-
-    private JButton conversationButton(String conversationName) {
-        JButton button = new JButton(conversationName);
+    private JButton conversationButton(Conversation conversation) {
+        JButton button = new JButton(conversation.getConversationName());
         button.setPreferredSize(new Dimension(550, 35));
 
         button.setHorizontalTextPosition(SwingConstants.LEFT);
 
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mainPanel.add(createTextingPage(conversation),conversation.getConversationName());
+                cardLayout.show(mainPanel, conversation.getConversationName());
+            }
+        });
+
         return button;
     }
+
+    private JButton textMessageButton(TextMessage textMessage) {
+        String messageString = textMessage.getSender().getUsername()
+                + " | "
+                + textMessage.getTimeSent() + " | "
+                + textMessage.getMessage();
+
+        return new JButton(messageString);
+    }
+
+    private JPanel createTextingPage(Conversation conversation) {
+        GridBagConstraints global = new GridBagConstraints();
+        global.gridx = 0;
+        global.gridy = 0;
+        global.insets = new Insets(0, 10, 15, 10);
+        global.anchor = GridBagConstraints.WEST;
+        JPanel trueContent = new JPanel(new GridBagLayout());
+        JButton returnToConversationPage2 = new JButton("Return to Conversations");
+        trueContent.add(returnToConversationPage2, global);
+
+        global.gridy = 1;
+        trueContent.add(new JLabel("Messages for "
+                + conversation.getConversationName()),
+                global);
+
+        ArrayList<Message> messages = conversation.getMessages();
+        System.out.println("message list size: " + messages.size());
+
+        global.anchor = GridBagConstraints.CENTER;
+        if (messages.size() > 0) {
+            for (Message message : messages) {
+                System.out.println("adding button");
+                TextMessage text = (TextMessage) message;
+                global.gridy++;
+                trueContent.add(textMessageButton(text), global);
+            }
+        } else {
+            global.gridy++;
+            trueContent.add(new JLabel("No messages here!"), global);
+        }
+
+        global.gridy++;
+        JTextField messagingBar = new JTextField("Send a message!", 45);
+        trueContent.add(messagingBar, global);
+
+        global.gridx++;
+        JButton sendButton = new JButton("Send");
+        trueContent.add(sendButton, global);
+
+        returnToConversationPage2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mainPanel.remove(3);
+                mainPanel.add(createConversationMainPage(),"Conversation Main Page");
+                cardLayout.show(mainPanel, "Conversation Main Page");
+            }
+        });
+        sendButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    System.out.println("sending...");
+                    clientSender.sendMessageRequest(conversation, messagingBar.getText());
+                    cardLayout.show(mainPanel, conversation.getConversationName());
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                } catch (ClassNotFoundException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
+
+        return trueContent;
+    }
+
     private JButton userProfileButton(User user) {
         JButton button = new JButton(user.getUsername());
         button.setPreferredSize(new Dimension(165, 35));
@@ -491,12 +572,17 @@ public class _USERINTERFACE implements Runnable {
                                     "Conversation created!",
                                     "Success",
                                     JOptionPane.PLAIN_MESSAGE);
-
+                            mainPanel.remove(3);
+                            mainPanel.add(createConversationMainPage(),"Conversation Main Page");
+                            cardLayout.show(mainPanel, "Conversation Main Page");
                         } else {
                             JOptionPane.showMessageDialog(null,
                                     "You cannot chat with this person.",
                                     "Error",
                                     JOptionPane.ERROR_MESSAGE);
+                            mainPanel.remove(3);
+                            mainPanel.add(createConversationMainPage(),"Conversation Main Page");
+                            cardLayout.show(mainPanel, "Conversation Main Page");
                         }
                     } catch (IOException | ClassNotFoundException ex) {
                         ex.printStackTrace();
@@ -504,6 +590,9 @@ public class _USERINTERFACE implements Runnable {
                                 "Error creating conversation, try another time!",
                                 "Error",
                                 JOptionPane.ERROR_MESSAGE);
+                        mainPanel.remove(3);
+                        mainPanel.add(createConversationMainPage(),"Conversation Main Page");
+                        cardLayout.show(mainPanel, "Conversation Main Page");
                     }
                 } else if (choice == 3) {
                     try {
@@ -546,13 +635,14 @@ public class _USERINTERFACE implements Runnable {
 
         try {
             ArrayList<Conversation> conversations = clientSender.convosAvailableRequest();
+            System.out.println("invoked request");
             if (conversations != null) {
                 if (conversations.size() > 0) {
                     System.out.println("entering if block");
                     global.anchor = GridBagConstraints.CENTER;
                     for (Conversation conversation : conversations) {
                         global.gridy++;
-                        trueContent.add(conversationButton(conversation.getConversationName())
+                        trueContent.add(conversationButton(conversation)
                                 , global);
                     }
                 } else {
@@ -576,7 +666,6 @@ public class _USERINTERFACE implements Runnable {
 
         return trueContent;
     }
-
     private JPanel friendsPanel() {
         GridBagConstraints global = new GridBagConstraints();
         global.gridx = 0;
@@ -611,7 +700,6 @@ public class _USERINTERFACE implements Runnable {
         }
         return trueContent;
     }
-
     private JPanel createConversationMainPage() {
         GridBagConstraints global = new GridBagConstraints();
         global.gridx = 0;
@@ -679,7 +767,6 @@ public class _USERINTERFACE implements Runnable {
         frame.setSize(1000,800);
         frame.setVisible(true);
     }
-
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new _USERINTERFACE());
     }

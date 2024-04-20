@@ -153,7 +153,6 @@ public class TestsMessageAndConversationClass {
 
             assertTrue(cd.getConversationArray().isEmpty());
             assertEquals("output.txt", cd.getFilePath());
-            assertTrue(testConversation.getID() > 0);
             assertEquals(2, testConversation.getUsers().size());
             assertEquals(0, testConversation.getMessages().size());
         }
@@ -252,16 +251,5 @@ public class TestsMessageAndConversationClass {
             assertTrue(testConversation.getMessages().isEmpty());
         }
 
-        @Test(timeout = 2000)
-        public void testConversationToString() {
-            User user1 = new User("ellie", "will2613@purdue.edu", "elliewilliams", "purdue123", "03/16/2004");
-
-            ArrayList<User> testArray = new ArrayList<User>();
-
-            ConversationDatabase cd = new ConversationDatabase("output.txt");
-            Conversation testConversation = new Conversation("cs 180 group", testArray, cd);
-
-            assertEquals(testConversation.fileNameString(), "Conversation #" + testConversation.getID());
-        }
     }
 }

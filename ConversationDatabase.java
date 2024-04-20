@@ -43,7 +43,7 @@ public class ConversationDatabase implements Database {
     }
 
     public ArrayList<Object> readDatabase() {
-        ArrayList<Object> conversationsFound = new ArrayList<Object>();
+        ArrayList<Object> conversationsFound = new ArrayList<>();
         File f = new File(this.filePath);
         try {
             // open file
@@ -62,7 +62,7 @@ public class ConversationDatabase implements Database {
             return conversationsFound;
         } catch (ClassNotFoundException | IOException e) {
             e.printStackTrace();
-            return new ArrayList<Object>();
+            return new ArrayList<>();
         }
     }
 
@@ -104,7 +104,7 @@ public class ConversationDatabase implements Database {
 
     public boolean writeMessageLogs(Conversation conversation) {
         boolean completion = true;
-        File f = new File(conversation.getID() + ".txt");
+        File f = new File(conversation.getConversationName() + ".txt");
         try {
             FileOutputStream fos = new FileOutputStream(f, false);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
@@ -119,7 +119,14 @@ public class ConversationDatabase implements Database {
     }
 
     public boolean addConversation(Conversation conversation) {
+        int oldSize = conversationArray.size();
         this.conversationArray.add(conversation);
-        return true;
+        int newSize = conversationArray.size();
+
+        if (newSize - oldSize != 1) {
+            return false;
+        } else {
+            return true;
+        }
     }
 }

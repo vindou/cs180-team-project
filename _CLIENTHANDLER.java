@@ -106,46 +106,67 @@ public class _CLIENTHANDLER implements Runnable {
                         }
                     } else if (clientRequest.equals("FRIEND_REQUEST_QUERY")) {
                         ArrayList<User> friends = accessedServer.getFriendList(this.assocUser);
-                        System.out.println("friends " + friends.size());
-
-                        for (User user : friends) {
-                            System.out.println(user.getUsername());
-                        }
+                        int cycles = friends.size();
 
                         if (!friends.isEmpty()) {
-                            objectSender.flush();
                             objectSender.writeObject("FRIENDS_FOUND");
                             objectSender.flush();
 
-                            System.out.println("writing friends");
-                            objectSender.writeObject(accessedServer.getFriendList(this.assocUser));
+                            objectSender.writeObject(cycles);
                             objectSender.flush();
+
+                            System.out.println("writing friends");
+                            for (User friend : friends) {
+                                objectSender.writeObject(friend);
+                                objectSender.flush();
+                            }
                         } else {
                             objectSender.writeObject("NO_FRIENDS");
                             objectSender.flush();
                         }
                     } else if (clientRequest.equals("CONVOS_REQUEST")) {
+                        System.out.println("finding convos");
                         ArrayList<Conversation> foundConvos = this.accessedServer.convosAvailable(this.assocUser);
+                        int size = foundConvos.size();
+                        System.out.println("convo size: " + size);
 
-                        if (foundConvos.size() == 0) {
+                        if (foundConvos.size() > 0) {
                             objectSender.writeObject("CONVOS_FOUND");
                             objectSender.flush();
 
-                            objectSender.writeObject(foundConvos);
+                            objectSender.writeObject(size);
                             objectSender.flush();
+
+                            for (int i = 0; i < size; i++) {
+                                System.out.println("writing convo");
+                                Conversation convo = foundConvos.get(i);
+                                objectSender.writeObject(convo);
+                                objectSender.flush();
+                            }
                         } else {
                             objectSender.writeObject("NO_CONVOS_FOUND");
                             objectSender.flush();
                         }
                     } else if (clientRequest.equals("SEND_MESSAGE_REQUEST")) {
                         Conversation assocConvo = (Conversation) objectReader.readObject();
-                        TextMessage proposedMessage = (TextMessage) objectReader.readObject();
-                        boolean success = this.accessedServer.sendMessage(assocConvo, proposedMessage);
+                        System.out.println("received convo");
+                        String message = (String) objectReader.readObject();
+                        System.out.println("received message");
+                        boolean success = this.accessedServer.sendMessage(assocConvo,
+                                new TextMessage(this.assocUser, message));
 
                         if (success) {
+                            System.out.println("message sent successfully");
+                            System.out.println("convo now has "
+                                    + assocConvo.getMessages().size()
+                                    + " messages");
                             objectSender.writeObject("MESSAGE_SENT");
                             objectSender.flush();
+
+                            objectSender.writeObject(assocConvo);
+                            objectSender.flush();
                         } else {
+                            System.out.println("message not sent...");
                             objectSender.writeObject("MESSAGE_SEND_FAILED");
                             objectSender.flush();
                         }
@@ -188,6 +209,10 @@ public class _CLIENTHANDLER implements Runnable {
                             System.out.println("convo created");
                             objectSender.writeObject("CONVERSATION_ADDITION_SUCCESS");
                             objectSender.flush();
+
+                            System.out.println("User has "
+                                    + accessedServer.convosAvailable(this.assocUser).size()
+                                    + " convos now");
                         } else {
                             System.out.println("convo not created");
                             objectSender.writeObject("CONVERSATION_ADDITION_FAILED");
@@ -195,6 +220,7 @@ public class _CLIENTHANDLER implements Runnable {
                         }
                     } else if (clientRequest.equals("CLIENT_SHUTDOWN")) {
                         break;
+
                     } else if (clientRequest.equals("PONG")) {
                         System.out.println("PONG");
                     }

@@ -15,12 +15,6 @@ public class Conversation implements Serializable {
 
     // DM File with usernames in it
 
-    // Unique integer ID for a conversation 
-    private int conversationID;
-
-    // Database to write to and refer to
-    private ConversationDatabase conversationDatabase;
-
     // Users Field: A list representing the users
     // involved in the conversation. Allows for
     // group chats to be made. 
@@ -36,8 +30,6 @@ public class Conversation implements Serializable {
 
     public Conversation() {
         this.conversationName = "";
-        this.conversationID = -1;
-        this.conversationDatabase = null;
         this.users = null;
         this.msgs = null;
         this.deletedMsgs = null;
@@ -47,14 +39,12 @@ public class Conversation implements Serializable {
             , ArrayList<User> users
             , ConversationDatabase conversationDatabase) {
         this.conversationName = conversationName;
-        this.conversationID = generateID(conversationDatabase);
-        this.conversationDatabase = conversationDatabase;
         this.users = users;
         this.msgs = new ArrayList<Message>();
         this.deletedMsgs = new ArrayList<Message>();
     }
 
-    public Conversation(ArrayList<User> users, ConversationDatabase conversationDatabase) {
+    public Conversation(ArrayList<User> users) {
         this.conversationName = "";
         for (int i = 0; i < users.size(); i++) {
             if (i != users.size() - 1) {
@@ -63,11 +53,9 @@ public class Conversation implements Serializable {
                 this.conversationName += users.get(i) + ", ";
             }
         }
-        this.conversationID = generateID(conversationDatabase);
-        this.conversationDatabase = conversationDatabase;
         this.users = users;
-        this.msgs = new ArrayList<Message>();
-        this.deletedMsgs = new ArrayList<Message>();
+        this.msgs = new ArrayList<>();
+        this.deletedMsgs = new ArrayList<>();
     }
 
     // Returns the User object represented by User 1
@@ -91,10 +79,6 @@ public class Conversation implements Serializable {
 
     public ArrayList<Message> getDeletedMessages() {
         return this.deletedMsgs;
-    }
-
-    public int getID() {
-        return this.conversationID;
     }
 
     public String getConversationName() {
@@ -159,31 +143,4 @@ public class Conversation implements Serializable {
         }
     }
 
-    public int generateID(ConversationDatabase database) {
-        boolean randomIntegerGenerated = false;
-        int proposedID = 0;
-        do {
-            proposedID = (int) (Math.random() * 1000000);
-
-            innerloop:
-            for (Object individualConversation : database.getConversationArray()) {
-                Conversation tempConvo = (Conversation) individualConversation;
-                if (this.conversationID == tempConvo.getID()) {
-                    break innerloop;
-                }
-            }
-
-            randomIntegerGenerated = true;
-        } while (!randomIntegerGenerated);
-
-        return proposedID;
-    }
-
-    public String toString() {
-        return String.valueOf(this.conversationID);
-    }
-
-    public String fileNameString() {
-        return "Conversation #" + conversationID;
-    }
 }

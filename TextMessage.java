@@ -1,3 +1,5 @@
+import java.io.Serializable;
+
 /**
  * TextMessage.java
  *
@@ -8,7 +10,7 @@
  * @version March 31, 2024
  */
 
-public class TextMessage extends Message {
+public class TextMessage extends Message implements Serializable {
 
     // rawMessage: String field representing
     // the raw string content of a text message.
