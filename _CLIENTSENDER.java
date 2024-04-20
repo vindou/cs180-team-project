@@ -251,22 +251,18 @@ public class _CLIENTSENDER implements Runnable {
         objectSender.flush();
 
         String responseStatus = (String) objectReader.readObject();
-        System.out.println(responseStatus);
 
         if (responseStatus.equals("CONVOS_FOUND")) {
             int convosAvailable = (int) objectReader.readObject();
-            System.out.println(convosAvailable);
             ArrayList<Conversation> availableConvos = new ArrayList<>();
 
             for (int i = 0; i < convosAvailable; i++) {
-                System.out.println("appending convo");
                 Conversation convo = (Conversation) objectReader.readObject();
                 availableConvos.add(convo);
             }
 
             return availableConvos;
         } else if (responseStatus.equals("NO_CONVOS_FOUND")) {
-            System.out.println("no convos found");
             return null;
         } else {
             return null;
@@ -274,35 +270,33 @@ public class _CLIENTSENDER implements Runnable {
     }
     public synchronized Conversation sendMessageRequest(Conversation assocConvo, String message) throws IOException
             , ClassNotFoundException {
-        System.out.println("sending request");
         objectSender.writeObject("SEND_MESSAGE_REQUEST");
         objectSender.flush();
 
         // send conversation
-        System.out.println("writing convo");
         objectSender.writeObject(assocConvo);
         objectSender.flush();
 
         // send message
-        System.out.println("writing message");
         objectSender.writeObject(message);
         objectSender.flush();
 
         String responseStatus = (String) objectReader.readObject();
 
         if (responseStatus.equals("MESSAGE_SENT")) {
-            System.out.println("message sent");
+            ArrayList<Message> oldMessageArray = assocConvo.getMessages();
+            TextMessage newMessage = (TextMessage) objectReader.readObject();
 
-            Conversation newConvo = (Conversation) objectReader.readObject();
-            return newConvo;
+            oldMessageArray.add(newMessage);
+            assocConvo.setMsgs(oldMessageArray);
+            return assocConvo;
         } else if (responseStatus.equals("MESSAGE_SEND_FAILED")) {
-            System.out.println("message not sent");
             return null;
         } else {
             return null;
         }
     }
-    public synchronized boolean deleteMessageRequest(Conversation assocConvo, TextMessage proposedDelete) throws IOException
+    public synchronized Conversation deleteMessageRequest(Conversation assocConvo, TextMessage proposedDelete) throws IOException
             , ClassNotFoundException {
         boolean success;
         objectSender.writeObject("DELETE_MESSAGE_REQUEST");
@@ -317,14 +311,17 @@ public class _CLIENTSENDER implements Runnable {
         String responseStatus = (String) objectReader.readObject();
 
         if (responseStatus.equals("DELETE_SUCCESS")) {
-            success = true;
+            try {
+                assocConvo.deleteMessage(proposedDelete);
+            } catch (ActionNotAllowedException e) {
+                throw new RuntimeException(e);
+            }
+            return assocConvo;
         } else if (responseStatus.equals("DELETE_FAILED")) {
-            success = false;
+            return null;
         } else {
-            success = false;
+            return null;
         }
-
-        return success;
     }
     public synchronized ArrayList<User> requestUserQuery(String query) throws IOException
             , ClassNotFoundException {

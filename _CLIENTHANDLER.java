@@ -34,8 +34,6 @@ public class _CLIENTHANDLER implements Runnable {
                     if (clientRequest.equals("LOGIN_REQUEST")) {
                         String username = (String) objectReader.readObject();
                         String password = (String) objectReader.readObject();
-
-                        System.out.println("Username: " + username);
                         this.assocUser = this.accessedServer.verifyLogIn(username, password);
 
                         if (this.assocUser == null) {
@@ -115,7 +113,6 @@ public class _CLIENTHANDLER implements Runnable {
                             objectSender.writeObject(cycles);
                             objectSender.flush();
 
-                            System.out.println("writing friends");
                             for (User friend : friends) {
                                 objectSender.writeObject(friend);
                                 objectSender.flush();
@@ -125,10 +122,8 @@ public class _CLIENTHANDLER implements Runnable {
                             objectSender.flush();
                         }
                     } else if (clientRequest.equals("CONVOS_REQUEST")) {
-                        System.out.println("finding convos");
                         ArrayList<Conversation> foundConvos = this.accessedServer.convosAvailable(this.assocUser);
                         int size = foundConvos.size();
-                        System.out.println("convo size: " + size);
 
                         if (foundConvos.size() > 0) {
                             objectSender.writeObject("CONVOS_FOUND");
@@ -138,8 +133,8 @@ public class _CLIENTHANDLER implements Runnable {
                             objectSender.flush();
 
                             for (int i = 0; i < size; i++) {
-                                System.out.println("writing convo");
                                 Conversation convo = foundConvos.get(i);
+                                System.out.println("msgs in " + convo.getConversationName() + convo.getMessages().size());
                                 objectSender.writeObject(convo);
                                 objectSender.flush();
                             }
@@ -149,24 +144,26 @@ public class _CLIENTHANDLER implements Runnable {
                         }
                     } else if (clientRequest.equals("SEND_MESSAGE_REQUEST")) {
                         Conversation assocConvo = (Conversation) objectReader.readObject();
-                        System.out.println("received convo");
                         String message = (String) objectReader.readObject();
-                        System.out.println("received message");
+                        TextMessage newMsg = new TextMessage(this.assocUser, message);
                         boolean success = this.accessedServer.sendMessage(assocConvo,
-                                new TextMessage(this.assocUser, message));
+                                newMsg);
+
+                        Conversation newConvo = new Conversation();
+                        for (Conversation convo : this.accessedServer.convosAvailable(assocUser)) {
+                            if (assocConvo.equals(convo)) {
+                                newConvo = convo;
+                                break;
+                            }
+                        }
 
                         if (success) {
-                            System.out.println("message sent successfully");
-                            System.out.println("convo now has "
-                                    + assocConvo.getMessages().size()
-                                    + " messages");
                             objectSender.writeObject("MESSAGE_SENT");
                             objectSender.flush();
 
-                            objectSender.writeObject(assocConvo);
+                            objectSender.writeObject(newMsg);
                             objectSender.flush();
                         } else {
-                            System.out.println("message not sent...");
                             objectSender.writeObject("MESSAGE_SEND_FAILED");
                             objectSender.flush();
                         }
@@ -174,6 +171,17 @@ public class _CLIENTHANDLER implements Runnable {
                         Conversation assocConvo = (Conversation) objectReader.readObject();
                         TextMessage proposedDelete = (TextMessage) objectReader.readObject();
                         boolean success = this.accessedServer.deleteMessage(assocConvo, proposedDelete);
+
+                        for (Conversation convo : this.accessedServer.convosAvailable(assocUser)) {
+                            if (assocConvo.equals(convo)) {
+                                assocConvo = convo;
+                                break;
+                            }
+                        }
+
+                        System.out.println("Messages contained in "
+                                + assocConvo.getConversationName() + ": "
+                                + assocConvo.getMessages().size());
 
                         if (success) {
                             objectSender.writeObject("DELETE_SUCCESS");
@@ -206,15 +214,10 @@ public class _CLIENTHANDLER implements Runnable {
                         String conversationName = (String) objectReader.readObject();
 
                         if (accessedServer.createConversation(users, conversationName)) {
-                            System.out.println("convo created");
                             objectSender.writeObject("CONVERSATION_ADDITION_SUCCESS");
                             objectSender.flush();
 
-                            System.out.println("User has "
-                                    + accessedServer.convosAvailable(this.assocUser).size()
-                                    + " convos now");
                         } else {
-                            System.out.println("convo not created");
                             objectSender.writeObject("CONVERSATION_ADDITION_FAILED");
                             objectSender.flush();
                         }

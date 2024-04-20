@@ -412,21 +412,45 @@ public class _USERINTERFACE implements Runnable {
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                mainPanel.add(createTextingPage(conversation),conversation.getConversationName());
+                mainPanel.add(createTextingPage(conversation), conversation.getConversationName());
                 cardLayout.show(mainPanel, conversation.getConversationName());
             }
         });
 
         return button;
     }
+    private JButton textMessageButton(Conversation assocConvo, TextMessage textMessage) {
+        String messageString = textMessage.toString();
 
-    private JButton textMessageButton(TextMessage textMessage) {
-        String messageString = textMessage.getSender().getUsername()
-                + " | "
-                + textMessage.getTimeSent() + " | "
-                + textMessage.getMessage();
+        JButton button = new JButton(messageString);
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int choice = JOptionPane.showOptionDialog(
+                        null,
+                        "User Actions",
+                        "Actions: ",
+                        JOptionPane.YES_NO_CANCEL_OPTION,
+                        JOptionPane.QUESTION_MESSAGE,
+                        null,
+                        new String[]{"Delete Message",
+                                "Cancel"},
+                        "Cancel");
 
-        return new JButton(messageString);
+                if (choice == JOptionPane.YES_OPTION) {
+                    try {
+                        System.out.println("deleting message, repopulating screen");
+                        Conversation newConvo = clientSender.deleteMessageRequest(assocConvo, textMessage);
+                        System.out.println("newConvo message size: " + newConvo.getMessages().size());
+                        repopulateScreen(newConvo);
+                    } catch (IOException | ClassNotFoundException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                }
+            }
+        });
+
+        return button;
     }
 
     private JPanel createTextingPage(Conversation conversation) {
@@ -445,15 +469,13 @@ public class _USERINTERFACE implements Runnable {
                 global);
 
         ArrayList<Message> messages = conversation.getMessages();
-        System.out.println("message list size: " + messages.size());
 
         global.anchor = GridBagConstraints.CENTER;
-        if (messages.size() > 0) {
+        if (!messages.isEmpty()) {
             for (Message message : messages) {
-                System.out.println("adding button");
                 TextMessage text = (TextMessage) message;
                 global.gridy++;
-                trueContent.add(textMessageButton(text), global);
+                trueContent.add(textMessageButton(conversation, text), global);
             }
         } else {
             global.gridy++;
@@ -471,7 +493,8 @@ public class _USERINTERFACE implements Runnable {
         returnToConversationPage2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                mainPanel.remove(3);
+                mainPanel.remove(createConversationMainPage());
+                mainPanel.remove(createTextingPage(conversation));
                 mainPanel.add(createConversationMainPage(),"Conversation Main Page");
                 cardLayout.show(mainPanel, "Conversation Main Page");
             }
@@ -480,17 +503,18 @@ public class _USERINTERFACE implements Runnable {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    System.out.println("sending...");
-                    clientSender.sendMessageRequest(conversation, messagingBar.getText());
-                    cardLayout.show(mainPanel, conversation.getConversationName());
+                    System.out.println("sending message, repopulating screen");
+                    Conversation newConvo = clientSender.sendMessageRequest(conversation, messagingBar.getText());
+                    System.out.println("newConvo message size: " + newConvo.getMessages().size());
+                    repopulateScreen(newConvo);
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 } catch (ClassNotFoundException ex) {
                     throw new RuntimeException(ex);
                 }
+
             }
         });
-
         return trueContent;
     }
 
@@ -635,10 +659,8 @@ public class _USERINTERFACE implements Runnable {
 
         try {
             ArrayList<Conversation> conversations = clientSender.convosAvailableRequest();
-            System.out.println("invoked request");
             if (conversations != null) {
                 if (conversations.size() > 0) {
-                    System.out.println("entering if block");
                     global.anchor = GridBagConstraints.CENTER;
                     for (Conversation conversation : conversations) {
                         global.gridy++;
@@ -646,19 +668,16 @@ public class _USERINTERFACE implements Runnable {
                                 , global);
                     }
                 } else {
-                    System.out.println("fail1");
                     global.anchor = GridBagConstraints.CENTER;
                     global.gridy = 1;
                     trueContent.add(new JLabel("No Conversations Available..."), global);
                 }
             } else {
-                System.out.println("fail2");
                 global.anchor = GridBagConstraints.CENTER;
                 global.gridy = 1;
                 trueContent.add(new JLabel("No Conversations Available..."), global);
             }
         } catch (IOException | ClassNotFoundException e) {
-            System.out.println("fail3");
             global.anchor = GridBagConstraints.CENTER;
             global.gridy = 1;
             trueContent.add(new JLabel("No Conversations Available..."), global);
@@ -677,10 +696,6 @@ public class _USERINTERFACE implements Runnable {
         try {
             ArrayList<User> friends = clientSender.requestFriends();
             if (friends != null && !friends.isEmpty()) {
-                for (User user : friends) {
-                    System.out.println(user.getUsername());
-                }
-
                 trueContent.removeAll(); // Clear the panel before adding buttons
                 trueContent.add(new JLabel("Friends"), global); // Add the label
                 global.gridy = 1;
@@ -753,6 +768,18 @@ public class _USERINTERFACE implements Runnable {
 
         return trueContent;
     }
+
+    public void repopulateScreen(Conversation conversation) {
+        mainPanel.removeAll();
+        mainPanel.add(createMainPage(), "Main Page");
+        mainPanel.add(createRegistrationPanel(), "Register");
+        mainPanel.add(createLogInPanel(), "LogIn");
+        mainPanel.add(createConversationMainPage(),"Conversation Main Page");
+
+        mainPanel.add(createTextingPage(conversation), conversation.getConversationName());
+        cardLayout.show(mainPanel, conversation.getConversationName());
+    }
+
     @Override
     public void run() {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

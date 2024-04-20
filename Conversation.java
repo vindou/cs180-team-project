@@ -76,6 +76,9 @@ public class Conversation implements Serializable {
     public ArrayList<Message> getMessages() {
         return this.msgs;
     }
+    public void setMsgs(ArrayList<Message> msgs) {
+        this.msgs = msgs;
+    }
 
     public ArrayList<Message> getDeletedMessages() {
         return this.deletedMsgs;
@@ -134,13 +137,15 @@ public class Conversation implements Serializable {
     // from the msgs ArrayList. Checks if the index and
     // message content is the same.
     public void deleteMessage(Message deletedMessage) throws ActionNotAllowedException {
-        Message targetMessage = this.msgs.get(deletedMessage.getIndex());
-        if (targetMessage.equals(deletedMessage)) {
-            this.deletedMsgs.add(targetMessage);
-            this.msgs.remove(targetMessage);
-        } else {
-            throw new ActionNotAllowedException("Message not found");
-        }
+        this.msgs.remove(deletedMessage);
     }
 
+    public boolean equals(Conversation convo) {
+        if (this.conversationName.equals(convo.getConversationName())
+        && this.users.equals(convo.getUsers())) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

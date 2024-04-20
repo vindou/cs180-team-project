@@ -98,22 +98,13 @@ public class _SERVERCLASS {
     }
     public synchronized ArrayList<User> getFriendList(User assocUser) {
         ArrayList<User> friends = assocUser.getFriends();
-        System.out.println("server side friend size: " + friends.size());
         return friends;
     }
     public synchronized ArrayList<Conversation> convosAvailable(User assocUser) {
         ArrayList<Conversation> convos = conversationDatabase.findAvailableConversations(assocUser);
-        System.out.println("Convos available for "
-                + assocUser.getUsername() + ": "
-                + conversationDatabase.findAvailableConversations(assocUser).size());
         return convos;
     }
     public synchronized boolean createConversation(ArrayList<User> users, String conversationName) {
-        for (User user : users) {
-            System.out.println(user.getUsername());
-        }
-        System.out.println(conversationName);
-
         Conversation proposedConversation = new Conversation(conversationName, users, conversationDatabase);
         boolean isBlocked = false;
 
@@ -126,28 +117,53 @@ public class _SERVERCLASS {
         }
 
         if (isBlocked) {
-            System.out.println("a user blocked the other here");
             return false;
         } else {
-            System.out.println("success adding convo");
             conversationDatabase.addConversation(proposedConversation);
             System.out.println(conversationDatabase.getConversationArray().size());
             return true;
         }
     }
     public synchronized boolean sendMessage(Conversation assocConversation, TextMessage sentMessage) {
-        try {
-            assocConversation.addMessage(sentMessage);
-            return true;
-        } catch (ActionNotAllowedException ignored) {
+        boolean success = false;
+        for (Object convo : this.conversationDatabase.getConversationArray()) {
+            Conversation transConvo = (Conversation) convo;
+            if (transConvo.equals(assocConversation)) {
+                try {
+                    ((Conversation) convo).addMessage(sentMessage);
+                    success = true;
+                    break;
+                } catch (ActionNotAllowedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+
+        if (success) {
+            System.out.println("message sucessfully sent");
+            return success;
+        } else {
             return false;
         }
     }
     public synchronized boolean deleteMessage(Conversation assocConversation, TextMessage deletedMessage) {
-        try {
-            assocConversation.deleteMessage(deletedMessage);
-            return true;
-        } catch (ActionNotAllowedException ignored) {
+        boolean success = false;
+        for (Object convo : this.conversationDatabase.getConversationArray()) {
+            Conversation transConvo = (Conversation) convo;
+            if (transConvo.equals(assocConversation)) {
+                try {
+                    ((Conversation) convo).deleteMessage(deletedMessage);
+                    success = true;
+                    break;
+                } catch (ActionNotAllowedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+
+        if (success) {
+            return success;
+        } else {
             return false;
         }
     }
