@@ -174,7 +174,12 @@ of TestsServerClass.java.
 
 To test the IO capabilities of our server-client interactions, first run ServerClass.java (its main method), then run 
 Client Class, and follow the prompts. Keep in mind that the files will most likely be blank, so things like searching for
-users or starting conversations won't be doable, as you'll be the only user on that instance of the platform. 
+users or starting conversations won't be doable, as you'll be the only user on that instance of the platform.
+
+#### GUI Testing
+
+To test the GUI component of our program, first run the main method of _SERVERCLASS.java, then run _CLIENTCLASS.java and follow the prompts. 
+Incorrect or illegal inputs will display error messages, as well as a prompt to the User to try again. 
 
 ## Submissions
 ### Phase 1
