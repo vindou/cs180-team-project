@@ -188,6 +188,8 @@ Incorrect or illegal inputs will display error messages, as well as a prompt to 
 - Vocareum: Ellie Williams
 #### Phase 3
  - Vocareum: Ellie Williams
+ - Project Report: Gilbert Chang
+ - Video Presentation: Ellie Williams
 
 
 
