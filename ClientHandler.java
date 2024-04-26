@@ -146,13 +146,12 @@ public class ClientHandler implements Runnable {
             String userChoice;
             outerloop:
             while (true) {
-                writer.println("""
-                    What would you like to do:
-                    1) View Conversations
-                    2) Start New Conversation
-                    3) Search Users
-                    4) See My Account
-                    5) Quitend""");
+                writer.println("What would you like to do: \n" +
+                    "1) View Conversations\n" +
+                    "2) Start New Conversation\n" +
+                    "3) Search Users\n" +
+                    "4) See My Account\n" +
+                    "5) Quitend");
                 // search should have add user and block user
                 writer.flush();
                 userChoice = reader.readLine();
