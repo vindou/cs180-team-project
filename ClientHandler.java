@@ -147,7 +147,7 @@ public class ClientHandler implements Runnable {
             outerloop:
             while (true) {
                 writer.println("""
-                    What would you like to do:\s
+                    What would you like to do:
                     1) View Conversations
                     2) Start New Conversation
                     3) Search Users
