@@ -1,24 +1,22 @@
-import javax.swing.*;
 import java.io.EOFException;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
-public class _SERVERCLASS {
+public class FinalServerClass {
     public static UserDatabase userDatabase = new UserDatabase("userData.txt");
     public static ConversationDatabase conversationDatabase = new ConversationDatabase("conversationData.txt");
     private static int PORT_NUM = 5329;
 
-    public _SERVERCLASS() {}
+    public FinalServerClass() {}
     public void main(String[] args) {
         Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
             public void run() {
                 saveData();
             }
         }, "Shutdown-thread"));
-        _SERVERCLASS mainServer = new _SERVERCLASS();
+        FinalServerClass mainServer = new FinalServerClass();
         try {
             ServerSocket serverSocket = new ServerSocket(PORT_NUM);
             System.out.printf("PORT_NUM = %d\nSERVER ONLINE\n", PORT_NUM);
@@ -26,7 +24,7 @@ public class _SERVERCLASS {
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("\nCLIENT CONNECTION MADE: " + clientSocket.getInetAddress());
 
-                Thread clientThread = new Thread(new _CLIENTHANDLER(mainServer, clientSocket));
+                Thread clientThread = new Thread(new FinalClientHandler(mainServer, clientSocket));
                 clientThread.start();
             }
         } catch (EOFException | NullPointerException e) {

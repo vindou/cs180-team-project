@@ -1,4 +1,3 @@
-import javax.sound.sampled.Line;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
@@ -7,18 +6,16 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.net.Socket;
 import java.util.ArrayList;
 
-public class _USERINTERFACE implements Runnable {
+public class FinalUserInterface implements Runnable {
     private JFrame frame;
     private JPanel mainPanel;
     private CardLayout cardLayout;
-    private _CLIENTSENDER clientSender;
+    private FinalClientSender clientSender;
     private String[] registrationFieldData = new String[5];
     private String[] logInFieldData = new String[2];
-    public _USERINTERFACE() {
+    public FinalUserInterface() {
         this.frame = new JFrame("User Interface");
         this.mainPanel = new JPanel();
         this.cardLayout = new CardLayout();
@@ -43,7 +40,7 @@ public class _USERINTERFACE implements Runnable {
                 , registerBirthday.getText()};
     }
 
-    public void setClientSender(_CLIENTSENDER clientSender) {
+    public void setClientSender(FinalClientSender clientSender) {
         this.clientSender = clientSender;
     }
 
@@ -795,6 +792,6 @@ public class _USERINTERFACE implements Runnable {
         frame.setVisible(true);
     }
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(new _USERINTERFACE());
+        SwingUtilities.invokeLater(new FinalUserInterface());
     }
 }

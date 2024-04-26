@@ -1,7 +1,4 @@
-import org.w3c.dom.Text;
-
 import java.io.*;
-import java.lang.reflect.Array;
 import java.net.*;
 import java.util.ArrayList;
 
@@ -16,13 +13,13 @@ import java.util.ArrayList;
  * @version Apr 16, 2024
  */
 
-public class _CLIENTSENDER implements Runnable {
+public class FinalClientSender implements Runnable {
     private Socket route;
     private ObjectInputStream objectReader;
     private ObjectOutputStream objectSender;
-    private _USERINTERFACE userInterface;
+    private FinalUserInterface userInterface;
     private boolean[] registrationFieldValidity = new boolean[3];
-    public _CLIENTSENDER(Socket socket, _USERINTERFACE userInterface) throws IOException {
+    public FinalClientSender(Socket socket, FinalUserInterface userInterface) throws IOException {
         this.route = socket;
         this.userInterface = userInterface;
         this.objectSender = new ObjectOutputStream(route.getOutputStream());

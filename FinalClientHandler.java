@@ -1,17 +1,15 @@
-import org.w3c.dom.Text;
-
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 
-public class _CLIENTHANDLER implements Runnable {
-    private _SERVERCLASS accessedServer;
+public class FinalClientHandler implements Runnable {
+    private FinalServerClass accessedServer;
     private Socket clientSocket;
     private User assocUser;
     private ObjectInputStream objectReader;
     private ObjectOutputStream objectSender;
 
-    public _CLIENTHANDLER(_SERVERCLASS accessedServer, Socket clientSocket) {
+    public FinalClientHandler(FinalServerClass accessedServer, Socket clientSocket) {
         this.accessedServer = accessedServer;
         this.clientSocket = clientSocket;
         this.assocUser = null;

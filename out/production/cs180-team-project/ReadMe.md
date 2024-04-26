@@ -97,17 +97,25 @@ This class contains the methods to read and write all the User objects from a sp
 retrieveUserData method which looks for a specific user object in the specific file (the file path is a field).
 
 #### Server Client Interaction
-##### ServerClass.java
-Contains the key field private ServerSocket serverSocket, which is used to create Threads that call upon the run() method in the ClientHandler class. This class acts as the server, with the ClientHandler being the middleman between it and the Client.
+##### FinalServerClass.java
+Connects to the client and establishes both a Conversation Database and a User Database to write messages to. Saves data after every User interaction by writing to the Database. Supports functionality to both create a new account, or login to an existing one. Allows User to add, block, and remove friends, and see their Friend list. Allows users to view their current conversations or create a new one; allows for the sending and deletion of messages. Allows users to search for other users. 
 
-##### ClientHandler.java
+##### FinalClientHandler.java
 Working in tandem with the ServerClass, the ClientHandler class does the computing, reading in client input and handling getting 
-the correct output sent to the client in the ClientClass. Includes three key fields: userArray, userData, convos, of the ArrayList<User>, UserDatabase, ConversationDatabase classes. Main function "runs" the class, meaning that the singular method, known as handleClient, is perpetually running,
-which handles information sent from Client objects.
+the correct output sent to the client in the ClientClass. Includes three key fields: userArray, userData, convos, of the ArrayList<User>, UserDatabase, ConversationDatabase classes. Main function "runs" the class, meaning that the singular method is perpetually running,
+which handles information sent from Client objects. Uses if-else statements in order to send different request types
+depending on what the user wants.
 
-##### ClientClass.java
-Main method handles client requests to the server. Uses a case-switch statement in order to send different request types
-depending on what the user wants. 
+##### FinalClientClass.java
+Main method handles client requests to the server. Connects to the server, then instantiates new User Interface and Client Sender objects. 
+
+#### FinalClientSender.java
+This class is instantiated in FinalClientClass.java. Used to directly associate actions performed by the User with modifications on the Server side. 
+
+#### FinalUserInterface.java
+The GUI component of our team's project. Features include a Login page, a "home" page in which the client can see which conversations they are currently a part of, a page where they can view their profile (including their list of friends and blocked users), and a search bar. Shows error messages when the User attempts to perform an illegal action, such as unfriending a User who is not on their friends list. 
+
+
 
 
 
@@ -166,13 +174,22 @@ of TestsServerClass.java.
 
 To test the IO capabilities of our server-client interactions, first run ServerClass.java (its main method), then run 
 Client Class, and follow the prompts. Keep in mind that the files will most likely be blank, so things like searching for
-users or starting conversations won't be doable, as you'll be the only user on that instance of the platform. 
+users or starting conversations won't be doable, as you'll be the only user on that instance of the platform.
+
+#### GUI Testing
+
+To test the GUI component of our program, first run the main method of FinalServerClass.java, then run FinalClientClass.java and follow the prompts. 
+Incorrect or illegal inputs will display error messages, as well as a prompt to the User to try again. 
 
 ## Submissions
 ### Phase 1
 - Vocareum: Ellie Williams
 #### Phase 2
 - Vocareum: Ellie Williams
+#### Phase 3
+ - Vocareum: Ellie Williams
+ - Project Report: Gilbert Chang
+ - Video Presentation: Ellie Williams
 
 
 
