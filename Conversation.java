@@ -140,9 +140,10 @@ public class Conversation implements Serializable {
         this.msgs.remove(deletedMessage);
     }
 
-    public boolean equals(Conversation convo) {
-        if (this.conversationName.equals(convo.getConversationName())
-        && this.users.equals(convo.getUsers())) {
+    public boolean equals(Object convo) {
+        Conversation transConvo = (Conversation) convo;
+        if (this.conversationName.equals(transConvo.getConversationName())
+        && this.users.equals(transConvo.getUsers())) {
             return true;
         } else {
             return false;
