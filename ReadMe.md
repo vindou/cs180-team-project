@@ -176,9 +176,9 @@ To test the IO capabilities of our server-client interactions, first run ServerC
 Client Class, and follow the prompts. Keep in mind that the files will most likely be blank, so things like searching for
 users or starting conversations won't be doable, as you'll be the only user on that instance of the platform.
 
-#### GUI Testing
+#### GUI Testing/Running the Program
 
-To test the GUI component of our program, first run the main method of FinalServerClass.java, then run FinalClientClass.java and follow the prompts. 
+First run the main method of FinalServerClass.java, then run FinalClientClass.java and follow the prompts. 
 Incorrect or illegal inputs will display error messages, as well as a prompt to the User to try again. 
 
 ## Submissions
